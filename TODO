@@ -1,10 +1,14 @@
 Meeting Notes 7/21 13:55
 
-1. Wrap ECDH using our wrapper (the same procedure as ddhm_...)
+1. Wrap EECDH using our wrapper (the same procedure as ddhm_...)
+2. Write testsuite for EECDH
 
-2. The ddhm_init need to set P and G
+3. The ddhm_init need to set P and G
+4. Write testsuite for DDHM
 
-3. Write testsuite for DDHM (and EECDH)
+5. Read SSL codes (how does it use the crypto wrapper?)
+
+
 
 Next meeting date: 7/24 Thu (or 7/25 Fri) 10:00 am
 
