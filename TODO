@@ -1,15 +1,32 @@
+Meeting Notes 7/17 14:26
+------------------------
+
+今天 trace 了 PolarSSL 的 SSL handshake 當中 DH keyexchange 部分，
+覺得有很多程式碼相當 dirty 而且不容易清理。
+
+1. 加一個 DH 抽象層
+2. 把現有的 DH 與 ECDH 程式碼用我們的抽象層包裝起來
+   (測試 DH standalone testcase 要通過)
+3. 修改 SSL structure, 要加上我們的抽象層
+4. 把呼叫 DH 與 ECDH 的程式碼 (主要在 handshaking 部分中)
+   換成我們的寫法
+
+Next internal meeting date: 7/21 (一) 早上 10:00 @MD631
+
+
+
 Meeting Notes 7/21 13:55
 ------------------------
 
 今日再看了一次 DH 與 ECDH 的上下層包裝實作方式,
 然後簡單地撰寫了 DHM 的我們的包裝...
 
-接下來的分工表:
+TODO 分工表:
 1-1. Wrap EECDH using our wrapper (the same procedure as ddhm_...)
 1-2. Write testsuite for EECDH
 2-1. The ddhm_init need to set P and G
 2-2. Write testsuite for DDHM
 3. Read SSL codes (how does it use the crypto wrapper?)
 
-Next internal meeting date: 7/24 Thu (or 7/25 Fri) 10:00 am
+Next internal meeting date: 7/24 Thu (or 7/25 Fri) 10:00 am @MD631
 
