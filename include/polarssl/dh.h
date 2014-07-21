@@ -1,3 +1,6 @@
+#ifndef POLARSSL_DH_H
+#define POLARSSL_DH_H
+
 typedef enum {
     POLARSSL_DH_NONE=0,
     POLARSSL_DH_DHM,
@@ -31,3 +34,4 @@ typedef struct {
     void *dh_ctx;
 } dh_context_t;
 
+#endif
