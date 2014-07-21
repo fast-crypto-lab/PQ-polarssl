@@ -1,0 +1,10 @@
+Meeting Notes 7/21 13:55
+
+1. Wrap ECDH using our wrapper (the same procedure as ddhm_...)
+
+2. The ddhm_init need to set P and G
+
+3. Write testsuite for DDHM (and EECDH)
+
+Next meeting date: 7/24 Thu (or 7/25 Fri) 10:00 am
+
