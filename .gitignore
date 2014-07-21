@@ -7,3 +7,4 @@ Coverage
 *.gcno
 *.gcda
 library/polarssl.info
+tags
