@@ -1,6 +1,9 @@
 #ifndef POLARSSL_DH_H
 #define POLARSSL_DH_H
 
+/* for size_t */
+#include <stdlib.h>
+
 typedef enum {
     POLARSSL_DH_NONE=0,
     POLARSSL_DH_DHM,
@@ -12,8 +15,8 @@ typedef struct {
     dh_type_t type;
     const char *name;
 
-    void (*init)( void *ctx );
-    void (*free)( void *ctx );
+    void * (*ctx_alloc)( void );
+    void (*ctx_free)( void *ctx );
 
     int (*make_params)( void *ctx, size_t *olen, unsigned char *buf, size_t blen,
                       int (*f_rng)(void *, unsigned char *, size_t), void *p_rng );

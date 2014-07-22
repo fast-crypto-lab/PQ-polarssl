@@ -4,21 +4,45 @@
 #include POLARSSL_CONFIG_FILE
 #endif
 
+
+#include <stdlib.h>
+
+
 #include "polarssl/dh_wrap.h"
 
 
 
 #if defined(POLARSSL_DHM_C)
+
+/* for polarssl_malloc() , polarssl_free() */
+#include "polarssl/platform.h"
+#include "polarssl/bignum.h"
 #include "polarssl/dhm.h"
 
-static void ddhm_init( void *ctx ) {
-    dhm_init((dhm_context *) ctx);
-    /* TODO: set P and G by mpi_... */
+static void * ddhm_alloc( void ) {
+
+    dhm_context *ctx = polarssl_malloc( sizeof( dhm_context ) );
+    if( NULL ==  ctx ) {
+        return NULL;
+    }
+
+    dhm_init(ctx);
+
+    if( mpi_read_string( & ctx->P, 16, POLARSSL_DHM_RFC5114_MODP_1024_P) ||
+        mpi_read_string( & ctx->G, 16, POLARSSL_DHM_RFC5114_MODP_1024_G) ) {
+        dhm_free(ctx);
+        ctx = NULL;
+    }
+    ctx->len = mpi_size( & ctx->P );
+    
+    return ctx;
 }
 
 static void ddhm_free( void *ctx ) {
     dhm_free((dhm_context *) ctx);
+    polarssl_free( ctx );
 }
+
 
 static int ddhm_make_params( void *ctx, size_t *olen, unsigned char *buf, size_t blen,
                     int (*f_rng)(void *, unsigned char *, size_t), void *p_rng ) {
@@ -31,11 +55,12 @@ static int ddhm_read_params( void *ctx, unsigned char **buf, const unsigned char
 
 static int ddhm_make_public( void *ctx, size_t *olen, unsigned char *buf, size_t blen,
                     int (*f_rng)(void *, unsigned char *, size_t), void *p_rng ) {
+    size_t plen = mpi_size( & ((dhm_context *) ctx)->P );
     int ret =  dhm_make_public( (dhm_context *) ctx, blen, buf,
-            ((dhm_context *) ctx)->P.len, /* XXX: Check olen == ctx->P.len */
+            plen, /* XXX: Check olen == ctx->P.len */
             f_rng, p_rng);
     if (ret == 0) {
-        *olen = ((dhm_context *) ctx)->P.len;
+        *olen = plen;
     }
     return ret;
 }
@@ -46,13 +71,14 @@ static int ddhm_read_public( void *ctx, const unsigned char *inputbuf, size_t bl
 
 static int ddhm_calc_secret( void *ctx, size_t *olen, unsigned char *buf, size_t blen,
                     int (*f_rng)(void *, unsigned char *, size_t), void *p_rng ) {
+    *olen = blen;
     return dhm_calc_secret( (dhm_context *)ctx, buf, olen, f_rng, p_rng);
 }
 
 const dh_info_t ddhm_info = {
     POLARSSL_DH_DHM,
-    "MD2",
-    ddhm_init,
+    "DDHM",
+    ddhm_alloc,
     ddhm_free,
     ddhm_make_params,
     ddhm_read_params,
@@ -65,7 +91,7 @@ const dh_info_t ddhm_info = {
  * The user (SSL side) need to handle these...
 
 const dh_context_t ddhm_ctx = {
-    &ddhm_init,
+    &ddhm_info,
     context.....
 };
 

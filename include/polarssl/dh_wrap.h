@@ -14,7 +14,7 @@ extern "C" {
 #endif
 
 #if defined(POLARSSL_DHM_C)
-extern const dh_info_t dhm_info;
+extern const dh_info_t ddhm_info;
 #endif
 
 #if defined(POLARSSL_ECDH_C)
