@@ -32,3 +32,9 @@ Next internal meeting date: 7/24 Thu (or 7/25 Fri) 10:00 am @MD631
 
 To be disscussed:
 1. buffer length of DH.
+2. Currently the only one wrapper for ECDH does not specify which curve to
+   use...  (We should use ecp_use_known_dp() in ctx_alloc() to select a
+   particular curve for each ECDH wrapper)
+
+
+

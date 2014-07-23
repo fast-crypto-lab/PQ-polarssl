@@ -18,7 +18,7 @@ extern const dh_info_t ddhm_info;
 #endif
 
 #if defined(POLARSSL_ECDH_C)
-extern const dh_info_t ecdh_info;
+extern const dh_info_t m_ecdh_info;
 #endif
 
 #ifdef __cplusplus

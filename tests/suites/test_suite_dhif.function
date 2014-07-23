@@ -4,10 +4,14 @@
 
 /* for setting P,G directly */
 #include <polarssl/dhm.h>
+
+/* maybe I need some helper utilities here */
+#include <polarssl/ecdh.h>
+
 /* END_HEADER */
 
 /* BEGIN_DEPENDENCIES
- * depends_on:POLARSSL_DHM_C:POLARSSL_BIGNUM_C
+ * depends_on:POLARSSL_DHM_C:POLARSSL_BIGNUM_C:POLARSSL_ECDH_C
  * END_DEPENDENCIES
  */
 
@@ -108,3 +112,46 @@ exit:
     ddhm_info.ctx_free( ctx_cli.dh_ctx );
 }
 /* END_CASE */
+
+/* BEGIN_CASE */
+void dhif_do_ecdh_exchange( int id )
+{
+    dh_context_t srv = { &m_ecdh_info , NULL };
+    dh_context_t cli = { &m_ecdh_info , NULL };
+
+    unsigned char buf[1000];
+    const unsigned char *vbuf;
+    size_t len;
+    rnd_pseudo_info rnd_info;
+
+    /*
+     * alloc
+     */
+    TEST_ASSERT( NULL != ( srv.dh_ctx = m_ecdh_info.ctx_alloc() ) );
+    TEST_ASSERT( NULL != ( cli.dh_ctx = m_ecdh_info.ctx_alloc() ) );
+
+    memset( &rnd_info, 0x00, sizeof( rnd_pseudo_info ) );
+
+    TEST_ASSERT( ecp_use_known_dp( &((ecdh_context *)srv.dh_ctx)->grp, id ) == 0 );
+
+    memset( buf, 0x00, sizeof( buf ) ); vbuf = buf;
+    TEST_ASSERT( m_ecdh_info.make_params( (ecdh_context *)srv.dh_ctx, &len, buf, 1000,
+                                   &rnd_pseudo_rand, &rnd_info ) == 0 );
+    TEST_ASSERT( m_ecdh_info.read_params( (ecdh_context *)cli.dh_ctx, &vbuf, buf + len ) == 0 );
+
+    memset( buf, 0x00, sizeof( buf ) );
+    TEST_ASSERT( m_ecdh_info.make_public( (ecdh_context *)cli.dh_ctx, &len, buf, 1000,
+                                   &rnd_pseudo_rand, &rnd_info ) == 0 );
+    TEST_ASSERT( m_ecdh_info.read_public( (ecdh_context *)srv.dh_ctx, buf, len ) == 0 );
+
+    TEST_ASSERT( m_ecdh_info.calc_secret( (ecdh_context *)srv.dh_ctx, &len, buf, 1000,
+                                   &rnd_pseudo_rand, &rnd_info ) == 0 );
+    TEST_ASSERT( m_ecdh_info.calc_secret( (ecdh_context *)cli.dh_ctx, &len, buf, 1000, NULL, NULL ) == 0 );
+    TEST_ASSERT( mpi_cmp_mpi( &((ecdh_context *)srv.dh_ctx)->z, &((ecdh_context *)cli.dh_ctx)->z ) == 0 );
+
+exit:
+    m_ecdh_info.ctx_free( (ecdh_context *)srv.dh_ctx );
+    m_ecdh_info.ctx_free( (ecdh_context *)cli.dh_ctx );
+}
+/* END_CASE */
+

@@ -102,8 +102,74 @@ const dh_context_t ddhm_ctx = {
 
 
 
+
 #if defined(POLARSSL_ECDH_C)
+
+#include "polarssl/platform.h"
 #include "polarssl/ecdh.h"
 
-#endif /* POLARSSL_ECDH_C */
+/* TODO: Use ecp_use_known_dp() to select a particular curve for each ECDH wrapper */
+static void *m_ecdh_alloc( void ) {
+    ecdh_context *ctx = polarssl_malloc( sizeof( ecdh_context ) );
+    if ( ctx == NULL ) {
+        return NULL;
+    } else {
+        ecdh_init(ctx);
+        return ctx;
+    }
+}
 
+static void m_ecdh_free( void *ctx ) {
+    ecdh_free( (ecdh_context *) ctx );
+    polarssl_free( ctx );
+}
+
+static int m_ecdh_make_params( void *ctx, size_t *olen, unsigned char *buf,
+        size_t blen, int (*f_rng)(void *, unsigned char *, size_t),
+        void *p_rng ) {
+
+    return ecdh_make_params(
+            (ecdh_context *)ctx, olen, buf, blen, f_rng, p_rng );
+}
+
+static int m_ecdh_read_params( void *ctx, unsigned char **buf,
+        const unsigned char *end ) {
+
+    return ecdh_read_params( (ecdh_context *)ctx, buf, end );
+}
+
+static int m_ecdh_make_public( void *ctx, size_t *olen, unsigned char *buf,
+        size_t blen, int (*f_rng)(void *, unsigned char *, size_t),
+        void *p_rng ) {
+
+    return ecdh_make_public(
+            (ecdh_context *)ctx, olen, buf, blen, f_rng, p_rng );
+}
+
+static int m_ecdh_read_public( void *ctx, const unsigned char *inputbuf,
+        size_t blen ) {
+
+    return ecdh_read_public( (ecdh_context *)ctx, inputbuf, blen );
+}
+
+static int m_ecdh_calc_secret( void *ctx, size_t *olen, unsigned char *buf,
+        size_t blen, int (*f_rng)(void *, unsigned char *, size_t),
+        void *p_rng ) {
+
+    return ecdh_calc_secret(
+            (ecdh_context *)ctx, olen, buf, blen, f_rng, p_rng );
+}
+
+const dh_info_t m_ecdh_info = {
+    POLARSSL_DH_EC,
+    "M_ECDH",
+    m_ecdh_alloc,
+    m_ecdh_free,
+    m_ecdh_make_params,
+    m_ecdh_read_params,
+    m_ecdh_make_public,
+    m_ecdh_read_public,
+    m_ecdh_calc_secret,
+};
+
+#endif /* POLARSSL_ECDH_C */
