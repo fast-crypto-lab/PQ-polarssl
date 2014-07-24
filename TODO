@@ -38,3 +38,20 @@ To be disscussed:
 
 
 
+
+Meeting Notes 7/24 16:54
+------------------------
+
+今天看了 ssl_{tls,srv,cli}.c 共一萬多行程式碼中和 DH 比較有關聯的部分
+簡直是個悲劇花了六個小時
+
+TODO:
+1. Rewrite all DH codes in ssl_{tls,srv,cli}.c
+2. Decouple buffer IO and crypto computation
+   and then rewrite all DH codes in ssl_{tls,srv,cli}.c again
+3. Implement Curve25519 (from NaCl)
+
+Call for meeting Friday (7/25) 14:00~16:00 or 20:00~
+for discussing about some of this stuff
+
+
