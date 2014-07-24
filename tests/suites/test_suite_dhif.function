@@ -124,9 +124,6 @@ void dhif_do_ecdh_exchange( int id )
     size_t len;
     rnd_pseudo_info rnd_info;
 
-    /*
-     * alloc
-     */
     TEST_ASSERT( NULL != ( srv.dh_ctx = m_ecdh_info.ctx_alloc() ) );
     TEST_ASSERT( NULL != ( cli.dh_ctx = m_ecdh_info.ctx_alloc() ) );
 
@@ -135,23 +132,20 @@ void dhif_do_ecdh_exchange( int id )
     TEST_ASSERT( ecp_use_known_dp( &((ecdh_context *)srv.dh_ctx)->grp, id ) == 0 );
 
     memset( buf, 0x00, sizeof( buf ) ); vbuf = buf;
-    TEST_ASSERT( m_ecdh_info.make_params( (ecdh_context *)srv.dh_ctx, &len, buf, 1000,
-                                   &rnd_pseudo_rand, &rnd_info ) == 0 );
-    TEST_ASSERT( m_ecdh_info.read_params( (ecdh_context *)cli.dh_ctx, &vbuf, buf + len ) == 0 );
+    TEST_ASSERT( m_ecdh_info.make_params( srv.dh_ctx, &len, buf, 1000, &rnd_pseudo_rand, &rnd_info ) == 0 );
+    TEST_ASSERT( m_ecdh_info.read_params( cli.dh_ctx, &vbuf, buf + len ) == 0 );
 
     memset( buf, 0x00, sizeof( buf ) );
-    TEST_ASSERT( m_ecdh_info.make_public( (ecdh_context *)cli.dh_ctx, &len, buf, 1000,
-                                   &rnd_pseudo_rand, &rnd_info ) == 0 );
-    TEST_ASSERT( m_ecdh_info.read_public( (ecdh_context *)srv.dh_ctx, buf, len ) == 0 );
+    TEST_ASSERT( m_ecdh_info.make_public( cli.dh_ctx, &len, buf, 1000, &rnd_pseudo_rand, &rnd_info ) == 0 );
+    TEST_ASSERT( m_ecdh_info.read_public( srv.dh_ctx, buf, len ) == 0 );
 
-    TEST_ASSERT( m_ecdh_info.calc_secret( (ecdh_context *)srv.dh_ctx, &len, buf, 1000,
-                                   &rnd_pseudo_rand, &rnd_info ) == 0 );
-    TEST_ASSERT( m_ecdh_info.calc_secret( (ecdh_context *)cli.dh_ctx, &len, buf, 1000, NULL, NULL ) == 0 );
+    TEST_ASSERT( m_ecdh_info.calc_secret( srv.dh_ctx, &len, buf, 1000, &rnd_pseudo_rand, &rnd_info ) == 0 );
+    TEST_ASSERT( m_ecdh_info.calc_secret( cli.dh_ctx, &len, buf, 1000, NULL, NULL ) == 0 );
     TEST_ASSERT( mpi_cmp_mpi( &((ecdh_context *)srv.dh_ctx)->z, &((ecdh_context *)cli.dh_ctx)->z ) == 0 );
 
 exit:
-    m_ecdh_info.ctx_free( (ecdh_context *)srv.dh_ctx );
-    m_ecdh_info.ctx_free( (ecdh_context *)cli.dh_ctx );
+    m_ecdh_info.ctx_free( srv.dh_ctx );
+    m_ecdh_info.ctx_free( cli.dh_ctx );
 }
 /* END_CASE */
 
