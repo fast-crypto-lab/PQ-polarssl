@@ -135,7 +135,7 @@ static int m_ecdh_make_params( void *ctx, size_t *olen, unsigned char *buf,
 static int m_ecdh_read_params( void *ctx, unsigned char **buf,
         const unsigned char *end ) {
 
-    return ecdh_read_params( (ecdh_context *)ctx, buf, end );
+    return ecdh_read_params( (ecdh_context *)ctx, (const unsigned char **) buf, end ); /* Type casting to supress compiler warning */
 }
 
 static int m_ecdh_make_public( void *ctx, size_t *olen, unsigned char *buf,

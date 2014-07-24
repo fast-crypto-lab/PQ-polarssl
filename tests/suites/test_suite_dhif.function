@@ -120,7 +120,7 @@ void dhif_do_ecdh_exchange( int id )
     dh_context_t cli = { &m_ecdh_info , NULL };
 
     unsigned char buf[1000];
-    const unsigned char *vbuf;
+    unsigned char *vbuf; /* To supress the compiler warning... Originally: const unsigned char *vbuf; */
     size_t len;
     rnd_pseudo_info rnd_info;
 
