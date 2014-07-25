@@ -49,9 +49,24 @@ TODO:
 1. Rewrite all DH codes in ssl_{tls,srv,cli}.c
 2. Decouple buffer IO and crypto computation
    and then rewrite all DH codes in ssl_{tls,srv,cli}.c again
+
 3. Implement Curve25519 (from NaCl)
 
 Call for meeting Friday (7/25) 14:00~16:00 or 20:00~
 for discussing about some of this stuff
+
+
+
+
+Meeting Notes 7/25 14:53
+------------------------
+
+Let's do the TODO#2 first
+
+- Marshalling/Unmarhsalling
+  Think about how to design the interfaces...
+
+- No need to support all legacy versions
+  First try to implement TLS 1.2 well
 
 
