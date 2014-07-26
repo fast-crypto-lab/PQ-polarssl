@@ -15,10 +15,12 @@ extern "C" {
 
 #if defined(POLARSSL_DHM_C)
 extern const dh_info_t ddhm_info;
+extern const dh_info2_t dhm_info2;
 #endif
 
 #if defined(POLARSSL_ECDH_C)
 extern const dh_info_t m_ecdh_info;
+extern const dh_info2_t ecdh_info2;
 #endif
 
 #ifdef __cplusplus
