@@ -304,6 +304,24 @@ int dhm_parse_dhmfile( dhm_context *dhm, const char *path );
  */
 int dhm_self_test( int verbose );
 
+
+
+int dhm_gen_public( dhm_context *ctx, int (*f_rng)(void *, unsigned char *, size_t), void *p_rng );
+int dhm_compute_shared( dhm_context *ctx , int (*f_rng)(void *, unsigned char *, size_t),
+                         void *p_rng );
+int dhm_set_params( dhm_context *ctx , int params );
+int dhm_read_params( dhm_context *ctx , const unsigned char *buf , size_t blen );
+size_t dhm_get_size_params( const dhm_context * ctx );
+int dhm_write_params( size_t * olen , unsigned char *buf, size_t blen, const dhm_context *ctx );
+
+int dhm_read_public( dhm_context *ctx, const unsigned char *buf, size_t blen );
+
+size_t dhm_get_size_pk( const dhm_context *ctx );
+int dhm_write_public( size_t * olen , unsigned char *buf, size_t blen, const dhm_context *ctx );
+
+int dhm_write_pre_master( size_t * olen, unsigned char *buf, size_t blen, const dhm_context *ctx );
+
+
 #ifdef __cplusplus
 }
 #endif
