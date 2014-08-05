@@ -173,3 +173,32 @@ const dh_info_t m_ecdh_info = {
 };
 
 #endif /* POLARSSL_ECDH_C */
+
+
+
+
+#if defined(POLARSSL_DHM_C_2)
+
+#include "polarssl/dhm.h"
+
+const dh_info2_t dhm_info2 = {
+    POLARSSL_DH_DHM,
+    "DDHM",
+    ddhm_alloc,
+    ddhm_free,
+    wdhm_gen_public,
+    wdhm_compute_shared,
+    wdhm_set_params,
+    wdhm_read_params,
+    wdhm_read_public,
+    wdhm_read_from_pk_ctx,
+    wdhm_getsize_params,
+    wdhm_write_params,
+    wdhm_getsize_public,
+    wdhm_write_public,
+    wdhm_getsize_premaster,
+    wdhm_write_premaster,
+};
+
+
+#endif /* POLARSSL_DHM_C_2 */

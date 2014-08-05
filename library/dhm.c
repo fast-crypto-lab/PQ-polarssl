@@ -485,6 +485,141 @@ exit:
     return( ret );
 }
 
+
+/*
+ * BEGIN Our wrapper interfaces for DH key exchange
+ */
+
+int wdhm_gen_public( dhm_context *ctx, int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
+{
+    static unsigned char tmp_buffer[1536]; /* XXX: We assume that 1536 is always greater than mpi_size(P) */
+    int ret = 0;
+
+    ret = dhm_make_public(ctx, (int) mpi_size(&ctx->P), tmp_buffer, ctx->len, f_rng, p_rng);
+
+    return ret;
+}
+
+int wdhm_compute_shared( dhm_context *ctx , int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
+{
+    static unsigned char tmp_buffer[1536];
+    size_t buffer_len = 1536;
+    int ret = 0;
+
+    ret = dhm_calc_secret(ctx, tmp_buffer, &buffer_len, f_rng, p_rng);
+
+    return ret;
+}
+
+typedef struct { mpi P; mpi G; } wdh_params;
+
+int wdhm_set_params( dhm_context *ctx , const void *_params )
+{
+    int ret = 0;
+    const wdh_params *params = (const wdh_params *) _params;
+
+    MPI_CHK( mpi_copy( &ctx->P, &params->P ) );
+    MPI_CHK( mpi_copy( &ctx->G, &params->G ) );
+    ctx->len = mpi_size(&ctx->P);
+
+cleanup:
+    return ret;
+}
+
+int wdhm_read_params( dhm_context *ctx , const unsigned char *buf , size_t blen )
+{
+    const unsigned char *p = buf;
+    int ret = 0;
+    const unsigned char *end = p + blen;
+
+    ret = dhm_read_params(ctx, &p, end);
+
+    return ret;
+}
+
+int wdhm_read_public( dhm_context *ctx, const unsigned char *buf, size_t blen )
+{
+    int ret = 0;
+    ret = dhm_read_public(ctx, buf, blen);
+    return ret;
+}
+
+int wdhm_read_from_pk_ctx( dhm_context *ctx , const void *pk_ctx )
+{
+    /* TODO */
+    return -1;
+}
+
+size_t wdhm_getsize_params( const dhm_context *ctx )
+{
+    return 2 * ctx->len;;
+}
+
+int wdhm_write_params( size_t *olen, unsigned char *buf, size_t blen, const dhm_context *ctx )
+{
+    int ret = 0;
+
+    if( ctx == NULL || blen < 2 * ctx->len )
+        return( POLARSSL_ERR_DHM_BAD_INPUT_DATA );
+
+    MPI_CHK( mpi_write_binary(&ctx->P, buf, ctx->len) );
+    MPI_CHK( mpi_write_binary(&ctx->G, buf + ctx->len, ctx->len) );
+
+cleanup:
+    if (ret != 0)
+        return POLARSSL_ERR_DHM_MAKE_PUBLIC_FAILED + ret;
+
+    return 0;
+}
+
+size_t wdhm_getsize_public( const dhm_context *ctx )
+{
+    return ctx->len;
+}
+
+int wdhm_write_public( size_t *olen , unsigned char *buf, size_t blen, const dhm_context *ctx )
+{
+    int ret = 0;
+
+    if( ctx == NULL || blen < ctx->len )
+        return( POLARSSL_ERR_DHM_BAD_INPUT_DATA );
+
+    MPI_CHK( mpi_write_binary(&ctx->GX, buf, ctx->len) );
+
+cleanup:
+    if (ret != 0)
+        return POLARSSL_ERR_DHM_MAKE_PUBLIC_FAILED + ret;
+
+    return 0;
+}
+
+size_t wdhm_getsize_premaster( const dhm_context *ctx )
+{
+    return ctx->len;
+}
+
+int wdhm_write_premaster( size_t *olen, unsigned char *buf, size_t blen, const dhm_context *ctx )
+{
+    int ret = 0;
+
+    if( ctx == NULL || blen < ctx->len )
+        return( POLARSSL_ERR_DHM_BAD_INPUT_DATA );
+
+    MPI_CHK( mpi_write_binary(&ctx->K, buf, ctx->len) );
+
+cleanup:
+    if (ret != 0)
+        return POLARSSL_ERR_DHM_MAKE_PUBLIC_FAILED + ret;
+
+    return 0;
+}
+
+
+/*
+ * END Our wrapper interfaces for DH key exchange
+ */
+
+
 #if defined(POLARSSL_FS_IO)
 /*
  * Load all data from a file into a given buffer.

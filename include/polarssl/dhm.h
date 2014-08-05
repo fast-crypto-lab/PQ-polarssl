@@ -305,9 +305,6 @@ int dhm_parse_dhmfile( dhm_context *dhm, const char *path );
 int dhm_self_test( int verbose );
 
 
-
-
-/* TODO: */
 int wdhm_gen_public( dhm_context *ctx, int (*f_rng)(void *, unsigned char *, size_t), void *p_rng );
 int wdhm_compute_shared( dhm_context *ctx , int (*f_rng)(void *, unsigned char *, size_t), void *p_rng );
 int wdhm_set_params( dhm_context *ctx , const void *params );
