@@ -101,3 +101,22 @@ Q: What is the difference between RSA and RSA_PSK?
    因為在 authenticated encrypted channel 上面，雙方可以比較到此為止所有訊息的
    hash value 即可
 
+
+TODO
+------------------------
+
+PHASE 1
+
+1. (Chen) Write testsuite for DHM
+2. (Kuo) Create a wrapper for ECDH using our
+         new interface [Finish before 23:59 Wed]
+3. (Xian) Write testsuite for ECDH
+
+        For 2. and 3., Try not to call additional mpi_* functions in the
+        testing function
+
+PHASE 2
+
+1. Rewrite the SSL codes using the new interface
+
+= Next meeting time 8/8 (Fri) 10:30 am at MD631 =
