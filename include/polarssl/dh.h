@@ -52,6 +52,7 @@ typedef struct {
 
     int (*set_params)( void *ctx , const void *params );
 
+    /* and public */
     int (*read_params)( void *ctx , const unsigned char *buf , size_t blen );
 
     int (*read_public)( void *ctx, const unsigned char *buf, size_t blen );
@@ -60,6 +61,7 @@ typedef struct {
     /* The pk_ctx is initialized in pk_parse_subpubkey() in library/pkparse.c */
     int (*read_from_pk_ctx)( void *ctx , const void *pk_ctx );
 
+    /* and public */
     size_t (*getsize_params)( const void *ctx );
     int (*write_params)( size_t *olen, unsigned char *buf, size_t blen, const void *ctx );
 

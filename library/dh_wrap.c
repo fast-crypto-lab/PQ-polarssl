@@ -177,7 +177,7 @@ const dh_info_t m_ecdh_info = {
 
 
 
-#if defined(POLARSSL_DHM_C_2)
+#if defined(POLARSSL_DHM_C)
 
 #include "polarssl/dhm.h"
 
@@ -201,4 +201,4 @@ const dh_info2_t dhm_info2 = {
 };
 
 
-#endif /* POLARSSL_DHM_C_2 */
+#endif /* POLARSSL_DHM_C */

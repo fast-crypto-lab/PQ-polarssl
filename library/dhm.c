@@ -492,10 +492,12 @@ exit:
 
 int wdhm_gen_public( dhm_context *ctx, int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
 {
-    static unsigned char tmp_buffer[1536]; /* XXX: We assume that 1536 is always greater than mpi_size(P) */
+    static unsigned char tmp_buffer[1536]; /* XXX: We assume that 1536 is always greater than 3*mpi_size(P) */
     int ret = 0;
 
-    ret = dhm_make_public(ctx, (int) mpi_size(&ctx->P), tmp_buffer, ctx->len, f_rng, p_rng);
+    if( NULL == ctx || 0 == ctx->len ) return (POLARSSL_ERR_DHM_BAD_INPUT_DATA);
+
+    ret = dhm_make_public(ctx, (int) ctx->len, tmp_buffer, ctx->len, f_rng, p_rng);
 
     return ret;
 }
@@ -518,6 +520,8 @@ int wdhm_set_params( dhm_context *ctx , const void *_params )
     int ret = 0;
     const wdh_params *params = (const wdh_params *) _params;
 
+    if( NULL == ctx || NULL == params ) return (POLARSSL_ERR_DHM_BAD_INPUT_DATA);
+
     MPI_CHK( mpi_copy( &ctx->P, &params->P ) );
     MPI_CHK( mpi_copy( &ctx->G, &params->G ) );
     ctx->len = mpi_size(&ctx->P);
@@ -526,6 +530,7 @@ cleanup:
     return ret;
 }
 
+/* and public */
 int wdhm_read_params( dhm_context *ctx , const unsigned char *buf , size_t blen )
 {
     const unsigned char *p = buf;
@@ -547,23 +552,40 @@ int wdhm_read_public( dhm_context *ctx, const unsigned char *buf, size_t blen )
 int wdhm_read_from_pk_ctx( dhm_context *ctx , const void *pk_ctx )
 {
     /* TODO */
+    ((void)ctx);
+    ((void)pk_ctx);
     return -1;
 }
 
 size_t wdhm_getsize_params( const dhm_context *ctx )
 {
-    return 2 * ctx->len;;
+    return 3 * 2 + mpi_size(&ctx->P) + mpi_size(&ctx->G) + mpi_size(&ctx->GX);
 }
 
 int wdhm_write_params( size_t *olen, unsigned char *buf, size_t blen, const dhm_context *ctx )
 {
     int ret = 0;
+    unsigned char *p = buf;
+    size_t n1,n2,n3;
 
-    if( ctx == NULL || blen < 2 * ctx->len )
+    if( ctx == NULL || blen < wdhm_getsize_params(ctx) )
         return( POLARSSL_ERR_DHM_BAD_INPUT_DATA );
 
-    MPI_CHK( mpi_write_binary(&ctx->P, buf, ctx->len) );
-    MPI_CHK( mpi_write_binary(&ctx->G, buf + ctx->len, ctx->len) );
+/*
+#define DHM_MPI_EXPORT(X,n)                     \
+    MPI_CHK( mpi_write_binary( X, p + 2, n ) ); \
+    *p++ = (unsigned char)( n >> 8 );           \
+    *p++ = (unsigned char)( n      ); p += n;
+*/
+    n1 = mpi_size( &ctx->P  );
+    n2 = mpi_size( &ctx->G  );
+    n3 = mpi_size( &ctx->GX );
+
+    DHM_MPI_EXPORT( &ctx->P , n1 );
+    DHM_MPI_EXPORT( &ctx->G , n2 );
+    DHM_MPI_EXPORT( &ctx->GX, n3 );
+
+    *olen = p-buf;
 
 cleanup:
     if (ret != 0)
@@ -585,6 +607,7 @@ int wdhm_write_public( size_t *olen , unsigned char *buf, size_t blen, const dhm
         return( POLARSSL_ERR_DHM_BAD_INPUT_DATA );
 
     MPI_CHK( mpi_write_binary(&ctx->GX, buf, ctx->len) );
+    *olen = ctx->len;
 
 cleanup:
     if (ret != 0)
@@ -606,6 +629,7 @@ int wdhm_write_premaster( size_t *olen, unsigned char *buf, size_t blen, const d
         return( POLARSSL_ERR_DHM_BAD_INPUT_DATA );
 
     MPI_CHK( mpi_write_binary(&ctx->K, buf, ctx->len) );
+    *olen = ctx->len;
 
 cleanup:
     if (ret != 0)
