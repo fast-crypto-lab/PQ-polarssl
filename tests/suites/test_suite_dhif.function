@@ -122,7 +122,6 @@ void dhif_do_dhm2( int radix_P, char *input_P,
     dh_context2_t ctx_cli = { &dhm_info2 , NULL };
 
     unsigned char ske[1000];
-/*    unsigned char *p = ske; */
     unsigned char pub_cli[1000];
     unsigned char sec_srv[1000];
     unsigned char sec_cli[1000];
@@ -134,6 +133,7 @@ void dhif_do_dhm2( int radix_P, char *input_P,
     rnd_pseudo_info rnd_info;
 
     struct { mpi P; mpi G; } params;
+    memset( &params , 0 , sizeof(mpi)*2 );
 
     memset( ske, 0x00, 1000 );
     memset( pub_cli, 0x00, 1000 );
@@ -158,8 +158,6 @@ void dhif_do_dhm2( int radix_P, char *input_P,
         TEST_ASSERT( mpi_read_string( & params.G, 16, POLARSSL_DHM_RFC5114_MODP_1024_G ) == 0 );
     }
     TEST_ASSERT( dhm_info2.set_params( ctx_srv.dh_ctx , &params ) == 0 );
-    /* x_size = mpi_size( & ((dhm_context *)ctx_srv.dh_ctx)->P ); *//* XXX: here: to be disscussed */
-    /* pub_cli_len = 0; */
 
     /*
      * First key exchange
@@ -167,15 +165,11 @@ void dhif_do_dhm2( int radix_P, char *input_P,
     TEST_ASSERT( dhm_info2.gen_public( ctx_srv.dh_ctx , &rnd_pseudo_rand, &rnd_info ) == 0 );
     TEST_ASSERT( dhm_info2.write_params( &ske_len , ske , 1000 , ctx_srv.dh_ctx ) == 0 );
     TEST_ASSERT( ske_len == dhm_info2.getsize_params(ctx_srv.dh_ctx) );
-/*
-    TEST_ASSERT( ddhm_info.make_params( ctx_srv.dh_ctx, &ske_len , ske, x_size, &rnd_pseudo_rand, &rnd_info ) == 0 );
-    ske[ske_len++] = 0;
-    ske[ske_len++] = 0;
-*/
-    TEST_ASSERT( dhm_info2.read_params( ctx_cli.dh_ctx, ske, ske_len ) == 0 );
 
+    TEST_ASSERT( dhm_info2.read_params( ctx_cli.dh_ctx, ske, ske_len ) == 0 );
     TEST_ASSERT( dhm_info2.gen_public( ctx_cli.dh_ctx , &rnd_pseudo_rand, &rnd_info ) == 0 );
-    TEST_ASSERT( dhm_info2.write_public( &pub_cli_len, pub_cli , 1000 , ctx_cli.dh_ctx ) );
+
+    TEST_ASSERT( dhm_info2.write_public( &pub_cli_len, pub_cli , 1000 , ctx_cli.dh_ctx ) == 0 );
     TEST_ASSERT( pub_cli_len == dhm_info2.getsize_public( ctx_cli.dh_ctx ) );
 
     TEST_ASSERT( dhm_info2.read_public( ctx_srv.dh_ctx , pub_cli, pub_cli_len ) == 0 );
@@ -183,19 +177,12 @@ void dhif_do_dhm2( int radix_P, char *input_P,
     TEST_ASSERT( dhm_info2.compute_shared(ctx_srv.dh_ctx, &rnd_pseudo_rand, &rnd_info ) == 0 );
     TEST_ASSERT( dhm_info2.compute_shared(ctx_cli.dh_ctx, &rnd_pseudo_rand, &rnd_info ) == 0 );
 
-    TEST_ASSERT( dhm_info2.write_premaster( &sec_srv_len , sec_srv , 1000 , ctx_srv.dh_ctx ) );
-    TEST_ASSERT( dhm_info2.write_premaster( &sec_cli_len , sec_cli , 1000 , ctx_cli.dh_ctx ) );
+    TEST_ASSERT( dhm_info2.write_premaster( &sec_srv_len , sec_srv , 1000 , ctx_srv.dh_ctx ) == 0 );
+    TEST_ASSERT( dhm_info2.write_premaster( &sec_cli_len , sec_cli , 1000 , ctx_cli.dh_ctx ) == 0 );
 
     TEST_ASSERT( sec_srv_len == dhm_info2.getsize_premaster( ctx_srv.dh_ctx ) );
     TEST_ASSERT( sec_cli_len == dhm_info2.getsize_premaster( ctx_cli.dh_ctx ) );
 
-/*
-    TEST_ASSERT( ddhm_info.make_public( ctx_cli.dh_ctx, &pub_cli_len , pub_cli, x_size, &rnd_pseudo_rand, &rnd_info ) == 0 );
-    TEST_ASSERT( ddhm_info.read_public( ctx_srv.dh_ctx, pub_cli, pub_cli_len ) == 0 );
-
-    TEST_ASSERT( ddhm_info.calc_secret( ctx_srv.dh_ctx, &sec_srv_len, sec_srv, sec_srv_len, &rnd_pseudo_rand, &rnd_info ) == 0 );
-    TEST_ASSERT( ddhm_info.calc_secret( ctx_cli.dh_ctx, &sec_cli_len, sec_cli, sec_cli_len, NULL, NULL ) == 0 );
-*/
     TEST_ASSERT( sec_srv_len == sec_cli_len );
     TEST_ASSERT( sec_srv_len != 0 );
     TEST_ASSERT( memcmp( sec_srv, sec_cli, sec_srv_len ) == 0 );
@@ -204,11 +191,8 @@ void dhif_do_dhm2( int radix_P, char *input_P,
     for( i = 0; i < 3; i++ )
     {
         sec_srv_len = 1000;
-/*
-        TEST_ASSERT( ddhm_info.calc_secret( ctx_srv.dh_ctx, &sec_srv_len, sec_srv, sec_srv_len, &rnd_pseudo_rand, &rnd_info ) == 0 );
-*/
         TEST_ASSERT( dhm_info2.compute_shared(ctx_srv.dh_ctx, &rnd_pseudo_rand, &rnd_info ) == 0 );
-        TEST_ASSERT( dhm_info2.write_premaster( &sec_srv_len , sec_srv , 1000 , ctx_srv.dh_ctx ) );
+        TEST_ASSERT( dhm_info2.write_premaster( &sec_srv_len , sec_srv , 1000 , ctx_srv.dh_ctx ) == 0 );
         TEST_ASSERT( sec_srv_len == dhm_info2.getsize_premaster( ctx_srv.dh_ctx ) );
         TEST_ASSERT( sec_srv_len == sec_cli_len );
         TEST_ASSERT( sec_srv_len != 0 );
@@ -224,15 +208,10 @@ void dhif_do_dhm2( int radix_P, char *input_P,
     TEST_ASSERT( dhm_info2.gen_public( ctx_srv.dh_ctx , &rnd_pseudo_rand, &rnd_info ) == 0 );
     TEST_ASSERT( dhm_info2.write_params( &ske_len , ske , 1000 , ctx_srv.dh_ctx ) == 0 );
     TEST_ASSERT( ske_len == dhm_info2.getsize_params(ctx_srv.dh_ctx) );
-/*
-    TEST_ASSERT( ddhm_info.make_params( ctx_srv.dh_ctx, &ske_len , ske, x_size, &rnd_pseudo_rand, &rnd_info ) == 0 );
-    ske[ske_len++] = 0;
-    ske[ske_len++] = 0;
-*/
     TEST_ASSERT( dhm_info2.read_params( ctx_cli.dh_ctx, ske, ske_len ) == 0 );
 
     TEST_ASSERT( dhm_info2.gen_public( ctx_cli.dh_ctx , &rnd_pseudo_rand, &rnd_info) == 0 );
-    TEST_ASSERT( dhm_info2.write_public( &pub_cli_len, pub_cli , 1000 , ctx_cli.dh_ctx ) );
+    TEST_ASSERT( dhm_info2.write_public( &pub_cli_len, pub_cli , 1000 , ctx_cli.dh_ctx ) == 0 );
     TEST_ASSERT( pub_cli_len == dhm_info2.getsize_public( ctx_cli.dh_ctx ) );
 
     TEST_ASSERT( dhm_info2.read_public( ctx_srv.dh_ctx , pub_cli, pub_cli_len ) == 0 );
@@ -240,41 +219,16 @@ void dhif_do_dhm2( int radix_P, char *input_P,
     TEST_ASSERT( dhm_info2.compute_shared(ctx_srv.dh_ctx, &rnd_pseudo_rand, &rnd_info ) == 0 );
     TEST_ASSERT( dhm_info2.compute_shared(ctx_cli.dh_ctx, &rnd_pseudo_rand, &rnd_info ) == 0 );
 
-    TEST_ASSERT( dhm_info2.write_premaster( &sec_srv_len , sec_srv , 1000 , ctx_srv.dh_ctx ) );
-    TEST_ASSERT( dhm_info2.write_premaster( &sec_cli_len , sec_cli , 1000 , ctx_cli.dh_ctx ) );
+    TEST_ASSERT( dhm_info2.write_premaster( &sec_srv_len , sec_srv , 1000 , ctx_srv.dh_ctx ) == 0 );
+    TEST_ASSERT( dhm_info2.write_premaster( &sec_cli_len , sec_cli , 1000 , ctx_cli.dh_ctx ) == 0 );
 
     TEST_ASSERT( sec_srv_len == dhm_info2.getsize_premaster( ctx_srv.dh_ctx ) );
     TEST_ASSERT( sec_cli_len == dhm_info2.getsize_premaster( ctx_cli.dh_ctx ) );
 
-/*
-    TEST_ASSERT( ddhm_info.make_public( ctx_cli.dh_ctx, &pub_cli_len , pub_cli, x_size, &rnd_pseudo_rand, &rnd_info ) == 0 );
-    TEST_ASSERT( ddhm_info.read_public( ctx_srv.dh_ctx, pub_cli, pub_cli_len ) == 0 );
-
-    TEST_ASSERT( ddhm_info.calc_secret( ctx_srv.dh_ctx, &sec_srv_len, sec_srv, sec_srv_len, &rnd_pseudo_rand, &rnd_info ) == 0 );
-    TEST_ASSERT( ddhm_info.calc_secret( ctx_cli.dh_ctx, &sec_cli_len, sec_cli, sec_cli_len, NULL, NULL ) == 0 );
-*/
     TEST_ASSERT( sec_srv_len == sec_cli_len );
     TEST_ASSERT( sec_srv_len != 0 );
     TEST_ASSERT( memcmp( sec_srv, sec_cli, sec_srv_len ) == 0 );
 
-/*
-    p = ske;
-
-    TEST_ASSERT( ddhm_info.make_params( ctx_srv.dh_ctx, &ske_len , ske, x_size, &rnd_pseudo_rand, &rnd_info ) == 0 );
-    ske[ske_len++] = 0;
-    ske[ske_len++] = 0;
-    TEST_ASSERT( ddhm_info.read_params( ctx_cli.dh_ctx, &p, ske + ske_len ) == 0 );
-
-    TEST_ASSERT( ddhm_info.make_public( ctx_cli.dh_ctx, &pub_cli_len , pub_cli, x_size, &rnd_pseudo_rand, &rnd_info ) == 0 );
-    TEST_ASSERT( ddhm_info.read_public( ctx_srv.dh_ctx, pub_cli, pub_cli_len ) == 0 );
-
-    TEST_ASSERT( ddhm_info.calc_secret( ctx_srv.dh_ctx, &sec_srv_len, sec_srv, sec_srv_len, &rnd_pseudo_rand, &rnd_info ) == 0 );
-    TEST_ASSERT( ddhm_info.calc_secret( ctx_cli.dh_ctx, &sec_cli_len, sec_cli, sec_cli_len, NULL, NULL ) == 0 );
-
-    TEST_ASSERT( sec_srv_len == sec_cli_len );
-    TEST_ASSERT( sec_srv_len != 0 );
-    TEST_ASSERT( memcmp( sec_srv, sec_cli, sec_srv_len ) == 0 );
-*/
 exit:
     ddhm_info.ctx_free( ctx_srv.dh_ctx );
     ddhm_info.ctx_free( ctx_cli.dh_ctx );

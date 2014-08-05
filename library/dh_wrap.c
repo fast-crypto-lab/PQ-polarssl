@@ -181,10 +181,21 @@ const dh_info_t m_ecdh_info = {
 
 #include "polarssl/dhm.h"
 
+static void * dhm_alloc2( void ) {
+
+    dhm_context *ctx = polarssl_malloc( sizeof( dhm_context ) );
+    if( NULL ==  ctx ) {
+        return NULL;
+    }
+
+    dhm_init(ctx);
+    return ctx;
+}
+
 const dh_info2_t dhm_info2 = {
     POLARSSL_DH_DHM,
-    "DDHM",
-    ddhm_alloc,
+    "DHMif2",
+    dhm_alloc2,
     ddhm_free,
     wdhm_gen_public,
     wdhm_compute_shared,
