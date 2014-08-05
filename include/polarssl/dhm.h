@@ -306,20 +306,20 @@ int dhm_self_test( int verbose );
 
 
 
-int dhm_gen_public( dhm_context *ctx, int (*f_rng)(void *, unsigned char *, size_t), void *p_rng );
-int dhm_compute_shared( dhm_context *ctx , int (*f_rng)(void *, unsigned char *, size_t),
-                         void *p_rng );
-int dhm_set_params( dhm_context *ctx , int params );
-int dhm_read_params( dhm_context *ctx , const unsigned char *buf , size_t blen );
-size_t dhm_get_size_params( const dhm_context * ctx );
-int dhm_write_params( size_t * olen , unsigned char *buf, size_t blen, const dhm_context *ctx );
 
-int dhm_read_public( dhm_context *ctx, const unsigned char *buf, size_t blen );
-
-size_t dhm_get_size_pk( const dhm_context *ctx );
-int dhm_write_public( size_t * olen , unsigned char *buf, size_t blen, const dhm_context *ctx );
-
-int dhm_write_pre_master( size_t * olen, unsigned char *buf, size_t blen, const dhm_context *ctx );
+/* TODO: */
+int wdhm_gen_public( dhm_context *ctx, int (*f_rng)(void *, unsigned char *, size_t), void *p_rng );
+int wdhm_compute_shared( dhm_context *ctx , int (*f_rng)(void *, unsigned char *, size_t), void *p_rng );
+int wdhm_set_params( dhm_context *ctx , const void *params );
+int wdhm_read_params( dhm_context *ctx , const unsigned char *buf , size_t blen );
+int wdhm_read_public( dhm_context *ctx, const unsigned char *buf, size_t blen );
+int wdhm_read_from_pk_ctx( dhm_context *ctx , const void *pk_ctx );
+size_t wdhm_getsize_params( const dhm_context *ctx );
+int wdhm_write_params( size_t *olen, unsigned char *buf, size_t blen, const dhm_context *ctx );
+size_t wdhm_getsize_public( const dhm_context *ctx );
+int wdhm_write_public( size_t *olen , unsigned char *buf, size_t blen, const dhm_context *ctx );
+size_t wdhm_getsize_premaster( const dhm_context *ctx );
+int wdhm_write_premaster( size_t *olen, unsigned char *buf, size_t blen, const dhm_context *ctx );
 
 
 #ifdef __cplusplus

@@ -46,27 +46,28 @@ typedef struct {
 
     /* computation */
     int (*gen_public)( void *ctx, int (*f_rng)(void *, unsigned char *, size_t), void *p_rng );
-    int (*compute_shared)( void *ctx , int (*f_rng)(void *, unsigned char *, size_t),
-                         void *p_rng );
+    int (*compute_shared)( void *ctx , int (*f_rng)(void *, unsigned char *, size_t), void *p_rng );
 
-    /* IO */
-    /* setting */
-    int (*set_params)( void *ctx , int params );
+    /*--- IO ---*/
+
+    int (*set_params)( void *ctx , const void *params );
+
     int (*read_params)( void *ctx , const unsigned char *buf , size_t blen );
-    int (*read_params_from_pk_ctx)( void *ctx , const void *pk_ctx);
 
-    size_t (*get_size_params)( const void *ctx );
-    int (*write_params)( size_t * olen , unsigned char *buf, size_t blen, const void *ctx );
+    int (*read_public)( void *ctx, const unsigned char *buf, size_t blen );
 
-    /* read peer's public from buf */
-    int (*read_public) ( void *ctx, const unsigned char *buf, size_t blen );
-    int (*read_public_from_pk_ctx)( void *ctx, const void *pk_ctx);
+    /* "pk_ctx" represent an interface with a certificate */
+    /* The pk_ctx is initialized in pk_parse_subpubkey() in library/pkparse.c */
+    int (*read_from_pk_ctx)( void *ctx , const void *pk_ctx );
 
-    /* write our's public to buf */
-    size_t (*get_size_pk)( const void *ctx );
-    int (*write_public)( size_t * olen , unsigned char *buf, size_t blen, const void *ctx );
+    size_t (*getsize_params)( const void *ctx );
+    int (*write_params)( size_t *olen, unsigned char *buf, size_t blen, const void *ctx );
 
-    int (*write_pre_master) ( size_t * olen, unsigned char *buf, size_t blen, const void *ctx );
+    size_t (*getsize_public)( const void *ctx );
+    int (*write_public)( size_t *olen , unsigned char *buf, size_t blen, const void *ctx );
+
+    size_t (*getsize_premaster)( const void *ctx );
+    int (*write_premaster)( size_t *olen, unsigned char *buf, size_t blen, const void *ctx );
 
 } dh_info2_t;
 
