@@ -70,3 +70,12 @@ Let's do the TODO#2 first
   First try to implement TLS 1.2 well
 
 
+
+Meeting Notes 8/05 14:17
+------------------------
+
+Trace the code of ECDH.
+- Does it use two certificates?
+- Or does it use the same public key for two tasks?
+
+
