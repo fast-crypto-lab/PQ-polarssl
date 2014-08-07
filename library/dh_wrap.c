@@ -221,7 +221,7 @@ const dh_info2_t dhm_info2 = {
 #include "polarssl/ecdh.h"
 
 /* TODO: modified*/
-const dh_info2_t m_ecdh_info2 = {
+const dh_info2_t ecdh_info2 = {
     POLARSSL_DH_EC,
     "M_ECDH2",
     m_ecdh_alloc,

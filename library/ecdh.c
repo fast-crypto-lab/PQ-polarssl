@@ -291,7 +291,7 @@ int wecdh_compute_shared( ecdh_context *ctx , int (*f_rng)(void *, unsigned char
 
 }
 
-typedef struct { ecp_group grp; ecp_point Q; } wecdh_params;
+typedef struct { ecp_group grp; } wecdh_params;
 
 int wecdh_set_params( ecdh_context *ctx , const void *_params )
 {
@@ -302,8 +302,6 @@ int wecdh_set_params( ecdh_context *ctx , const void *_params )
 
 	if ( (ret = ecp_group_copy(&ctx->grp, &params->grp) ) != 0)
 		return ret;
-	
-	ret = ecp_copy(&ctx->Q, &params->Q);
 
 	return ret;
 }
@@ -338,7 +336,9 @@ int wecdh_read_from_pk_ctx( ecdh_context *ctx , const void *pk_ctx )
 
 size_t wecdh_getsize_params( const ecdh_context *ctx )
 {
-	return sizeof(ctx->grp) + sizeof(ctx->Q);
+    /* In addition to the public parameter (an EC point),
+     * ecp_tls_write_group uses 3 bytes */
+    return 3 + wecdh_getsize_public(ctx);
 }
 
 int wecdh_write_params( size_t *olen, unsigned char *buf, size_t blen, const ecdh_context *ctx )
@@ -364,7 +364,27 @@ int wecdh_write_params( size_t *olen, unsigned char *buf, size_t blen, const ecd
 
 size_t wecdh_getsize_public( const ecdh_context *ctx )
 {
-	return sizeof(ctx->Q);
+    const ecp_group grp = ctx->grp;
+    const ecp_point Q = ctx->Q;
+    int point_format = ctx->point_format;
+    size_t point_length =  mpi_size(&grp.P);
+    size_t _ = -1;
+
+    /*
+     * ecp_point_write_binary uses _ bytes to write a ECP point
+     */
+    if (0 == mpi_cmp_int(&Q.Z, 0)) {
+        _ = 1;
+    } else if (point_format == POLARSSL_ECP_PF_UNCOMPRESSED) {
+        _ = 2 * point_length + 1;
+    } else if (point_format == POLARSSL_ECP_PF_COMPRESSED) {
+        _ = point_length + 1;
+    }
+
+    /*
+     * ecp_tls_write_point uses an additional 1 byte to write length
+     */
+    return 1 + _;
 }
 
 int wecdh_write_public( size_t *olen , unsigned char *buf, size_t blen, const ecdh_context *ctx )
