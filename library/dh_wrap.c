@@ -34,7 +34,7 @@ static void * ddhm_alloc( void ) {
         ctx = NULL;
     }
     ctx->len = mpi_size( & ctx->P );
-    
+
     return ctx;
 }
 
