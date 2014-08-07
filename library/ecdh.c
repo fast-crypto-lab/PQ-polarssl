@@ -270,131 +270,151 @@ int ecdh_calc_secret( ecdh_context *ctx, size_t *olen,
 
 int wecdh_gen_public( ecdh_context *ctx, int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
 {
-	int ret = 0;
+    int ret = 0;
 
-	if ( ctx == NULL || ctx->grp.pbits == 0 ) return ( POLARSSL_ERR_ECP_BAD_INPUT_DATA );
-	
-	ret = ecdh_gen_public( &ctx->grp, &ctx->d, &ctx->Q, f_rng, p_rng );
-	
-	return ret;
+    if ( ctx == NULL || ctx->grp.pbits == 0 ) return ( POLARSSL_ERR_ECP_BAD_INPUT_DATA );
+
+    ret = ecdh_gen_public( &ctx->grp, &ctx->d, &ctx->Q, f_rng, p_rng );
+
+    return ret;
 }
 
 int wecdh_compute_shared( ecdh_context *ctx , int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
 {
-	int ret = 0;
-	
-	if( ctx == NULL ) return ( POLARSSL_ERR_ECP_BAD_INPUT_DATA );
+    int ret = 0;
 
-	ret = ecdh_compute_shared( &ctx->grp, &ctx->z, &ctx->Qp, &ctx->d, f_rng, p_rng );
+    if( ctx == NULL ) return ( POLARSSL_ERR_ECP_BAD_INPUT_DATA );
 
-	return ret;
+    ret = ecdh_compute_shared( &ctx->grp, &ctx->z, &ctx->Qp, &ctx->d, f_rng, p_rng );
+
+    return ret;
 
 }
 
-typedef struct { ecp_group grp; ecp_point Q; } wecdh_params;
+typedef struct { ecp_group grp; } wecdh_params;
 
 int wecdh_set_params( ecdh_context *ctx , const void *_params )
 {
-	int ret = 0;
-	const wecdh_params *params = (const wecdh_params *) _params;
+    int ret = 0;
+    const wecdh_params *params = (const wecdh_params *) _params;
 
-	if( ctx == NULL || params == NULL) return ( POLARSSL_ERR_ECP_BAD_INPUT_DATA );
+    if( ctx == NULL || params == NULL) return ( POLARSSL_ERR_ECP_BAD_INPUT_DATA );
 
-	if ( (ret = ecp_group_copy(&ctx->grp, &params->grp) ) != 0)
-		return ret;
-	
-	ret = ecp_copy(&ctx->Q, &params->Q);
+    if ( (ret = ecp_group_copy(&ctx->grp, &params->grp) ) != 0)
+        return ret;
 
-	return ret;
+    return ret;
 }
 
 int wecdh_read_params( ecdh_context *ctx , const unsigned char *buf , size_t blen )
 {
-	const unsigned char *p = buf;
-	int ret = 0;
-	const unsigned char *end = p + blen;
+    const unsigned char *p = buf;
+    int ret = 0;
+    const unsigned char *end = p + blen;
 
-	ret = ecdh_read_params(ctx, &p, end);
+    ret = ecdh_read_params(ctx, &p, end);
 
-	return ret;
+    return ret;
 }
 
 int wecdh_read_public( ecdh_context *ctx, const unsigned char *buf, size_t blen )
 {
-	int ret = 0;
+    int ret = 0;
 
-	ret = ecdh_read_public(ctx, buf, blen);
-	
-	return ret;
+    ret = ecdh_read_public(ctx, buf, blen);
+
+    return ret;
 }
 
 int wecdh_read_from_pk_ctx( ecdh_context *ctx , const void *pk_ctx )
 {
-	/* TODO */
-	((void)ctx);
-	((void)pk_ctx);
-	return -1;
+    /* TODO */
+    ((void)ctx);
+    ((void)pk_ctx);
+    return -1;
 }
 
 size_t wecdh_getsize_params( const ecdh_context *ctx )
 {
-	return sizeof(ctx->grp) + sizeof(ctx->Q);
+    /* In addition to the public parameter (an EC point),
+     * ecp_tls_write_group uses 3 bytes */
+    return 3 + wecdh_getsize_public(ctx);
 }
 
 int wecdh_write_params( size_t *olen, unsigned char *buf, size_t blen, const ecdh_context *ctx )
 {
-	int ret = 0;
-	size_t grp_len, pt_len;
+    int ret = 0;
+    size_t grp_len, pt_len;
 
-	if( ctx == NULL || blen < wecdh_getsize_params(ctx) )
-		return ( POLARSSL_ERR_ECP_BAD_INPUT_DATA );
+    if( ctx == NULL || blen < wecdh_getsize_params(ctx) )
+        return ( POLARSSL_ERR_ECP_BAD_INPUT_DATA );
 
-	if ( (ret = ecp_tls_write_group( &ctx->grp, &grp_len, buf, blen ) ) != 0 )
-		return ret;
+    if ( (ret = ecp_tls_write_group( &ctx->grp, &grp_len, buf, blen ) ) != 0 )
+        return ret;
 
-	buf += grp_len;
-	blen -= grp_len;
+    buf += grp_len;
+    blen -= grp_len;
 
-	ret = ecp_tls_write_point( &ctx->grp, &ctx->Q, ctx->point_format, &pt_len, buf, blen );
+    ret = ecp_tls_write_point( &ctx->grp, &ctx->Q, ctx->point_format, &pt_len, buf, blen );
 
-	*olen = grp_len + pt_len;
+    *olen = grp_len + pt_len;
 
-	return ret;
+    return ret;
 }
 
 size_t wecdh_getsize_public( const ecdh_context *ctx )
 {
-	return sizeof(ctx->Q);
+    const ecp_group grp = ctx->grp;
+    const ecp_point Q = ctx->Q;
+    int point_format = ctx->point_format;
+    size_t point_length =  mpi_size(&grp.P);
+    size_t _ = -1;
+
+    /*
+     * ecp_point_write_binary uses _ bytes to write a ECP point
+     */
+    if (0 == mpi_cmp_int(&Q.Z, 0)) {
+        _ = 1;
+    } else if (point_format == POLARSSL_ECP_PF_UNCOMPRESSED) {
+        _ = 2 * point_length + 1;
+    } else if (point_format == POLARSSL_ECP_PF_COMPRESSED) {
+        _ = point_length + 1;
+    }
+
+    /*
+     * ecp_tls_write_point uses an additional 1 byte to write length
+     */
+    return 1 + _;
 }
 
 int wecdh_write_public( size_t *olen , unsigned char *buf, size_t blen, const ecdh_context *ctx )
 {
-	int ret = 0;
+    int ret = 0;
 
-	if( ctx == NULL || blen < sizeof(ctx->Q) )
-		return ( POLARSSL_ERR_ECP_BAD_INPUT_DATA );
+    if( ctx == NULL || blen < sizeof(ctx->Q) )
+        return ( POLARSSL_ERR_ECP_BAD_INPUT_DATA );
 
-	ret = ecp_tls_write_point( &ctx->grp, &ctx->Q, ctx->point_format, olen, buf, blen );
+    ret = ecp_tls_write_point( &ctx->grp, &ctx->Q, ctx->point_format, olen, buf, blen );
 
-	return ret;
+    return ret;
 }
 
 size_t wecdh_getsize_premaster( const ecdh_context *ctx )
 {
-	return mpi_size(&ctx->z);
+    return mpi_size(&ctx->z);
 }
 
 int wecdh_write_premaster( size_t *olen, unsigned char *buf, size_t blen, const ecdh_context *ctx )
 {
-	int ret = 0; 
+    int ret = 0;
 
-	if( ctx == NULL || blen < mpi_size(&ctx->z) )
-		return ( POLARSSL_ERR_ECP_BAD_INPUT_DATA );
+    if( ctx == NULL || blen < mpi_size(&ctx->z) )
+        return ( POLARSSL_ERR_ECP_BAD_INPUT_DATA );
 
-	*olen = ctx->grp.pbits / 8 + ( ( ctx->grp.pbits % 8 ) != 0 );
-	ret = mpi_write_binary( &ctx->z, buf, *olen );
+    *olen = ctx->grp.pbits / 8 + ( ( ctx->grp.pbits % 8 ) != 0 );
+    ret = mpi_write_binary( &ctx->z, buf, *olen );
 
-	return ret;
+    return ret;
 }
 
 /*

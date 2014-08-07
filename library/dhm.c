@@ -537,7 +537,7 @@ int wdhm_read_params( dhm_context *ctx , const unsigned char *buf , size_t blen 
     int ret = 0;
     const unsigned char *end = p + blen;
 
-    ret = dhm_read_params(ctx, &p, end);
+    ret = dhm_read_params(ctx, (unsigned char **) &p, end);
 
     return ret;
 }

@@ -273,3 +273,66 @@ exit:
 }
 /* END_CASE */
 
+/* BEGIN_CASE */
+void dhif_do_ecdh_exchange2( int ECP_GROUP_ID )
+{
+    unsigned char ske[1000];
+    unsigned char pub_cli[1000];
+    unsigned char sec_srv[1000];
+    unsigned char sec_cli[1000];
+    size_t ske_len = 0;
+    size_t pub_cli_len = 0;
+    size_t sec_srv_len = 1000;
+    size_t sec_cli_len = 1000;
+    struct { ecp_group grp; } _params;
+    rnd_pseudo_info rnd_info;
+    dh_context2_t srv = { &ecdh_info2, NULL };
+    dh_context2_t cli = { &ecdh_info2, NULL };
+
+    memset( ske, 0x00, 1000 );
+    memset( pub_cli, 0x00, 1000 );
+    memset( sec_srv, 0x00, 1000 );
+    memset( sec_cli, 0x00, 1000 );
+    memset( &_params, 0x00, sizeof( ecp_group ) );
+    memset( &rnd_info, 0x00, sizeof( rnd_pseudo_info ) );
+
+    /* alloc */
+    TEST_ASSERT( NULL != ( srv.dh_ctx = ecdh_info2.ctx_alloc() ) );
+    TEST_ASSERT( NULL != ( cli.dh_ctx = ecdh_info2.ctx_alloc() ) );
+
+    /* set params */
+    TEST_ASSERT( 0 == ecp_use_known_dp( &_params.grp, ECP_GROUP_ID ) );
+    TEST_ASSERT( 0 == ecdh_info2.set_params(srv.dh_ctx, &_params) );
+
+    /* key exchange */
+    TEST_ASSERT( 0 == ecdh_info2.gen_public(srv.dh_ctx, &rnd_pseudo_rand, &rnd_info) );
+    TEST_ASSERT( 0 == ecdh_info2.write_params(&ske_len, ske, 1000, srv.dh_ctx) );
+    TEST_ASSERT( ske_len == ecdh_info2.getsize_params(srv.dh_ctx) );
+
+    TEST_ASSERT( 0 == ecdh_info2.read_params(cli.dh_ctx, ske, ske_len) );
+
+    TEST_ASSERT( 0 == ecdh_info2.gen_public(cli.dh_ctx, &rnd_pseudo_rand, &rnd_info) );
+    TEST_ASSERT( 0 == ecdh_info2.write_public(&pub_cli_len, pub_cli, 1000, cli.dh_ctx) );
+    TEST_ASSERT( pub_cli_len == ecdh_info2.getsize_public( cli.dh_ctx ) );
+
+    TEST_ASSERT( 0 == ecdh_info2.read_public(srv.dh_ctx, pub_cli, pub_cli_len) );
+
+    TEST_ASSERT( 0 == ecdh_info2.compute_shared(srv.dh_ctx, &rnd_pseudo_rand, &rnd_info) );
+    TEST_ASSERT( 0 == ecdh_info2.write_premaster(&sec_srv_len, sec_srv, 1000, srv.dh_ctx) );
+    TEST_ASSERT( sec_srv_len == ecdh_info2.getsize_premaster(srv.dh_ctx) );
+
+    TEST_ASSERT( 0 == ecdh_info2.compute_shared(cli.dh_ctx, &rnd_pseudo_rand, &rnd_info) );
+    TEST_ASSERT( 0 == ecdh_info2.write_premaster(&sec_cli_len, sec_cli, 1000, cli.dh_ctx) );
+    TEST_ASSERT( sec_cli_len == ecdh_info2.getsize_premaster(cli.dh_ctx) );
+
+    TEST_ASSERT( sec_srv_len == sec_cli_len );
+    TEST_ASSERT( 0 != sec_srv_len );
+    TEST_ASSERT( 0 == memcmp(sec_srv, sec_cli, sec_srv_len) );
+    TEST_ASSERT( mpi_cmp_mpi( &((ecdh_context *)srv.dh_ctx)->z, &((ecdh_context *)cli.dh_ctx)->z ) == 0 );
+
+exit:
+    ecdh_info2.ctx_free( srv.dh_ctx );
+    ecdh_info2.ctx_free( cli.dh_ctx );
+}
+/* END_CASE */
+
