@@ -323,12 +323,29 @@ int wecdh_read_public( ecdh_context *ctx, const unsigned char *buf, size_t blen 
     return ret;
 }
 
-int wecdh_read_from_pk_ctx( ecdh_context *ctx , const void *pk_ctx )
+int wecdh_read_from_self_pk_ctx( ecdh_context *ctx , const void *_pk_ctx )
 {
-    /* TODO */
-    ((void)ctx);
-    ((void)pk_ctx);
-    return -1;
+    const ecp_keypair *key = (const ecp_keypair *) _pk_ctx;
+    int ret = -1;
+
+    if( ( ret = ecp_group_copy( &ctx->grp, &key->grp ) ) != 0 )
+        return( ret );
+
+    if( ( ret = ecp_copy( &ctx->Q, &key->Q ) ) != 0)
+        return( ret );
+
+    return mpi_copy( &ctx->d, &key->d );
+}
+
+int wecdh_read_from_peer_pk_ctx( ecdh_context *ctx , const void *_pk_ctx )
+{
+    const ecp_keypair *key = (const ecp_keypair *) _pk_ctx;
+    int ret = -1;
+
+    if( ( ret = ecp_group_copy( &ctx->grp, &key->grp ) ) != 0 )
+        return( ret );
+
+    return( ecp_copy( &ctx->Qp, &key->Q ) );
 }
 
 size_t wecdh_getsize_params( const ecdh_context *ctx )

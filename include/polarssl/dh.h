@@ -59,7 +59,8 @@ typedef struct {
 
     /* "pk_ctx" represent an interface with a certificate */
     /* The pk_ctx is initialized in pk_parse_subpubkey() in library/pkparse.c */
-    int (*read_from_pk_ctx)( void *ctx , const void *pk_ctx );
+    int (*read_from_self_pk_ctx)( void *ctx , const void *pk_ctx );
+    int (*read_from_peer_pk_ctx)( void *ctx , const void *pk_ctx );
 
     /* and public */
     size_t (*getsize_ske_params)( const void *ctx );

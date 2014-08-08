@@ -549,13 +549,14 @@ int wdhm_read_public( dhm_context *ctx, const unsigned char *buf, size_t blen )
     return ret;
 }
 
+/*
 int wdhm_read_from_pk_ctx( dhm_context *ctx , const void *pk_ctx )
 {
-    /* TODO */
     ((void)ctx);
     ((void)pk_ctx);
     return -1;
 }
+*/
 
 size_t wdhm_getsize_params( const dhm_context *ctx )
 {
