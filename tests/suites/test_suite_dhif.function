@@ -115,6 +115,42 @@ exit:
 
 
 /* BEGIN_CASE */
+void dhif_do_ecdh_exchange( int id )
+{
+    dh_context_t srv = { &m_ecdh_info , NULL };
+    dh_context_t cli = { &m_ecdh_info , NULL };
+
+    unsigned char buf[1000];
+    unsigned char *vbuf; /* To supress the compiler warning... Originally: const unsigned char *vbuf; */
+    size_t len;
+    rnd_pseudo_info rnd_info;
+
+    TEST_ASSERT( NULL != ( srv.dh_ctx = m_ecdh_info.ctx_alloc() ) );
+    TEST_ASSERT( NULL != ( cli.dh_ctx = m_ecdh_info.ctx_alloc() ) );
+
+    memset( &rnd_info, 0x00, sizeof( rnd_pseudo_info ) );
+
+    TEST_ASSERT( ecp_use_known_dp( &((ecdh_context *)srv.dh_ctx)->grp, id ) == 0 );
+
+    memset( buf, 0x00, sizeof( buf ) ); vbuf = buf;
+    TEST_ASSERT( m_ecdh_info.make_params( srv.dh_ctx, &len, buf, 1000, &rnd_pseudo_rand, &rnd_info ) == 0 );
+    TEST_ASSERT( m_ecdh_info.read_params( cli.dh_ctx, &vbuf, buf + len ) == 0 );
+
+    memset( buf, 0x00, sizeof( buf ) );
+    TEST_ASSERT( m_ecdh_info.make_public( cli.dh_ctx, &len, buf, 1000, &rnd_pseudo_rand, &rnd_info ) == 0 );
+    TEST_ASSERT( m_ecdh_info.read_public( srv.dh_ctx, buf, len ) == 0 );
+
+    TEST_ASSERT( m_ecdh_info.calc_secret( srv.dh_ctx, &len, buf, 1000, &rnd_pseudo_rand, &rnd_info ) == 0 );
+    TEST_ASSERT( m_ecdh_info.calc_secret( cli.dh_ctx, &len, buf, 1000, NULL, NULL ) == 0 );
+    TEST_ASSERT( mpi_cmp_mpi( &((ecdh_context *)srv.dh_ctx)->z, &((ecdh_context *)cli.dh_ctx)->z ) == 0 );
+
+exit:
+    m_ecdh_info.ctx_free( srv.dh_ctx );
+    m_ecdh_info.ctx_free( cli.dh_ctx );
+}
+/* END_CASE */
+
+/* BEGIN_CASE */
 void dhif_do_dhm2( int radix_P, char *input_P,
                  int radix_G, char *input_G )
 {
@@ -163,10 +199,10 @@ void dhif_do_dhm2( int radix_P, char *input_P,
      * First key exchange
      */
     TEST_ASSERT( dhm_info2.gen_public( ctx_srv.dh_ctx , &rnd_pseudo_rand, &rnd_info ) == 0 );
-    TEST_ASSERT( dhm_info2.write_params( &ske_len , ske , 1000 , ctx_srv.dh_ctx ) == 0 );
-    TEST_ASSERT( ske_len == dhm_info2.getsize_params(ctx_srv.dh_ctx) );
+    TEST_ASSERT( dhm_info2.write_ske_params( &ske_len , ske , 1000 , ctx_srv.dh_ctx ) == 0 );
+    TEST_ASSERT( ske_len == dhm_info2.getsize_ske_params(ctx_srv.dh_ctx) );
 
-    TEST_ASSERT( dhm_info2.read_params( ctx_cli.dh_ctx, ske, ske_len ) == 0 );
+    TEST_ASSERT( dhm_info2.read_ske_params( ctx_cli.dh_ctx, ske, ske_len ) == 0 );
     TEST_ASSERT( dhm_info2.gen_public( ctx_cli.dh_ctx , &rnd_pseudo_rand, &rnd_info ) == 0 );
 
     TEST_ASSERT( dhm_info2.write_public( &pub_cli_len, pub_cli , 1000 , ctx_cli.dh_ctx ) == 0 );
@@ -206,9 +242,9 @@ void dhif_do_dhm2( int radix_P, char *input_P,
     sec_srv_len = 1000;
 
     TEST_ASSERT( dhm_info2.gen_public( ctx_srv.dh_ctx , &rnd_pseudo_rand, &rnd_info ) == 0 );
-    TEST_ASSERT( dhm_info2.write_params( &ske_len , ske , 1000 , ctx_srv.dh_ctx ) == 0 );
-    TEST_ASSERT( ske_len == dhm_info2.getsize_params(ctx_srv.dh_ctx) );
-    TEST_ASSERT( dhm_info2.read_params( ctx_cli.dh_ctx, ske, ske_len ) == 0 );
+    TEST_ASSERT( dhm_info2.write_ske_params( &ske_len , ske , 1000 , ctx_srv.dh_ctx ) == 0 );
+    TEST_ASSERT( ske_len == dhm_info2.getsize_ske_params(ctx_srv.dh_ctx) );
+    TEST_ASSERT( dhm_info2.read_ske_params( ctx_cli.dh_ctx, ske, ske_len ) == 0 );
 
     TEST_ASSERT( dhm_info2.gen_public( ctx_cli.dh_ctx , &rnd_pseudo_rand, &rnd_info) == 0 );
     TEST_ASSERT( dhm_info2.write_public( &pub_cli_len, pub_cli , 1000 , ctx_cli.dh_ctx ) == 0 );
@@ -235,43 +271,6 @@ exit:
 }
 /* END_CASE */
 
-
-
-/* BEGIN_CASE */
-void dhif_do_ecdh_exchange( int id )
-{
-    dh_context_t srv = { &m_ecdh_info , NULL };
-    dh_context_t cli = { &m_ecdh_info , NULL };
-
-    unsigned char buf[1000];
-    unsigned char *vbuf; /* To supress the compiler warning... Originally: const unsigned char *vbuf; */
-    size_t len;
-    rnd_pseudo_info rnd_info;
-
-    TEST_ASSERT( NULL != ( srv.dh_ctx = m_ecdh_info.ctx_alloc() ) );
-    TEST_ASSERT( NULL != ( cli.dh_ctx = m_ecdh_info.ctx_alloc() ) );
-
-    memset( &rnd_info, 0x00, sizeof( rnd_pseudo_info ) );
-
-    TEST_ASSERT( ecp_use_known_dp( &((ecdh_context *)srv.dh_ctx)->grp, id ) == 0 );
-
-    memset( buf, 0x00, sizeof( buf ) ); vbuf = buf;
-    TEST_ASSERT( m_ecdh_info.make_params( srv.dh_ctx, &len, buf, 1000, &rnd_pseudo_rand, &rnd_info ) == 0 );
-    TEST_ASSERT( m_ecdh_info.read_params( cli.dh_ctx, &vbuf, buf + len ) == 0 );
-
-    memset( buf, 0x00, sizeof( buf ) );
-    TEST_ASSERT( m_ecdh_info.make_public( cli.dh_ctx, &len, buf, 1000, &rnd_pseudo_rand, &rnd_info ) == 0 );
-    TEST_ASSERT( m_ecdh_info.read_public( srv.dh_ctx, buf, len ) == 0 );
-
-    TEST_ASSERT( m_ecdh_info.calc_secret( srv.dh_ctx, &len, buf, 1000, &rnd_pseudo_rand, &rnd_info ) == 0 );
-    TEST_ASSERT( m_ecdh_info.calc_secret( cli.dh_ctx, &len, buf, 1000, NULL, NULL ) == 0 );
-    TEST_ASSERT( mpi_cmp_mpi( &((ecdh_context *)srv.dh_ctx)->z, &((ecdh_context *)cli.dh_ctx)->z ) == 0 );
-
-exit:
-    m_ecdh_info.ctx_free( srv.dh_ctx );
-    m_ecdh_info.ctx_free( cli.dh_ctx );
-}
-/* END_CASE */
 
 /* BEGIN_CASE */
 void dhif_do_ecdh_exchange2( int ECP_GROUP_ID )
@@ -306,10 +305,10 @@ void dhif_do_ecdh_exchange2( int ECP_GROUP_ID )
 
     /* key exchange */
     TEST_ASSERT( 0 == ecdh_info2.gen_public(srv.dh_ctx, &rnd_pseudo_rand, &rnd_info) );
-    TEST_ASSERT( 0 == ecdh_info2.write_params(&ske_len, ske, 1000, srv.dh_ctx) );
-    TEST_ASSERT( ske_len == ecdh_info2.getsize_params(srv.dh_ctx) );
+    TEST_ASSERT( 0 == ecdh_info2.write_ske_params(&ske_len, ske, 1000, srv.dh_ctx) );
+    TEST_ASSERT( ske_len == ecdh_info2.getsize_ske_params(srv.dh_ctx) );
 
-    TEST_ASSERT( 0 == ecdh_info2.read_params(cli.dh_ctx, ske, ske_len) );
+    TEST_ASSERT( 0 == ecdh_info2.read_ske_params(cli.dh_ctx, ske, ske_len) );
 
     TEST_ASSERT( 0 == ecdh_info2.gen_public(cli.dh_ctx, &rnd_pseudo_rand, &rnd_info) );
     TEST_ASSERT( 0 == ecdh_info2.write_public(&pub_cli_len, pub_cli, 1000, cli.dh_ctx) );
