@@ -300,8 +300,7 @@ void dhif_do_ecdh_exchange2( int ECP_GROUP_ID )
     TEST_ASSERT( NULL != ( cli.dh_ctx = ecdh_info2.ctx_alloc() ) );
 
     /* set params */
-    TEST_ASSERT( 0 == ecp_use_known_dp( &_params.grp, ECP_GROUP_ID ) );
-    TEST_ASSERT( 0 == ecdh_info2.set_params(srv.dh_ctx, &_params) );
+    TEST_ASSERT( 0 == ecdh_info2.set_params(srv.dh_ctx, &ECP_GROUP_ID) );
 
     /* key exchange */
     TEST_ASSERT( 0 == ecdh_info2.gen_public(srv.dh_ctx, &rnd_pseudo_rand, &rnd_info) );

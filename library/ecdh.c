@@ -291,17 +291,14 @@ int wecdh_compute_shared( ecdh_context *ctx , int (*f_rng)(void *, unsigned char
 
 }
 
-typedef struct { ecp_group grp; } wecdh_params;
-
 int wecdh_set_params( ecdh_context *ctx , const void *_params )
 {
     int ret = 0;
-    const wecdh_params *params = (const wecdh_params *) _params;
+    const int *id = (const int *) _params;
 
-    if( ctx == NULL || params == NULL) return ( POLARSSL_ERR_ECP_BAD_INPUT_DATA );
+    if( ctx == NULL || id == NULL) return ( POLARSSL_ERR_ECP_BAD_INPUT_DATA );
 
-    if ( (ret = ecp_group_copy(&ctx->grp, &params->grp) ) != 0)
-        return ret;
+    ret = ecp_use_known_dp( &ctx->grp, *id );
 
     return ret;
 }
