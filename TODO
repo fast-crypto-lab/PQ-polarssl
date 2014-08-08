@@ -120,3 +120,47 @@ PHASE 2
 1. Rewrite the SSL codes using the new interface
 
 = Next meeting time 8/8 (Fri) 10:30 am at MD631 =
+
+
+
+
+TODO 2014/08/08 Fri 15:21:09
+------------------------
+
+
+1.  [Wu] TLS functions to be replaced using our new wrapper
+
+    Duplicate these functions, and make sure their computation results match
+    by running some programs/ssl/ssl_* testing programs
+
+    make_params ->
+        set_params
+        gen_public
+        write_ske_params
+
+    read_params ->
+        read_ske_params
+
+    ssl_get_ecdh_params_from_cert ->
+        read_from_pk_ctx
+        NOTE: 有 server 與 client 兩種
+        NOTE: 到底要呼叫 read_from_pk_ctx 還是
+              呼叫 read_ske_params 要由 SSL
+              根據接受到的 ciphersuite 決定
+
+    dhm_make_public, ecdh_make_public in ssl_parse_server_hello_done ->
+        gen_public
+        write_public
+
+    for each "*_read_public" in ssl_parse_client_dh_public ->
+        read_public
+
+    for each ciphersuite in ssl_psk_derive_premaster ->
+        write the corresponding write_premaster function call
+
+2.  [Kuo] Write complete test cases for TLS (for all ciphersuites that we care)
+
+3.  [Chen] Wrap 25519 implementation of NaCl using our interface
+
+Next internal meeting date: 8/13 Wed 10:30 am @MD631
+
