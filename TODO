@@ -169,7 +169,16 @@ Next internal meeting date: 8/13 Wed 10:30 am @MD631
 Meeting Notes 2014/08/13 Wed 12:34
 ------------------------
 
-(1) About rewriting SSL
+(1) About adding curve25519
+
+    目前狀態:
+        我們選擇引用 NaCl 的方式為直接複製標準的 C 實作，修改得我們在 PolarSSL 內可以使用的樣子
+        註: 這是為了 portability ，原 NaCl 有不同平台上的實作
+
+        等我們在 ssl struct 內加好 dhif 抽象層後，就可以直接在 PolarSSL 內使用它
+        寫 curve25519 函數的 testcase
+
+(2) About rewriting SSL
 
     目前還不知道怎樣做:
         我們不知道怎樣測試修改前、修改後的程式碼效果是否相同？(傳 struct 進去可能會有意外的 side effects)
@@ -190,26 +199,30 @@ Meeting Notes 2014/08/13 Wed 12:34
             Caller 端呼叫 ecdh_info2.set_params(&ssl->handshake->ecdh_ctx, &(*curve)->grp_id);
             必須要順便把 point_format 傳進去，更新 ecdh_context
 
-        #3: 更新 dhm 和 ecdh 抽象層的 unitest 讓他吻合我們新的 function prototypes
-            並且加入 25519 的 unitest
-
-        #4: 決定好要用 DHM 還是 ECDH 第一次使用 DH 抽象層時
+        #3: 決定好要用 DHM 還是 ECDH 第一次使用 DH 抽象層時
                 對 cli 來說第一次使用 DH interface 是在 parser server key exchange 的 _read_params
                 對 srv 來說第一次使用 DH interface 是在 write server key exchange 的 _make_params
             要先 alloc (把兩個 NULL pointers 改掉)
 
-        #5: 各種地方使用抽象層地方的 rewrite
+        #4: 各種地方使用抽象層地方的 rewrite
             把所有的 ssl->handshake->dhm_ctx 和 ssl->handshake->ecdh_ctx 換掉
 
+        #5: 更新 dhm 和 ecdh 抽象層的 unitest 讓他吻合我們新的 function prototypes
 
-(2) About adding curve25519
+(3) About test
 
-    目前狀態:
-        我們選擇引用 NaCl 的方式為直接複製標準的 C 實作，修改得我們在 PolarSSL 內可以使用的樣子
-        註: 這是為了 portability ，原 NaCl 有不同平台上的實作
+        #1: SSL 的 unitest
+            針對 SSL 步驟中個個程式碼片段測試
 
-    TODO:
-        (pending)
-        SSL 如何根據得到的訊息來呼叫 dhcv25519_info2 內的函數
-        應該等待我們在 ssl struct 內加好 dhif 抽象層後，就可以直接在 PolarSSL 內使用它
+        #2: SSL 的 higher level test
+            準備好不同的 ciphersuites 列表、不同的憑證
+            跑 HTTPS client 去 GET google.com 的 /ncr
+            跑 HTTPS server 去讓其他的 HTTPS client (例如 curl 或實際的 web browser) 可以和他交換資料
+
+分工:
+    (Wu)   Rewriting SSL
+    (Kuo)  Write unitest for SSL
+    (Chen) Write higher level tests for SSL
+
+Next internal meeting date: 8/20 Wed 10:30 am @MD631
 
