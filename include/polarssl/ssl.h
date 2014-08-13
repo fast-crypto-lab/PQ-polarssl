@@ -596,8 +596,16 @@ struct _ssl_handshake_params
 #if defined(POLARSSL_ECDH_C)
     ecdh_context ecdh_ctx;              /*!<  ECDH key exchange       */
 #endif
+
+/*!< XXX Our interface of Diffie-Hellman */
+#if defined(POLARSSL_DHM_C) || defined(POLARSSL_ECDH_C) || defined(NACL_CURVE25519_C)
+    const dh_info2_t *dhif_info;
+    void *dhif_ctx;
+#endif
+
 #if defined(POLARSSL_ECDH_C) || defined(POLARSSL_ECDSA_C)
     const ecp_curve_info **curves;      /*!<  Supported elliptic curves */
+    int point_format;                   /*!< XXX Our additional params for EC */
 #endif
 #if defined(POLARSSL_X509_CRT_PARSE_C)
     /**

@@ -316,11 +316,13 @@ static int dh_cv25519_read_public( void *_ctx, const unsigned char *buf, size_t 
     if( crypto_scalarmult_curve25519_BYTES > blen ) return -1;
 
     for(i=0;i<crypto_scalarmult_curve25519_BYTES;i++) ctx->Qp[i] = buf[i];
+
     return 0;
 }
 
-static int dh_cv25519_read_params( void *ctx , const unsigned char *buf , size_t blen )
+static int dh_cv25519_read_params( void *ctx , int *rlen, const unsigned char *buf , size_t blen )
 {
+    *rlen = crypto_scalarmult_curve25519_BYTES;
     return dh_cv25519_read_public(ctx,buf,blen);
 }
 

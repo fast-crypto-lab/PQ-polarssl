@@ -293,6 +293,7 @@ int wecdh_compute_shared( ecdh_context *ctx , int (*f_rng)(void *, unsigned char
 
 int wecdh_set_params( ecdh_context *ctx , const void *_params )
 {
+    /* TODO: also need to set ecdh_ctx.point_format */
     int ret = 0;
     const int *id = (const int *) _params;
 
@@ -303,13 +304,15 @@ int wecdh_set_params( ecdh_context *ctx , const void *_params )
     return ret;
 }
 
-int wecdh_read_params( ecdh_context *ctx , const unsigned char *buf , size_t blen )
+int wecdh_read_params( ecdh_context *ctx , int *rlen, const unsigned char *buf , size_t blen )
 {
     const unsigned char *p = buf;
     int ret = 0;
     const unsigned char *end = p + blen;
 
     ret = ecdh_read_params(ctx, &p, end);
+
+    *rlen = p - buf;
 
     return ret;
 }

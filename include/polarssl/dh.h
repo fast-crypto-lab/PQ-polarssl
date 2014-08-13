@@ -54,7 +54,7 @@ typedef struct {
     int (*set_params)( void *ctx , const void *params );
 
     /* and public */
-    int (*read_ske_params)( void *ctx , const unsigned char *buf , size_t blen );
+    int (*read_ske_params)( void *ctx, int *rlen, const unsigned char *buf, size_t blen );
 
     int (*read_public)( void *ctx, const unsigned char *buf, size_t blen );
 

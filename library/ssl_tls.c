@@ -3301,6 +3301,10 @@ static void ssl_handshake_params_init( ssl_handshake_params *handshake )
 #if defined(POLARSSL_ECDH_C)
     ecdh_init( &handshake->ecdh_ctx );
 #endif
+#if defined(POLARSSL_DHM_C) || defined(POLARSSL_ECDH_C) || defined(NACL_CURVE25519_C)
+    &handshake->dhif_info = NULL;
+    &handshake->dhif_ctx = NULL;
+#endif
 }
 
 static void ssl_transform_init( ssl_transform *transform )
@@ -4551,6 +4555,11 @@ void ssl_handshake_free( ssl_handshake_params *handshake )
 #endif
 #if defined(POLARSSL_ECDH_C)
     ecdh_free( &handshake->ecdh_ctx );
+#endif
+#if defined(POLARSSL_DHM_C) || defined(POLARSSL_ECDH_C) || defined(NACL_CURVE25519_C)
+    if (handshake->dhif_info != NULL) {
+        handshake->dhif_info->ctx_free(handshake->dhif_ctx);
+    }
 #endif
 
 #if defined(POLARSSL_ECDH_C) || defined(POLARSSL_ECDSA_C)

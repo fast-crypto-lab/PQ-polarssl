@@ -531,7 +531,7 @@ cleanup:
 }
 
 /* and public */
-int wdhm_read_params( dhm_context *ctx , const unsigned char *buf , size_t blen )
+int wdhm_read_params( dhm_context *ctx , int *rlen, const unsigned char *buf , size_t blen )
 {
     const unsigned char *p = buf;
     int ret = 0;
@@ -539,13 +539,22 @@ int wdhm_read_params( dhm_context *ctx , const unsigned char *buf , size_t blen 
 
     ret = dhm_read_params(ctx, (unsigned char **) &p, end);
 
+    *rlen = p - buf;
+
     return ret;
 }
 
 int wdhm_read_public( dhm_context *ctx, const unsigned char *buf, size_t blen )
 {
     int ret = 0;
+
+    /* TODO
+     * 把 buf 開頭的兩個 bytes 包含的 length 處理掉
+     * Caller 端不需要先把 pointer 指向 +2 處
+     */
+
     ret = dhm_read_public(ctx, buf, blen);
+
     return ret;
 }
 
@@ -602,6 +611,11 @@ size_t wdhm_getsize_public( const dhm_context *ctx )
 
 int wdhm_write_public( size_t *olen , unsigned char *buf, size_t blen, const dhm_context *ctx )
 {
+    /* TODO
+     * 在這 buf 開始兩個 bytes 寫入資料的長度
+     * Caller 端傳 buf pointer 進來時，原本是 +6 ，現在應該改為 +4 就好
+     * olen 會 +2
+     */
     int ret = 0;
 
     if( ctx == NULL || blen < ctx->len )
