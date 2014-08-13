@@ -164,3 +164,35 @@ TODO 2014/08/08 Fri 15:21:09
 
 Next internal meeting date: 8/13 Wed 10:30 am @MD631
 
+
+
+Meeting Notes 2014/08/13 Wed 12:34
+------------------------
+
+(1) About rewriting SSL
+
+    目前還不知道怎樣做:
+        我們不知道怎樣測試修改前、修改後的程式碼效果是否相同？(傳 struct 進去可能會有意外的 side effects)
+        註: PolarSSL 的 SSL 根本沒有 unitest ，而且很多 buffer 寫入時也不檢查是否會 overflow
+
+    TODO:
+        有些函數的抽象層，嘗試去修改 SSL 端程式以後才發現不適宜
+        #1: 修改 _read_params 和 _read_public 讓他們多取一個 int * argument 以便回傳處理過的 bytes 數
+        #2: 三種函數 write_* 似乎不用幫忙檢查 buffer size 了 (因為 SSL 層也不管)
+        #3: 要用 _alloc 和 _free 包裝想要使用的 context
+            新加上抽象層 ssl->handshake->dhif_ctx
+            把所有的 ssl->handshake->dhm_ctx 和 ssl->handshake->ecdh_ctx 換掉
+            (TODO: 看一下應該要把新的東西加在哪)
+            (TODO: 分工 next actions)
+
+(2) About adding curve25519
+
+    目前狀態:
+        我們選擇引用 NaCl 的方式為直接複製標準的 C 實作，修改得我們在 PolarSSL 內可以使用的樣子
+        註: 這是為了 portability ，原 NaCl 有不同平台上的實作
+
+    TODO:
+        (pending)
+        SSL 如何根據得到的訊息來呼叫 dhcv25519_info2 內的函數
+        應該等待我們在 ssl struct 內加好 dhif 抽象層後，就可以直接在 PolarSSL 內使用它
+
