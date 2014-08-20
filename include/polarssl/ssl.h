@@ -64,6 +64,10 @@
 #include "x509_crl.h"
 #endif
 
+/* Our wrapper interface of Diffie-Hellman key exchange for TLS */
+#include <polarssl/dh.h>
+#include <polarssl/dh_wrap.h>
+
 #if defined(POLARSSL_DHM_C)
 #include "dhm.h"
 #endif

@@ -167,6 +167,7 @@ void dhif_do_dhm2( int radix_P, char *input_P,
     size_t sec_cli_len = 1000;
     int i;
     rnd_pseudo_info rnd_info;
+    int rlen = 0;
 
     struct { mpi P; mpi G; } params;
     memset( &params , 0 , sizeof(mpi)*2 );
@@ -202,7 +203,7 @@ void dhif_do_dhm2( int radix_P, char *input_P,
     TEST_ASSERT( dhm_info2.write_ske_params( &ske_len , ske , 1000 , ctx_srv.dh_ctx ) == 0 );
     TEST_ASSERT( ske_len == dhm_info2.getsize_ske_params(ctx_srv.dh_ctx) );
 
-    TEST_ASSERT( dhm_info2.read_ske_params( ctx_cli.dh_ctx, ske, ske_len ) == 0 );
+    TEST_ASSERT( dhm_info2.read_ske_params( ctx_cli.dh_ctx, &rlen, ske, ske_len ) == 0 );
     TEST_ASSERT( dhm_info2.gen_public( ctx_cli.dh_ctx , &rnd_pseudo_rand, &rnd_info ) == 0 );
 
     TEST_ASSERT( dhm_info2.write_public( &pub_cli_len, pub_cli , 1000 , ctx_cli.dh_ctx ) == 0 );
@@ -244,7 +245,7 @@ void dhif_do_dhm2( int radix_P, char *input_P,
     TEST_ASSERT( dhm_info2.gen_public( ctx_srv.dh_ctx , &rnd_pseudo_rand, &rnd_info ) == 0 );
     TEST_ASSERT( dhm_info2.write_ske_params( &ske_len , ske , 1000 , ctx_srv.dh_ctx ) == 0 );
     TEST_ASSERT( ske_len == dhm_info2.getsize_ske_params(ctx_srv.dh_ctx) );
-    TEST_ASSERT( dhm_info2.read_ske_params( ctx_cli.dh_ctx, ske, ske_len ) == 0 );
+    TEST_ASSERT( dhm_info2.read_ske_params( ctx_cli.dh_ctx, &rlen, ske, ske_len ) == 0 );
 
     TEST_ASSERT( dhm_info2.gen_public( ctx_cli.dh_ctx , &rnd_pseudo_rand, &rnd_info) == 0 );
     TEST_ASSERT( dhm_info2.write_public( &pub_cli_len, pub_cli , 1000 , ctx_cli.dh_ctx ) == 0 );
@@ -283,16 +284,17 @@ void dhif_do_ecdh_exchange2( int ECP_GROUP_ID )
     size_t pub_cli_len = 0;
     size_t sec_srv_len = 1000;
     size_t sec_cli_len = 1000;
-    struct { ecp_group grp; } _params;
+    struct { int point_format; ecp_group_id group_id; } _params;
     rnd_pseudo_info rnd_info;
     dh_context2_t srv = { &ecdh_info2, NULL };
     dh_context2_t cli = { &ecdh_info2, NULL };
+    int rlen = 0;
 
     memset( ske, 0x00, 1000 );
     memset( pub_cli, 0x00, 1000 );
     memset( sec_srv, 0x00, 1000 );
     memset( sec_cli, 0x00, 1000 );
-    memset( &_params, 0x00, sizeof( ecp_group ) );
+    memset(&_params, 0x00, 2 * sizeof(int));
     memset( &rnd_info, 0x00, sizeof( rnd_pseudo_info ) );
 
     /* alloc */
@@ -300,14 +302,16 @@ void dhif_do_ecdh_exchange2( int ECP_GROUP_ID )
     TEST_ASSERT( NULL != ( cli.dh_ctx = ecdh_info2.ctx_alloc() ) );
 
     /* set params */
-    TEST_ASSERT( 0 == ecdh_info2.set_params(srv.dh_ctx, &ECP_GROUP_ID) );
+    _params.point_format = POLARSSL_ECP_PF_UNCOMPRESSED;
+    _params.group_id = ECP_GROUP_ID;
+    TEST_ASSERT( 0 == ecdh_info2.set_params(srv.dh_ctx, &_params) );
 
     /* key exchange */
     TEST_ASSERT( 0 == ecdh_info2.gen_public(srv.dh_ctx, &rnd_pseudo_rand, &rnd_info) );
     TEST_ASSERT( 0 == ecdh_info2.write_ske_params(&ske_len, ske, 1000, srv.dh_ctx) );
     TEST_ASSERT( ske_len == ecdh_info2.getsize_ske_params(srv.dh_ctx) );
 
-    TEST_ASSERT( 0 == ecdh_info2.read_ske_params(cli.dh_ctx, ske, ske_len) );
+    TEST_ASSERT( 0 == ecdh_info2.read_ske_params(cli.dh_ctx, &rlen, ske, ske_len) );
 
     TEST_ASSERT( 0 == ecdh_info2.gen_public(cli.dh_ctx, &rnd_pseudo_rand, &rnd_info) );
     TEST_ASSERT( 0 == ecdh_info2.write_public(&pub_cli_len, pub_cli, 1000, cli.dh_ctx) );

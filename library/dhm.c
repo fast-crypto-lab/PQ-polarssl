@@ -547,25 +547,45 @@ int wdhm_read_params( dhm_context *ctx , int *rlen, const unsigned char *buf , s
 int wdhm_read_public( dhm_context *ctx, const unsigned char *buf, size_t blen )
 {
     int ret = 0;
+    size_t n;
 
-    /* TODO
-     * 把 buf 開頭的兩個 bytes 包含的 length 處理掉
-     * Caller 端不需要先把 pointer 指向 +2 處
-     */
+    if (blen < 2) {
+        return POLARSSL_ERR_DHM_BAD_INPUT_DATA;
+    }
 
-    ret = dhm_read_public(ctx, buf, blen);
+    n = ( buf[0] << 8 ) | buf[1];
+    buf += 2;
+    if (blen < 2 + n) {
+        return POLARSSL_ERR_DHM_BAD_INPUT_DATA;
+    }
+
+    ret = dhm_read_public(ctx, buf, n);
+    if (ret != 0) {
+        return POLARSSL_ERR_DHM_BAD_INPUT_DATA;
+    }
+
+    if (blen != 2 + n) {
+        return POLARSSL_ERR_DHM_BAD_INPUT_DATA;
+    }
 
     return ret;
 }
 
 /*
-int wdhm_read_from_pk_ctx( dhm_context *ctx , const void *pk_ctx )
-{
+ * PolarSSL does not support the DHM non-ephemeral keyexchange...
+
+int wdhm_read_from_self_pk_ctx( dhm_context *ctx, const void *_pk_ctx ) {
     ((void)ctx);
-    ((void)pk_ctx);
+    ((void)_pk_ctx);
     return -1;
 }
-*/
+int wdhm_read_from_peer_pk_ctx( dhm_context *ctx, const void *_pk_ctx ) {
+    ((void)ctx);
+    ((void)_pk_ctx);
+    return -1;
+}
+
+ */
 
 size_t wdhm_getsize_params( const dhm_context *ctx )
 {
@@ -606,23 +626,20 @@ cleanup:
 
 size_t wdhm_getsize_public( const dhm_context *ctx )
 {
-    return ctx->len;
+    return ctx->len + 2;
 }
 
-int wdhm_write_public( size_t *olen , unsigned char *buf, size_t blen, const dhm_context *ctx )
+int wdhm_write_public( size_t *olen, unsigned char *buf, size_t blen, const dhm_context *ctx )
 {
-    /* TODO
-     * 在這 buf 開始兩個 bytes 寫入資料的長度
-     * Caller 端傳 buf pointer 進來時，原本是 +6 ，現在應該改為 +4 就好
-     * olen 會 +2
-     */
     int ret = 0;
 
     if( ctx == NULL || blen < ctx->len )
         return( POLARSSL_ERR_DHM_BAD_INPUT_DATA );
 
-    MPI_CHK( mpi_write_binary(&ctx->GX, buf, ctx->len) );
-    *olen = ctx->len;
+    MPI_CHK( mpi_write_binary(&ctx->GX, buf + 2, ctx->len) );
+    buf[0] = (unsigned char)(ctx->len >> 8);
+    buf[1] = (unsigned char)(ctx->len     );
+    *olen = ctx->len + 2;
 
 cleanup:
     if (ret != 0)

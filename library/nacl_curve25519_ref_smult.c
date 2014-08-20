@@ -243,7 +243,7 @@ static void recip(unsigned int out[32],const unsigned int z[32])
   /* 2^255 - 21 */ mult(out,t1,z11);
 }
 
-int crypto_scalarmult(unsigned char *q,
+int crypto_scalarmult_curve25519(unsigned char *q,
   const unsigned char *n,
   const unsigned char *p)
 {
@@ -266,8 +266,8 @@ int crypto_scalarmult(unsigned char *q,
 static
 const unsigned char base[32] = {9};
 
-int crypto_scalarmult_base(unsigned char *q,
+int crypto_scalarmult_curve25519_base(unsigned char *q,
   const unsigned char *n)
 {
-  return crypto_scalarmult(q,n,base);
+  return crypto_scalarmult_curve25519(q,n,base);
 }

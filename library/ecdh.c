@@ -279,7 +279,7 @@ int wecdh_gen_public( ecdh_context *ctx, int (*f_rng)(void *, unsigned char *, s
     return ret;
 }
 
-int wecdh_compute_shared( ecdh_context *ctx , int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
+int wecdh_compute_shared( ecdh_context *ctx, int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
 {
     int ret = 0;
 
@@ -291,20 +291,22 @@ int wecdh_compute_shared( ecdh_context *ctx , int (*f_rng)(void *, unsigned char
 
 }
 
-int wecdh_set_params( ecdh_context *ctx , const void *_params )
+typedef struct { int point_format; ecp_group_id group_id; } wecdh_params;
+
+int wecdh_set_params( ecdh_context *ctx, const void *_params )
 {
-    /* TODO: also need to set ecdh_ctx.point_format */
     int ret = 0;
-    const int *id = (const int *) _params;
+    const wecdh_params *params = (const wecdh_params *) _params;
 
-    if( ctx == NULL || id == NULL) return ( POLARSSL_ERR_ECP_BAD_INPUT_DATA );
+    if( ctx == NULL || params == NULL) return ( POLARSSL_ERR_ECP_BAD_INPUT_DATA );
 
-    ret = ecp_use_known_dp( &ctx->grp, *id );
+    ctx->point_format = params->point_format;
+    ret = ecp_use_known_dp( &ctx->grp, params->group_id );
 
     return ret;
 }
 
-int wecdh_read_params( ecdh_context *ctx , int *rlen, const unsigned char *buf , size_t blen )
+int wecdh_read_params( ecdh_context *ctx, int *rlen, const unsigned char *buf, size_t blen )
 {
     const unsigned char *p = buf;
     int ret = 0;
@@ -326,7 +328,7 @@ int wecdh_read_public( ecdh_context *ctx, const unsigned char *buf, size_t blen 
     return ret;
 }
 
-int wecdh_read_from_self_pk_ctx( ecdh_context *ctx , const void *_pk_ctx )
+int wecdh_read_from_self_pk_ctx( ecdh_context *ctx, const void *_pk_ctx )
 {
     const ecp_keypair *key = (const ecp_keypair *) _pk_ctx;
     int ret = -1;
@@ -340,7 +342,7 @@ int wecdh_read_from_self_pk_ctx( ecdh_context *ctx , const void *_pk_ctx )
     return mpi_copy( &ctx->d, &key->d );
 }
 
-int wecdh_read_from_peer_pk_ctx( ecdh_context *ctx , const void *_pk_ctx )
+int wecdh_read_from_peer_pk_ctx( ecdh_context *ctx, const void *_pk_ctx )
 {
     const ecp_keypair *key = (const ecp_keypair *) _pk_ctx;
     int ret = -1;
@@ -404,7 +406,7 @@ size_t wecdh_getsize_public( const ecdh_context *ctx )
     return 1 + _;
 }
 
-int wecdh_write_public( size_t *olen , unsigned char *buf, size_t blen, const ecdh_context *ctx )
+int wecdh_write_public( size_t *olen, unsigned char *buf, size_t blen, const ecdh_context *ctx )
 {
     int ret = 0;
 
