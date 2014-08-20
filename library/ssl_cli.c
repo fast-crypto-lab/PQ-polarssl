@@ -1236,17 +1236,6 @@ static int ssl_parse_server_dh_params( ssl_context *ssl, unsigned char **p,
         SSL_DEBUG_RET( 2, ( "dhm_read_params" ), ret );
         return( ret );
     }
-#else
-    {
-        int rlen = -1;
-        ret = ssl->handshake->dhif_info->read_ske_params(
-                ssl->handshake->dhif_ctx, &rlen, *p, end - *p);
-        *p += rlen;
-        if (ret != 0) {
-            return ret;
-        }
-    }
-#endif
 
     if( ssl->handshake->dhm_ctx.len < 64  ||
         ssl->handshake->dhm_ctx.len > 512 )
@@ -1259,6 +1248,19 @@ static int ssl_parse_server_dh_params( ssl_context *ssl, unsigned char **p,
     SSL_DEBUG_MPI( 3, "DHM: G ", &ssl->handshake->dhm_ctx.G  );
     SSL_DEBUG_MPI( 3, "DHM: GY", &ssl->handshake->dhm_ctx.GY );
 
+#else
+    {
+        int rlen = -1;
+        /* TODO: 檢查 DHM 參數是否合宜 */
+        ret = ssl->handshake->dhif_info->read_ske_params(
+                ssl->handshake->dhif_ctx, &rlen, *p, end - *p);
+        *p += rlen;
+        if (ret != 0) {
+            return ret;
+        }
+    }
+#endif
+
     return( ret );
 }
 #endif /* POLARSSL_KEY_EXCHANGE_DHE_RSA_ENABLED ||
@@ -1269,6 +1271,7 @@ static int ssl_parse_server_dh_params( ssl_context *ssl, unsigned char **p,
     defined(POLARSSL_KEY_EXCHANGE_ECDHE_PSK_ENABLED) ||                     \
     defined(POLARSSL_KEY_EXCHANGE_ECDH_RSA_ENABLED) ||                      \
     defined(POLARSSL_KEY_EXCHANGE_ECDH_ECDSA_ENABLED)
+/* 這個函數我們不用了! */
 static int ssl_check_server_ecdh_params( const ssl_context *ssl )
 {
     const ecp_curve_info *curve_info;
@@ -1325,9 +1328,17 @@ static int ssl_parse_server_ecdh_params( ssl_context *ssl,
         SSL_DEBUG_RET( 1, ( "ecdh_read_params" ), ret );
         return( ret );
     }
+
+    if( ssl_check_server_ecdh_params( ssl ) != 0 )
+    {
+        SSL_DEBUG_MSG( 1, ( "bad server key exchange message (ECDHE curve)" ) );
+        return( POLARSSL_ERR_SSL_BAD_HS_SERVER_KEY_EXCHANGE );
+    }
+
 #else
     {
         int rlen = -1;
+        /* TODO Check supported ECDH parameters */
         ret = ssl->handshake->dhif_info->read_ske_params(
                 ssl->handshake->dhif_ctx, &rlen, *p, end - *p);
         *p += rlen;
@@ -1336,12 +1347,6 @@ static int ssl_parse_server_ecdh_params( ssl_context *ssl,
         }
     }
 #endif
-
-    if( ssl_check_server_ecdh_params( ssl ) != 0 )
-    {
-        SSL_DEBUG_MSG( 1, ( "bad server key exchange message (ECDHE curve)" ) );
-        return( POLARSSL_ERR_SSL_BAD_HS_SERVER_KEY_EXCHANGE );
-    }
 
     return( ret );
 }
@@ -1504,6 +1509,7 @@ static int ssl_parse_signature_algorithm( ssl_context *ssl,
 
 #if defined(POLARSSL_KEY_EXCHANGE_ECDH_RSA_ENABLED) || \
     defined(POLARSSL_KEY_EXCHANGE_ECDH_ECDSA_ENABLED)
+/* 這個函數我們不用了! */
 static int ssl_get_ecdh_params_from_cert( ssl_context *ssl )
 {
     int ret;
@@ -1582,6 +1588,8 @@ static int ssl_parse_server_key_exchange( ssl_context *ssl )
             ssl->handshake->dhif_ctx = ssl->handshake->dhif_info->ctx_alloc();
         }
 
+        /* TODO: 檢查 EC 參數是否是支援的
+         * (把 ssl_check_server_ecdh_params 的功能做出來) */
         ret = ssl->handshake->dhif_info->read_from_peer_pk_ctx(
                 ssl->handshake->dhif_ctx,
                 pk_ec(ssl->session_negotiate->peer_cert->pk) );
@@ -2353,6 +2361,8 @@ static int ssl_write_client_key_exchange( ssl_context *ssl )
                 SSL_DEBUG_RET( 1, "ecdh_make_public", ret );
                 return( ret );
             }
+            SSL_DEBUG_ECP( 3, "ECDH: Q", &ssl->handshake->ecdh_ctx.Q );
+
 #else
             ret = ssl->handshake->dhif_info->gen_public(
                 ssl->handshake->dhif_ctx,
@@ -2371,8 +2381,6 @@ static int ssl_write_client_key_exchange( ssl_context *ssl )
                 return ret;
             }
 #endif
-
-            SSL_DEBUG_ECP( 3, "ECDH: Q", &ssl->handshake->ecdh_ctx.Q );
         }
         else
 #endif /* POLARSSL_KEY_EXCHANGE_ECDHE_PSK_ENABLED */

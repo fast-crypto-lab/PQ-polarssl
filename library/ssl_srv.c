@@ -2102,6 +2102,7 @@ static int ssl_write_certificate_request( ssl_context *ssl )
 
 #if defined(POLARSSL_KEY_EXCHANGE_ECDH_RSA_ENABLED) || \
     defined(POLARSSL_KEY_EXCHANGE_ECDH_ECDSA_ENABLED)
+/* 這個函數我們不用了! */
 static int ssl_get_ecdh_params_from_cert( ssl_context *ssl )
 {
     int ret;
@@ -2231,6 +2232,11 @@ static int ssl_write_server_key_exchange( ssl_context *ssl )
             SSL_DEBUG_RET( 1, "dhm_make_params", ret );
             return( ret );
         }
+
+        SSL_DEBUG_MPI( 3, "DHM: X ", &ssl->handshake->dhm_ctx.X  );
+        SSL_DEBUG_MPI( 3, "DHM: P ", &ssl->handshake->dhm_ctx.P  );
+        SSL_DEBUG_MPI( 3, "DHM: G ", &ssl->handshake->dhm_ctx.G  );
+        SSL_DEBUG_MPI( 3, "DHM: GX", &ssl->handshake->dhm_ctx.GX );
 #else
         /* It is the first time we use DHM, so we should alloc it first */
         ssl->handshake->dhif_info = &dhm_info2;
@@ -2272,11 +2278,6 @@ static int ssl_write_server_key_exchange( ssl_context *ssl )
 
         p += len;
         n += len;
-
-        SSL_DEBUG_MPI( 3, "DHM: X ", &ssl->handshake->dhm_ctx.X  );
-        SSL_DEBUG_MPI( 3, "DHM: P ", &ssl->handshake->dhm_ctx.P  );
-        SSL_DEBUG_MPI( 3, "DHM: G ", &ssl->handshake->dhm_ctx.G  );
-        SSL_DEBUG_MPI( 3, "DHM: GX", &ssl->handshake->dhm_ctx.GX );
     }
 #endif /* POLARSSL_KEY_EXCHANGE_DHE_RSA_ENABLED ||
           POLARSSL_KEY_EXCHANGE_DHE_PSK_ENABLED */
@@ -2332,6 +2333,8 @@ curve_matching_done:
             SSL_DEBUG_RET( 1, "ecdh_make_params", ret );
             return( ret );
         }
+
+        SSL_DEBUG_ECP( 3, "ECDH: Q ", &ssl->handshake->ecdh_ctx.Q );
 #else
         /* It _MIGHT_ be the first time we use ECDH, so we should alloc it first */
         ssl->handshake->dhif_info = &ecdh_info2;
@@ -2374,8 +2377,6 @@ curve_matching_done:
 
         p += len;
         n += len;
-
-        SSL_DEBUG_ECP( 3, "ECDH: Q ", &ssl->handshake->ecdh_ctx.Q );
     }
 #endif /* POLARSSL_KEY_EXCHANGE__SOME__ECDHE_ENABLED */
 
@@ -2588,6 +2589,7 @@ static int ssl_write_server_hello_done( ssl_context *ssl )
 
 #if defined(POLARSSL_KEY_EXCHANGE_DHE_RSA_ENABLED) ||                       \
     defined(POLARSSL_KEY_EXCHANGE_DHE_PSK_ENABLED)
+/* 這個函數我們不用了! */
 static int ssl_parse_client_dh_public( ssl_context *ssl, unsigned char **p,
                                        const unsigned char *end )
 {

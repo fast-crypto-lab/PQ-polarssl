@@ -530,6 +530,11 @@ cleanup:
     return ret;
 }
 
+static int _check_p_range(const dhm_context *ctx )
+{
+    return ! (ctx->len < 64 || ctx->len > 512);
+}
+
 /* and public */
 int wdhm_read_params( dhm_context *ctx , int *rlen, const unsigned char *buf , size_t blen )
 {
@@ -541,6 +546,14 @@ int wdhm_read_params( dhm_context *ctx , int *rlen, const unsigned char *buf , s
 
     *rlen = p - buf;
 
+    if (ret != 0) {
+        return ret;
+    }
+
+    ret = _check_p_range(ctx);
+    if (ret != 0) {
+        return POLARSSL_ERR_DHM_BAD_INPUT_DATA;
+    }
     return ret;
 }
 

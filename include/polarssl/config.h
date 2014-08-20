@@ -809,7 +809,7 @@
  * a timing side-channel.
  *
  */
-//#define POLARSSL_SSL_DEBUG_ALL
+#define POLARSSL_SSL_DEBUG_ALL
 
 /**
  * \def POLARSSL_SSL_HW_RECORD_ACCEL

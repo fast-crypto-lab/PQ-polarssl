@@ -291,6 +291,34 @@ int wecdh_compute_shared( ecdh_context *ctx, int (*f_rng)(void *, unsigned char 
 
 }
 
+static int _check_server_ecdh_params( const ecdh_context *ctx )
+{
+    const ecp_curve_info *curve_info;
+
+    curve_info = ecp_curve_info_from_grp_id( ctx->grp.id );
+    if( curve_info == NULL )
+    {
+        return( POLARSSL_ERR_ECP_BAD_INPUT_DATA );
+    }
+
+#if defined(POLARSSL_SSL_ECP_SET_CURVES)
+    {
+        const ecp_group_id *gid;
+        for( gid = ecp_curve_list(); *gid != POLARSSL_ECP_DP_NONE; gid++ )
+            if( *gid == ctx->grp.id )
+                break;
+        if (*gid == POLARSSL_ECP_DP_NONE)
+            return -1;
+    }
+#else
+    if( ctx->grp.nbits < 163 ||
+        ctx->grp.nbits > 521 )
+        return( -1 );
+#endif
+
+    return( 0 );
+}
+
 typedef struct { int point_format; ecp_group_id group_id; } wecdh_params;
 
 int wecdh_set_params( ecdh_context *ctx, const void *_params )
@@ -302,7 +330,14 @@ int wecdh_set_params( ecdh_context *ctx, const void *_params )
 
     ctx->point_format = params->point_format;
     ret = ecp_use_known_dp( &ctx->grp, params->group_id );
+    if (ret != 0) {
+        return ret;
+    }
 
+    ret = _check_server_ecdh_params(ctx);
+    if (ret != 0) {
+        return POLARSSL_ERR_ECP_BAD_INPUT_DATA;
+    }
     return ret;
 }
 
@@ -339,7 +374,16 @@ int wecdh_read_from_self_pk_ctx( ecdh_context *ctx, const void *_pk_ctx )
     if( ( ret = ecp_copy( &ctx->Q, &key->Q ) ) != 0)
         return( ret );
 
-    return mpi_copy( &ctx->d, &key->d );
+    ret = mpi_copy( &ctx->d, &key->d );
+    if (ret != 0) {
+        return ret;
+    }
+
+    ret = _check_server_ecdh_params(ctx);
+    if (ret != 0) {
+        return POLARSSL_ERR_ECP_BAD_INPUT_DATA;
+    }
+    return ret;
 }
 
 int wecdh_read_from_peer_pk_ctx( ecdh_context *ctx, const void *_pk_ctx )
@@ -350,7 +394,16 @@ int wecdh_read_from_peer_pk_ctx( ecdh_context *ctx, const void *_pk_ctx )
     if( ( ret = ecp_group_copy( &ctx->grp, &key->grp ) ) != 0 )
         return( ret );
 
-    return( ecp_copy( &ctx->Qp, &key->Q ) );
+    ret =( ecp_copy( &ctx->Qp, &key->Q ) );
+    if (ret != 0) {
+        return ret;
+    }
+
+    ret = _check_server_ecdh_params(ctx);
+    if (ret != 0) {
+        return POLARSSL_ERR_ECP_BAD_INPUT_DATA;
+    }
+    return ret;
 }
 
 size_t wecdh_getsize_params( const ecdh_context *ctx )
