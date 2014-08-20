@@ -463,7 +463,7 @@ int wecdh_write_public( size_t *olen, unsigned char *buf, size_t blen, const ecd
 {
     int ret = 0;
 
-    if( ctx == NULL || blen < sizeof(ctx->Q) )
+    if( ctx == NULL || blen < wecdh_getsize_public(ctx) )
         return ( POLARSSL_ERR_ECP_BAD_INPUT_DATA );
 
     ret = ecp_tls_write_point( &ctx->grp, &ctx->Q, ctx->point_format, olen, buf, blen );
