@@ -1240,7 +1240,7 @@ static int ssl_parse_server_dh_params( ssl_context *ssl, unsigned char **p,
     {
         int rlen = -1;
         ret = ssl->handshake->dhif_info->read_ske_params(
-                &ssl->handshake->dhif_ctx, &rlen, *p, end - *p);
+                ssl->handshake->dhif_ctx, &rlen, *p, end - *p);
         *p += rlen;
         if (ret != 0) {
             return ret;
@@ -1329,7 +1329,7 @@ static int ssl_parse_server_ecdh_params( ssl_context *ssl,
     {
         int rlen = -1;
         ret = ssl->handshake->dhif_info->read_ske_params(
-                &ssl->handshake->dhif_ctx, &rlen, *p, end - *p);
+                ssl->handshake->dhif_ctx, &rlen, *p, end - *p);
         *p += rlen;
         if (ret != 0) {
             return ret;
@@ -1583,7 +1583,7 @@ static int ssl_parse_server_key_exchange( ssl_context *ssl )
         }
 
         ret = ssl->handshake->dhif_info->read_from_peer_pk_ctx(
-                &ssl->handshake->dhif_ctx,
+                ssl->handshake->dhif_ctx,
                 pk_ec(ssl->session_negotiate->peer_cert->pk) );
         if (ret != 0) {
             return ret;
@@ -2122,7 +2122,7 @@ static int ssl_write_client_key_exchange( ssl_context *ssl )
         SSL_DEBUG_MPI( 3, "DHM: GX", &ssl->handshake->dhm_ctx.GX );
 #else
         ret = ssl->handshake->dhif_info->gen_public(
-                &ssl->handshake->dhm_ctx,
+                ssl->handshake->dhif_ctx,
                 ssl->f_rng, ssl->p_rng );
         if (ret != 0) {
             return ret;
@@ -2131,8 +2131,9 @@ static int ssl_write_client_key_exchange( ssl_context *ssl )
         i = 4;
         ret = ssl->handshake->dhif_info->write_public(
                 &n, &ssl->out_msg[i],
-                /* WTF */ (int) mpi_size( &ssl->handshake->dhm_ctx.P ),
-                &ssl->handshake->dhif_ctx );
+                /* WTF Buffer size = ???! */
+                ssl->handshake->dhif_info->getsize_public(ssl->handshake->dhif_ctx),
+                ssl->handshake->dhif_ctx );
         if (ret != 0) {
             return ret;
         }
@@ -2155,7 +2156,7 @@ static int ssl_write_client_key_exchange( ssl_context *ssl )
         ssl->handshake->pmslen = POLARSSL_PREMASTER_SIZE;
 
         ret = ssl->handshake->dhif_info->compute_shared(
-                &ssl->handshake->dhif_ctx,
+                ssl->handshake->dhif_ctx,
                 ssl->f_rng,
                 ssl->p_rng);
         if (ret) {
@@ -2165,8 +2166,10 @@ static int ssl_write_client_key_exchange( ssl_context *ssl )
         ret = ssl->handshake->dhif_info->write_premaster(
                 &ssl->handshake->pmslen,
                 ssl->handshake->premaster,
-                /* WTF */ POLARSSL_PREMASTER_SIZE,
-                &ssl->handshake->dhif_ctx);
+                /* WTF POLARSSL_PREMASTER_SIZE,
+                 * buffer size should be enough */
+                ssl->handshake->dhif_info->getsize_premaster(ssl->handshake->dhif_ctx),
+                ssl->handshake->dhif_ctx);
         if (ret) {
             return ret;
         }
@@ -2202,7 +2205,7 @@ static int ssl_write_client_key_exchange( ssl_context *ssl )
         SSL_DEBUG_ECP( 3, "ECDH: Q", &ssl->handshake->ecdh_ctx.Q );
 #else
         ret = ssl->handshake->dhif_info->gen_public(
-                &ssl->handshake->dhif_ctx,
+                ssl->handshake->dhif_ctx,
                 ssl->f_rng, ssl->p_rng );
         if (ret != 0) {
             return ret;
@@ -2211,8 +2214,9 @@ static int ssl_write_client_key_exchange( ssl_context *ssl )
         i = 4;
         ret = ssl->handshake->dhif_info->write_public(
                 &n, &ssl->out_msg[i],
-                /* WTF */ 1000,
-                &ssl->handshake->dhif_ctx );
+                /* WTF 1000, */
+                ssl->handshake->dhif_info->getsize_public(ssl->handshake->dhif_ctx),
+                ssl->handshake->dhif_ctx );
         if (ret != 0) {
             return ret;
         }
@@ -2232,7 +2236,7 @@ static int ssl_write_client_key_exchange( ssl_context *ssl )
         SSL_DEBUG_MPI( 3, "ECDH: z", &ssl->handshake->ecdh_ctx.z );
 #else
         ret = ssl->handshake->dhif_info->compute_shared(
-                &ssl->handshake->dhif_ctx,
+                ssl->handshake->dhif_ctx,
                 ssl->f_rng,
                 ssl->p_rng);
         if (ret) {
@@ -2242,8 +2246,10 @@ static int ssl_write_client_key_exchange( ssl_context *ssl )
         ret = ssl->handshake->dhif_info->write_premaster(
                 &ssl->handshake->pmslen,
                 ssl->handshake->premaster,
-                /* WTF */ POLARSSL_MPI_MAX_SIZE,
-                &ssl->handshake->dhif_ctx);
+                /* WTF POLARSSL_MPI_MAX_SIZE,
+                 * buffer size should be enough */
+                ssl->handshake->dhif_info->getsize_premaster(ssl->handshake->dhif_ctx),
+                ssl->handshake->dhif_ctx);
         if (ret) {
             return ret;
         }
@@ -2313,7 +2319,7 @@ static int ssl_write_client_key_exchange( ssl_context *ssl )
             }
 #else
             ret = ssl->handshake->dhif_info->gen_public(
-                    &ssl->handshake->dhm_ctx,
+                    ssl->handshake->dhif_ctx,
                     ssl->f_rng, ssl->p_rng );
             if (ret != 0) {
                 return ret;
@@ -2321,8 +2327,9 @@ static int ssl_write_client_key_exchange( ssl_context *ssl )
 
             ret = ssl->handshake->dhif_info->write_public(
                     &n, &ssl->out_msg[i],
-                    /* WTF */ (int) mpi_size( &ssl->handshake->dhm_ctx.P ),
-                    &ssl->handshake->dhif_ctx );
+                    /* WTF Buffer size = ???! */
+                    ssl->handshake->dhif_info->getsize_public(ssl->handshake->dhif_ctx),
+                    ssl->handshake->dhif_ctx );
             if (ret != 0) {
                 return ret;
             }
@@ -2348,7 +2355,7 @@ static int ssl_write_client_key_exchange( ssl_context *ssl )
             }
 #else
             ret = ssl->handshake->dhif_info->gen_public(
-                &ssl->handshake->dhif_ctx,
+                ssl->handshake->dhif_ctx,
                 ssl->f_rng, ssl->p_rng );
             if (ret != 0) {
                 return ret;
@@ -2357,8 +2364,9 @@ static int ssl_write_client_key_exchange( ssl_context *ssl )
             i = 4;
             ret = ssl->handshake->dhif_info->write_public(
                     &n, &ssl->out_msg[i],
-                    /* WTF */ SSL_MAX_CONTENT_LEN - i,
-                    &ssl->handshake->dhif_ctx );
+                    /* WTF Buffer size = ???! */
+                    ssl->handshake->dhif_info->getsize_public(ssl->handshake->dhif_ctx),
+                    ssl->handshake->dhif_ctx );
             if (ret != 0) {
                 return ret;
             }

@@ -2174,7 +2174,7 @@ static int ssl_write_server_key_exchange( ssl_context *ssl )
         }
 
         ret = ssl->handshake->dhif_info->read_from_self_pk_ctx(
-                &ssl->handshake->dhif_ctx,
+                ssl->handshake->dhif_ctx,
                 pk_ec(*ssl_own_key(ssl)) );
         if (ret != 0) {
             return ret;
@@ -2239,27 +2239,29 @@ static int ssl_write_server_key_exchange( ssl_context *ssl )
         }
 
         {
+            /* 選 interface 和 alloc context 和這一段參數設定應該要提前到
+             * ciphersuite 被決定的時後就直接做掉 */
             struct { mpi P; mpi G; } _params;
             memset(&_params, 0, 2 * sizeof(mpi));
             mpi_copy(&_params.P, &ssl->dhm_P);
             mpi_copy(&_params.G, &ssl->dhm_G);
             ret = ssl->handshake->dhif_info->set_params(
-                    &ssl->handshake->dhm_ctx, &_params);
+                    ssl->handshake->dhif_ctx, &_params);
             if (ret != 0) {
                 return ret;
             }
         }
 
         ret = ssl->handshake->dhif_info->gen_public(
-                &ssl->handshake->dhm_ctx, ssl->f_rng, ssl->p_rng);
+                ssl->handshake->dhif_ctx, ssl->f_rng, ssl->p_rng);
         if (ret != 0) {
             return ret;
         }
 
         ret = ssl->handshake->dhif_info->write_ske_params(
                 &len, p,
-                /* WTF */ ssl->handshake->dhif_info->getsize_ske_params(&ssl->handshake->dhm_ctx),
-                &ssl->handshake->dhm_ctx);
+                /* WTF */ ssl->handshake->dhif_info->getsize_ske_params(ssl->handshake->dhif_ctx),
+                ssl->handshake->dhif_ctx);
         if (ret != 0) {
             return ret;
         }
@@ -2338,27 +2340,30 @@ curve_matching_done:
         }
 
         {
+            /* 選 interface 和 alloc context 和這一段參數設定應該要提前到
+             * ciphersuite 被決定的時後就直接做掉 */
             struct { int point_format; ecp_group_id group_id; } _params;
             memset(&_params, 0, 2 * sizeof(int));
             _params.point_format = ssl->handshake->point_format;
             _params.group_id = (*curve)->grp_id;
             ret = ssl->handshake->dhif_info->set_params(
-                    &ssl->handshake->dhm_ctx, &_params);
+                    ssl->handshake->dhif_ctx, &_params);
             if (ret != 0) {
                 return ret;
             }
         }
 
         ret = ssl->handshake->dhif_info->gen_public(
-                &ssl->handshake->dhm_ctx, ssl->f_rng, ssl->p_rng);
+                ssl->handshake->dhif_ctx, ssl->f_rng, ssl->p_rng);
         if (ret != 0) {
             return ret;
         }
 
         ret = ssl->handshake->dhif_info->write_ske_params(
                 &len, p,
-                /* WTF */ SSL_MAX_CONTENT_LEN - n,
-                &ssl->handshake->dhm_ctx);
+                /* WTF */
+                ssl->handshake->dhif_info->getsize_ske_params(ssl->handshake->dhif_ctx),
+                ssl->handshake->dhif_ctx);
         if (ret != 0) {
             return ret;
         }
@@ -2805,7 +2810,7 @@ static int ssl_parse_client_key_exchange( ssl_context *ssl )
         }
 #else
         ret = ssl->handshake->dhif_info->read_public(
-                &ssl->handshake->dhif_ctx, p, end - p);
+                ssl->handshake->dhif_ctx, p, end - p);
         if (ret != 0) {
             return POLARSSL_ERR_SSL_BAD_HS_CLIENT_KEY_EXCHANGE;
         }
@@ -2828,7 +2833,7 @@ static int ssl_parse_client_key_exchange( ssl_context *ssl )
         ssl->handshake->pmslen = POLARSSL_PREMASTER_SIZE;
 
         ret = ssl->handshake->dhif_info->compute_shared(
-                &ssl->handshake->dhif_ctx,
+                ssl->handshake->dhif_ctx,
                 ssl->f_rng,
                 ssl->p_rng);
         if (ret) {
@@ -2838,8 +2843,9 @@ static int ssl_parse_client_key_exchange( ssl_context *ssl )
         ret = ssl->handshake->dhif_info->write_premaster(
                 &ssl->handshake->pmslen,
                 ssl->handshake->premaster,
-                /* WTF */ POLARSSL_PREMASTER_SIZE,
-                &ssl->handshake->dhif_ctx);
+                /* WTF */
+                ssl->handshake->dhif_info->getsize_premaster(ssl->handshake->dhif_ctx),
+                ssl->handshake->dhif_ctx);
         if (ret) {
             return( POLARSSL_ERR_SSL_BAD_HS_CLIENT_KEY_EXCHANGE_CS );
         }
@@ -2867,7 +2873,7 @@ static int ssl_parse_client_key_exchange( ssl_context *ssl )
 #else
 
         ret = ssl->handshake->dhif_info->read_public(
-                &ssl->handshake->dhif_ctx,
+                ssl->handshake->dhif_ctx,
                 ssl->in_msg + 4,
                 ssl->in_hslen - 4);
         if (ret != 0) {
@@ -2889,7 +2895,7 @@ static int ssl_parse_client_key_exchange( ssl_context *ssl )
         SSL_DEBUG_MPI( 3, "ECDH: z  ", &ssl->handshake->ecdh_ctx.z );
 #else
         ret = ssl->handshake->dhif_info->compute_shared(
-                &ssl->handshake->dhif_ctx,
+                ssl->handshake->dhif_ctx,
                 ssl->f_rng,
                 ssl->p_rng);
         if (ret) {
@@ -2899,8 +2905,9 @@ static int ssl_parse_client_key_exchange( ssl_context *ssl )
         ret = ssl->handshake->dhif_info->write_premaster(
                 &ssl->handshake->pmslen,
                 ssl->handshake->premaster,
-                /* WTF */ POLARSSL_MPI_MAX_SIZE,
-                &ssl->handshake->dhif_ctx);
+                /* WTF */
+                ssl->handshake->dhif_info->getsize_premaster(ssl->handshake->dhif_ctx),
+                ssl->handshake->dhif_ctx);
         if (ret) {
             return( POLARSSL_ERR_SSL_BAD_HS_CLIENT_KEY_EXCHANGE_CS );
         }
@@ -2991,7 +2998,7 @@ static int ssl_parse_client_key_exchange( ssl_context *ssl )
         }
 #else
         ret = ssl->handshake->dhif_info->read_public(
-                &ssl->handshake->dhif_ctx, p, end - p);
+                ssl->handshake->dhif_ctx, p, end - p);
         if (ret != 0) {
             return POLARSSL_ERR_SSL_BAD_HS_CLIENT_KEY_EXCHANGE;
         }
@@ -3030,7 +3037,7 @@ static int ssl_parse_client_key_exchange( ssl_context *ssl )
 #else
 
         ret = ssl->handshake->dhif_info->read_public(
-                &ssl->handshake->dhif_ctx,
+                ssl->handshake->dhif_ctx,
                 p,
                 end - p);
         if (ret != 0) {

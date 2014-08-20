@@ -942,7 +942,7 @@ int ssl_psk_derive_premaster( ssl_context *ssl, key_exchange_type_t key_ex )
 #else
 
         ret = ssl->handshake->dhif_info->compute_shared(
-                &ssl->handshake->dhif_ctx,
+                ssl->handshake->dhif_ctx,
                 ssl->f_rng,
                 ssl->p_rng);
         if (ret) {
@@ -953,7 +953,7 @@ int ssl_psk_derive_premaster( ssl_context *ssl, key_exchange_type_t key_ex )
                 &len,
                 p + 2,
                 end - (p + 2),
-                &ssl->handshake->dhif_ctx);
+                ssl->handshake->dhif_ctx);
         if (ret) {
             return ret;
         }
@@ -989,7 +989,7 @@ int ssl_psk_derive_premaster( ssl_context *ssl, key_exchange_type_t key_ex )
 #else
 
         ret = ssl->handshake->dhif_info->compute_shared(
-                &ssl->handshake->dhif_ctx,
+                ssl->handshake->dhif_ctx,
                 ssl->f_rng,
                 ssl->p_rng);
         if (ret) {
@@ -1000,7 +1000,7 @@ int ssl_psk_derive_premaster( ssl_context *ssl, key_exchange_type_t key_ex )
                 &zlen,
                 p + 2,
                 end - (p + 2),
-                &ssl->handshake->dhif_ctx);
+                ssl->handshake->dhif_ctx);
         if (ret) {
             return ret;
         }
