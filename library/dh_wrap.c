@@ -237,12 +237,8 @@ const dh_info2_t ecdh_info2 = {
     wecdh_set_params,
     wecdh_read_params,
     wecdh_read_public,
-/*
     wecdh_read_from_self_pk_ctx,
     wecdh_read_from_peer_pk_ctx,
-*/
-    NULL,
-    NULL,
     wecdh_getsize_params,
     wecdh_write_params,
     wecdh_getsize_public,

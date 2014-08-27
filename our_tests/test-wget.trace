@@ -1,0 +1,843 @@
+----------------------------------------------------------------
+--      Test PolarSSL ssl_server2 using `wget`                --
+----------------------------------------------------------------
+
+BEGIN ---- TLS-ECDHE-ECDSA-WITH-AES-256-GCM-SHA384
+RESULT: wget OK   TLS-ECDHE-ECDSA-WITH-AES-256-GCM-SHA384
+RESULT: SSL OK
+END ------ TLS-ECDHE-ECDSA-WITH-AES-256-GCM-SHA384
+
+BEGIN ---- TLS-ECDHE-RSA-WITH-AES-256-GCM-SHA384
+./test-wget: line 7:  6310 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-ECDHE-RSA-WITH-AES-256-GCM-SHA384
+RESULT: SSL OK
+END ------ TLS-ECDHE-RSA-WITH-AES-256-GCM-SHA384
+
+BEGIN ---- TLS-DHE-RSA-WITH-AES-256-GCM-SHA384
+./test-wget: line 7:  6317 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-DHE-RSA-WITH-AES-256-GCM-SHA384
+RESULT: SSL OK
+END ------ TLS-DHE-RSA-WITH-AES-256-GCM-SHA384
+
+BEGIN ---- TLS-ECDHE-ECDSA-WITH-AES-256-CCM
+./test-wget: line 7:  6324 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-ECDHE-ECDSA-WITH-AES-256-CCM
+RESULT: SSL FAIL
+END ------ TLS-ECDHE-ECDSA-WITH-AES-256-CCM
+
+BEGIN ---- TLS-DHE-RSA-WITH-AES-256-CCM
+./test-wget: line 7:  6331 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-DHE-RSA-WITH-AES-256-CCM
+RESULT: SSL FAIL
+END ------ TLS-DHE-RSA-WITH-AES-256-CCM
+
+BEGIN ---- TLS-ECDHE-ECDSA-WITH-AES-256-CBC-SHA384
+./test-wget: line 7:  6338 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-ECDHE-ECDSA-WITH-AES-256-CBC-SHA384
+RESULT: SSL OK
+END ------ TLS-ECDHE-ECDSA-WITH-AES-256-CBC-SHA384
+
+BEGIN ---- TLS-ECDHE-RSA-WITH-AES-256-CBC-SHA384
+./test-wget: line 7:  6345 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-ECDHE-RSA-WITH-AES-256-CBC-SHA384
+RESULT: SSL OK
+END ------ TLS-ECDHE-RSA-WITH-AES-256-CBC-SHA384
+
+BEGIN ---- TLS-DHE-RSA-WITH-AES-256-CBC-SHA256
+./test-wget: line 7:  6352 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-DHE-RSA-WITH-AES-256-CBC-SHA256
+RESULT: SSL OK
+END ------ TLS-DHE-RSA-WITH-AES-256-CBC-SHA256
+
+BEGIN ---- TLS-ECDHE-ECDSA-WITH-AES-256-CBC-SHA
+./test-wget: line 7:  6359 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-ECDHE-ECDSA-WITH-AES-256-CBC-SHA
+RESULT: SSL OK
+END ------ TLS-ECDHE-ECDSA-WITH-AES-256-CBC-SHA
+
+BEGIN ---- TLS-ECDHE-RSA-WITH-AES-256-CBC-SHA
+./test-wget: line 7:  6366 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-ECDHE-RSA-WITH-AES-256-CBC-SHA
+RESULT: SSL OK
+END ------ TLS-ECDHE-RSA-WITH-AES-256-CBC-SHA
+
+BEGIN ---- TLS-DHE-RSA-WITH-AES-256-CBC-SHA
+./test-wget: line 7:  6373 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-DHE-RSA-WITH-AES-256-CBC-SHA
+RESULT: SSL OK
+END ------ TLS-DHE-RSA-WITH-AES-256-CBC-SHA
+
+BEGIN ---- TLS-ECDHE-ECDSA-WITH-AES-256-CCM-8
+./test-wget: line 7:  6380 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-ECDHE-ECDSA-WITH-AES-256-CCM-8
+RESULT: SSL FAIL
+END ------ TLS-ECDHE-ECDSA-WITH-AES-256-CCM-8
+
+BEGIN ---- TLS-DHE-RSA-WITH-AES-256-CCM-8
+./test-wget: line 7:  6387 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-DHE-RSA-WITH-AES-256-CCM-8
+RESULT: SSL FAIL
+END ------ TLS-DHE-RSA-WITH-AES-256-CCM-8
+
+BEGIN ---- TLS-ECDHE-ECDSA-WITH-CAMELLIA-256-GCM-SHA384
+./test-wget: line 7:  6394 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-ECDHE-ECDSA-WITH-CAMELLIA-256-GCM-SHA384
+RESULT: SSL FAIL
+END ------ TLS-ECDHE-ECDSA-WITH-CAMELLIA-256-GCM-SHA384
+
+BEGIN ---- TLS-ECDHE-RSA-WITH-CAMELLIA-256-GCM-SHA384
+./test-wget: line 7:  6401 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-ECDHE-RSA-WITH-CAMELLIA-256-GCM-SHA384
+RESULT: SSL FAIL
+END ------ TLS-ECDHE-RSA-WITH-CAMELLIA-256-GCM-SHA384
+
+BEGIN ---- TLS-DHE-RSA-WITH-CAMELLIA-256-GCM-SHA384
+./test-wget: line 7:  6408 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-DHE-RSA-WITH-CAMELLIA-256-GCM-SHA384
+RESULT: SSL FAIL
+END ------ TLS-DHE-RSA-WITH-CAMELLIA-256-GCM-SHA384
+
+BEGIN ---- TLS-ECDHE-ECDSA-WITH-CAMELLIA-256-CBC-SHA384
+./test-wget: line 7:  6415 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-ECDHE-ECDSA-WITH-CAMELLIA-256-CBC-SHA384
+RESULT: SSL FAIL
+END ------ TLS-ECDHE-ECDSA-WITH-CAMELLIA-256-CBC-SHA384
+
+BEGIN ---- TLS-ECDHE-RSA-WITH-CAMELLIA-256-CBC-SHA384
+./test-wget: line 7:  6422 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-ECDHE-RSA-WITH-CAMELLIA-256-CBC-SHA384
+RESULT: SSL FAIL
+END ------ TLS-ECDHE-RSA-WITH-CAMELLIA-256-CBC-SHA384
+
+BEGIN ---- TLS-DHE-RSA-WITH-CAMELLIA-256-CBC-SHA256
+./test-wget: line 7:  6429 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-DHE-RSA-WITH-CAMELLIA-256-CBC-SHA256
+RESULT: SSL FAIL
+END ------ TLS-DHE-RSA-WITH-CAMELLIA-256-CBC-SHA256
+
+BEGIN ---- TLS-DHE-RSA-WITH-CAMELLIA-256-CBC-SHA
+./test-wget: line 7:  6436 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-DHE-RSA-WITH-CAMELLIA-256-CBC-SHA
+RESULT: SSL OK
+END ------ TLS-DHE-RSA-WITH-CAMELLIA-256-CBC-SHA
+
+BEGIN ---- TLS-ECDHE-ECDSA-WITH-AES-128-GCM-SHA256
+./test-wget: line 7:  6443 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-ECDHE-ECDSA-WITH-AES-128-GCM-SHA256
+RESULT: SSL OK
+END ------ TLS-ECDHE-ECDSA-WITH-AES-128-GCM-SHA256
+
+BEGIN ---- TLS-ECDHE-RSA-WITH-AES-128-GCM-SHA256
+./test-wget: line 7:  6450 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-ECDHE-RSA-WITH-AES-128-GCM-SHA256
+RESULT: SSL OK
+END ------ TLS-ECDHE-RSA-WITH-AES-128-GCM-SHA256
+
+BEGIN ---- TLS-DHE-RSA-WITH-AES-128-GCM-SHA256
+./test-wget: line 7:  6457 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-DHE-RSA-WITH-AES-128-GCM-SHA256
+RESULT: SSL OK
+END ------ TLS-DHE-RSA-WITH-AES-128-GCM-SHA256
+
+BEGIN ---- TLS-ECDHE-ECDSA-WITH-AES-128-CCM
+./test-wget: line 7:  6464 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-ECDHE-ECDSA-WITH-AES-128-CCM
+RESULT: SSL FAIL
+END ------ TLS-ECDHE-ECDSA-WITH-AES-128-CCM
+
+BEGIN ---- TLS-DHE-RSA-WITH-AES-128-CCM
+./test-wget: line 7:  6471 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-DHE-RSA-WITH-AES-128-CCM
+RESULT: SSL FAIL
+END ------ TLS-DHE-RSA-WITH-AES-128-CCM
+
+BEGIN ---- TLS-ECDHE-ECDSA-WITH-AES-128-CBC-SHA256
+./test-wget: line 7:  6478 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-ECDHE-ECDSA-WITH-AES-128-CBC-SHA256
+RESULT: SSL OK
+END ------ TLS-ECDHE-ECDSA-WITH-AES-128-CBC-SHA256
+
+BEGIN ---- TLS-ECDHE-RSA-WITH-AES-128-CBC-SHA256
+./test-wget: line 7:  6485 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-ECDHE-RSA-WITH-AES-128-CBC-SHA256
+RESULT: SSL OK
+END ------ TLS-ECDHE-RSA-WITH-AES-128-CBC-SHA256
+
+BEGIN ---- TLS-DHE-RSA-WITH-AES-128-CBC-SHA256
+./test-wget: line 7:  6492 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-DHE-RSA-WITH-AES-128-CBC-SHA256
+RESULT: SSL OK
+END ------ TLS-DHE-RSA-WITH-AES-128-CBC-SHA256
+
+BEGIN ---- TLS-ECDHE-ECDSA-WITH-AES-128-CBC-SHA
+./test-wget: line 7:  6499 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-ECDHE-ECDSA-WITH-AES-128-CBC-SHA
+RESULT: SSL OK
+END ------ TLS-ECDHE-ECDSA-WITH-AES-128-CBC-SHA
+
+BEGIN ---- TLS-ECDHE-RSA-WITH-AES-128-CBC-SHA
+./test-wget: line 7:  6506 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-ECDHE-RSA-WITH-AES-128-CBC-SHA
+RESULT: SSL OK
+END ------ TLS-ECDHE-RSA-WITH-AES-128-CBC-SHA
+
+BEGIN ---- TLS-DHE-RSA-WITH-AES-128-CBC-SHA
+./test-wget: line 7:  6513 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-DHE-RSA-WITH-AES-128-CBC-SHA
+RESULT: SSL OK
+END ------ TLS-DHE-RSA-WITH-AES-128-CBC-SHA
+
+BEGIN ---- TLS-ECDHE-ECDSA-WITH-AES-128-CCM-8
+./test-wget: line 7:  6520 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-ECDHE-ECDSA-WITH-AES-128-CCM-8
+RESULT: SSL FAIL
+END ------ TLS-ECDHE-ECDSA-WITH-AES-128-CCM-8
+
+BEGIN ---- TLS-DHE-RSA-WITH-AES-128-CCM-8
+./test-wget: line 7:  6527 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-DHE-RSA-WITH-AES-128-CCM-8
+RESULT: SSL FAIL
+END ------ TLS-DHE-RSA-WITH-AES-128-CCM-8
+
+BEGIN ---- TLS-ECDHE-ECDSA-WITH-CAMELLIA-128-GCM-SHA256
+./test-wget: line 7:  6534 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-ECDHE-ECDSA-WITH-CAMELLIA-128-GCM-SHA256
+RESULT: SSL FAIL
+END ------ TLS-ECDHE-ECDSA-WITH-CAMELLIA-128-GCM-SHA256
+
+BEGIN ---- TLS-ECDHE-RSA-WITH-CAMELLIA-128-GCM-SHA256
+./test-wget: line 7:  6541 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-ECDHE-RSA-WITH-CAMELLIA-128-GCM-SHA256
+RESULT: SSL FAIL
+END ------ TLS-ECDHE-RSA-WITH-CAMELLIA-128-GCM-SHA256
+
+BEGIN ---- TLS-DHE-RSA-WITH-CAMELLIA-128-GCM-SHA256
+./test-wget: line 7:  6548 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-DHE-RSA-WITH-CAMELLIA-128-GCM-SHA256
+RESULT: SSL FAIL
+END ------ TLS-DHE-RSA-WITH-CAMELLIA-128-GCM-SHA256
+
+BEGIN ---- TLS-ECDHE-ECDSA-WITH-CAMELLIA-128-CBC-SHA256
+./test-wget: line 7:  6555 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-ECDHE-ECDSA-WITH-CAMELLIA-128-CBC-SHA256
+RESULT: SSL FAIL
+END ------ TLS-ECDHE-ECDSA-WITH-CAMELLIA-128-CBC-SHA256
+
+BEGIN ---- TLS-ECDHE-RSA-WITH-CAMELLIA-128-CBC-SHA256
+./test-wget: line 7:  6562 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-ECDHE-RSA-WITH-CAMELLIA-128-CBC-SHA256
+RESULT: SSL FAIL
+END ------ TLS-ECDHE-RSA-WITH-CAMELLIA-128-CBC-SHA256
+
+BEGIN ---- TLS-DHE-RSA-WITH-CAMELLIA-128-CBC-SHA256
+./test-wget: line 7:  6569 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-DHE-RSA-WITH-CAMELLIA-128-CBC-SHA256
+RESULT: SSL FAIL
+END ------ TLS-DHE-RSA-WITH-CAMELLIA-128-CBC-SHA256
+
+BEGIN ---- TLS-DHE-RSA-WITH-CAMELLIA-128-CBC-SHA
+./test-wget: line 7:  6576 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-DHE-RSA-WITH-CAMELLIA-128-CBC-SHA
+RESULT: SSL OK
+END ------ TLS-DHE-RSA-WITH-CAMELLIA-128-CBC-SHA
+
+BEGIN ---- TLS-ECDHE-ECDSA-WITH-3DES-EDE-CBC-SHA
+./test-wget: line 7:  6583 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-ECDHE-ECDSA-WITH-3DES-EDE-CBC-SHA
+RESULT: SSL OK
+END ------ TLS-ECDHE-ECDSA-WITH-3DES-EDE-CBC-SHA
+
+BEGIN ---- TLS-ECDHE-RSA-WITH-3DES-EDE-CBC-SHA
+./test-wget: line 7:  6590 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-ECDHE-RSA-WITH-3DES-EDE-CBC-SHA
+RESULT: SSL OK
+END ------ TLS-ECDHE-RSA-WITH-3DES-EDE-CBC-SHA
+
+BEGIN ---- TLS-DHE-RSA-WITH-3DES-EDE-CBC-SHA
+./test-wget: line 7:  6597 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-DHE-RSA-WITH-3DES-EDE-CBC-SHA
+RESULT: SSL OK
+END ------ TLS-DHE-RSA-WITH-3DES-EDE-CBC-SHA
+
+BEGIN ---- TLS-DHE-PSK-WITH-AES-256-GCM-SHA384
+./test-wget: line 7:  6604 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-DHE-PSK-WITH-AES-256-GCM-SHA384
+RESULT: SSL FAIL
+END ------ TLS-DHE-PSK-WITH-AES-256-GCM-SHA384
+
+BEGIN ---- TLS-DHE-PSK-WITH-AES-256-CCM
+./test-wget: line 7:  6611 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-DHE-PSK-WITH-AES-256-CCM
+RESULT: SSL FAIL
+END ------ TLS-DHE-PSK-WITH-AES-256-CCM
+
+BEGIN ---- TLS-ECDHE-PSK-WITH-AES-256-CBC-SHA384
+./test-wget: line 7:  6618 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-ECDHE-PSK-WITH-AES-256-CBC-SHA384
+RESULT: SSL FAIL
+END ------ TLS-ECDHE-PSK-WITH-AES-256-CBC-SHA384
+
+BEGIN ---- TLS-DHE-PSK-WITH-AES-256-CBC-SHA384
+./test-wget: line 7:  6625 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-DHE-PSK-WITH-AES-256-CBC-SHA384
+RESULT: SSL FAIL
+END ------ TLS-DHE-PSK-WITH-AES-256-CBC-SHA384
+
+BEGIN ---- TLS-ECDHE-PSK-WITH-AES-256-CBC-SHA
+./test-wget: line 7:  6632 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-ECDHE-PSK-WITH-AES-256-CBC-SHA
+RESULT: SSL FAIL
+END ------ TLS-ECDHE-PSK-WITH-AES-256-CBC-SHA
+
+BEGIN ---- TLS-DHE-PSK-WITH-AES-256-CBC-SHA
+./test-wget: line 7:  6639 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-DHE-PSK-WITH-AES-256-CBC-SHA
+RESULT: SSL FAIL
+END ------ TLS-DHE-PSK-WITH-AES-256-CBC-SHA
+
+BEGIN ---- TLS-DHE-PSK-WITH-CAMELLIA-256-GCM-SHA384
+./test-wget: line 7:  6646 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-DHE-PSK-WITH-CAMELLIA-256-GCM-SHA384
+RESULT: SSL FAIL
+END ------ TLS-DHE-PSK-WITH-CAMELLIA-256-GCM-SHA384
+
+BEGIN ---- TLS-ECDHE-PSK-WITH-CAMELLIA-256-CBC-SHA384
+./test-wget: line 7:  6653 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-ECDHE-PSK-WITH-CAMELLIA-256-CBC-SHA384
+RESULT: SSL FAIL
+END ------ TLS-ECDHE-PSK-WITH-CAMELLIA-256-CBC-SHA384
+
+BEGIN ---- TLS-DHE-PSK-WITH-CAMELLIA-256-CBC-SHA384
+./test-wget: line 7:  6660 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-DHE-PSK-WITH-CAMELLIA-256-CBC-SHA384
+RESULT: SSL FAIL
+END ------ TLS-DHE-PSK-WITH-CAMELLIA-256-CBC-SHA384
+
+BEGIN ---- TLS-DHE-PSK-WITH-AES-256-CCM-8
+./test-wget: line 7:  6667 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-DHE-PSK-WITH-AES-256-CCM-8
+RESULT: SSL FAIL
+END ------ TLS-DHE-PSK-WITH-AES-256-CCM-8
+
+BEGIN ---- TLS-DHE-PSK-WITH-AES-128-GCM-SHA256
+./test-wget: line 7:  6674 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-DHE-PSK-WITH-AES-128-GCM-SHA256
+RESULT: SSL FAIL
+END ------ TLS-DHE-PSK-WITH-AES-128-GCM-SHA256
+
+BEGIN ---- TLS-DHE-PSK-WITH-AES-128-CCM
+./test-wget: line 7:  6681 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-DHE-PSK-WITH-AES-128-CCM
+RESULT: SSL FAIL
+END ------ TLS-DHE-PSK-WITH-AES-128-CCM
+
+BEGIN ---- TLS-ECDHE-PSK-WITH-AES-128-CBC-SHA256
+./test-wget: line 7:  6688 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-ECDHE-PSK-WITH-AES-128-CBC-SHA256
+RESULT: SSL FAIL
+END ------ TLS-ECDHE-PSK-WITH-AES-128-CBC-SHA256
+
+BEGIN ---- TLS-DHE-PSK-WITH-AES-128-CBC-SHA256
+./test-wget: line 7:  6695 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-DHE-PSK-WITH-AES-128-CBC-SHA256
+RESULT: SSL FAIL
+END ------ TLS-DHE-PSK-WITH-AES-128-CBC-SHA256
+
+BEGIN ---- TLS-ECDHE-PSK-WITH-AES-128-CBC-SHA
+./test-wget: line 7:  6702 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-ECDHE-PSK-WITH-AES-128-CBC-SHA
+RESULT: SSL FAIL
+END ------ TLS-ECDHE-PSK-WITH-AES-128-CBC-SHA
+
+BEGIN ---- TLS-DHE-PSK-WITH-AES-128-CBC-SHA
+./test-wget: line 7:  6709 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-DHE-PSK-WITH-AES-128-CBC-SHA
+RESULT: SSL FAIL
+END ------ TLS-DHE-PSK-WITH-AES-128-CBC-SHA
+
+BEGIN ---- TLS-DHE-PSK-WITH-CAMELLIA-128-GCM-SHA256
+./test-wget: line 7:  6716 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-DHE-PSK-WITH-CAMELLIA-128-GCM-SHA256
+RESULT: SSL FAIL
+END ------ TLS-DHE-PSK-WITH-CAMELLIA-128-GCM-SHA256
+
+BEGIN ---- TLS-DHE-PSK-WITH-CAMELLIA-128-CBC-SHA256
+./test-wget: line 7:  6723 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-DHE-PSK-WITH-CAMELLIA-128-CBC-SHA256
+RESULT: SSL FAIL
+END ------ TLS-DHE-PSK-WITH-CAMELLIA-128-CBC-SHA256
+
+BEGIN ---- TLS-ECDHE-PSK-WITH-CAMELLIA-128-CBC-SHA256
+./test-wget: line 7:  6730 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-ECDHE-PSK-WITH-CAMELLIA-128-CBC-SHA256
+RESULT: SSL FAIL
+END ------ TLS-ECDHE-PSK-WITH-CAMELLIA-128-CBC-SHA256
+
+BEGIN ---- TLS-DHE-PSK-WITH-AES-128-CCM-8
+./test-wget: line 7:  6737 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-DHE-PSK-WITH-AES-128-CCM-8
+RESULT: SSL FAIL
+END ------ TLS-DHE-PSK-WITH-AES-128-CCM-8
+
+BEGIN ---- TLS-ECDHE-PSK-WITH-3DES-EDE-CBC-SHA
+./test-wget: line 7:  6744 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-ECDHE-PSK-WITH-3DES-EDE-CBC-SHA
+RESULT: SSL FAIL
+END ------ TLS-ECDHE-PSK-WITH-3DES-EDE-CBC-SHA
+
+BEGIN ---- TLS-DHE-PSK-WITH-3DES-EDE-CBC-SHA
+./test-wget: line 7:  6751 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-DHE-PSK-WITH-3DES-EDE-CBC-SHA
+RESULT: SSL FAIL
+END ------ TLS-DHE-PSK-WITH-3DES-EDE-CBC-SHA
+
+BEGIN ---- TLS-RSA-WITH-AES-256-GCM-SHA384
+./test-wget: line 7:  6758 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-RSA-WITH-AES-256-GCM-SHA384
+RESULT: SSL OK
+END ------ TLS-RSA-WITH-AES-256-GCM-SHA384
+
+BEGIN ---- TLS-RSA-WITH-AES-256-CCM
+./test-wget: line 7:  6765 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-RSA-WITH-AES-256-CCM
+RESULT: SSL FAIL
+END ------ TLS-RSA-WITH-AES-256-CCM
+
+BEGIN ---- TLS-RSA-WITH-AES-256-CBC-SHA256
+./test-wget: line 7:  6772 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-RSA-WITH-AES-256-CBC-SHA256
+RESULT: SSL OK
+END ------ TLS-RSA-WITH-AES-256-CBC-SHA256
+
+BEGIN ---- TLS-RSA-WITH-AES-256-CBC-SHA
+./test-wget: line 7:  6779 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-RSA-WITH-AES-256-CBC-SHA
+RESULT: SSL OK
+END ------ TLS-RSA-WITH-AES-256-CBC-SHA
+
+BEGIN ---- TLS-ECDH-RSA-WITH-AES-256-GCM-SHA384
+./test-wget: line 7:  6786 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-ECDH-RSA-WITH-AES-256-GCM-SHA384
+RESULT: SSL OK
+END ------ TLS-ECDH-RSA-WITH-AES-256-GCM-SHA384
+
+BEGIN ---- TLS-ECDH-RSA-WITH-AES-256-CBC-SHA384
+./test-wget: line 7:  6793 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-ECDH-RSA-WITH-AES-256-CBC-SHA384
+RESULT: SSL OK
+END ------ TLS-ECDH-RSA-WITH-AES-256-CBC-SHA384
+
+BEGIN ---- TLS-ECDH-RSA-WITH-AES-256-CBC-SHA
+./test-wget: line 7:  6800 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-ECDH-RSA-WITH-AES-256-CBC-SHA
+RESULT: SSL OK
+END ------ TLS-ECDH-RSA-WITH-AES-256-CBC-SHA
+
+BEGIN ---- TLS-ECDH-ECDSA-WITH-AES-256-GCM-SHA384
+./test-wget: line 7:  6807 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-ECDH-ECDSA-WITH-AES-256-GCM-SHA384
+RESULT: SSL OK
+END ------ TLS-ECDH-ECDSA-WITH-AES-256-GCM-SHA384
+
+BEGIN ---- TLS-ECDH-ECDSA-WITH-AES-256-CBC-SHA384
+./test-wget: line 7:  6814 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-ECDH-ECDSA-WITH-AES-256-CBC-SHA384
+RESULT: SSL OK
+END ------ TLS-ECDH-ECDSA-WITH-AES-256-CBC-SHA384
+
+BEGIN ---- TLS-ECDH-ECDSA-WITH-AES-256-CBC-SHA
+./test-wget: line 7:  6821 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-ECDH-ECDSA-WITH-AES-256-CBC-SHA
+RESULT: SSL OK
+END ------ TLS-ECDH-ECDSA-WITH-AES-256-CBC-SHA
+
+BEGIN ---- TLS-RSA-WITH-AES-256-CCM-8
+./test-wget: line 7:  6828 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-RSA-WITH-AES-256-CCM-8
+RESULT: SSL FAIL
+END ------ TLS-RSA-WITH-AES-256-CCM-8
+
+BEGIN ---- TLS-RSA-WITH-CAMELLIA-256-GCM-SHA384
+./test-wget: line 7:  6835 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-RSA-WITH-CAMELLIA-256-GCM-SHA384
+RESULT: SSL FAIL
+END ------ TLS-RSA-WITH-CAMELLIA-256-GCM-SHA384
+
+BEGIN ---- TLS-RSA-WITH-CAMELLIA-256-CBC-SHA256
+./test-wget: line 7:  6842 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-RSA-WITH-CAMELLIA-256-CBC-SHA256
+RESULT: SSL FAIL
+END ------ TLS-RSA-WITH-CAMELLIA-256-CBC-SHA256
+
+BEGIN ---- TLS-RSA-WITH-CAMELLIA-256-CBC-SHA
+./test-wget: line 7:  6849 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-RSA-WITH-CAMELLIA-256-CBC-SHA
+RESULT: SSL OK
+END ------ TLS-RSA-WITH-CAMELLIA-256-CBC-SHA
+
+BEGIN ---- TLS-ECDH-RSA-WITH-CAMELLIA-256-GCM-SHA384
+./test-wget: line 7:  6856 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-ECDH-RSA-WITH-CAMELLIA-256-GCM-SHA384
+RESULT: SSL FAIL
+END ------ TLS-ECDH-RSA-WITH-CAMELLIA-256-GCM-SHA384
+
+BEGIN ---- TLS-ECDH-RSA-WITH-CAMELLIA-256-CBC-SHA384
+./test-wget: line 7:  6863 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-ECDH-RSA-WITH-CAMELLIA-256-CBC-SHA384
+RESULT: SSL FAIL
+END ------ TLS-ECDH-RSA-WITH-CAMELLIA-256-CBC-SHA384
+
+BEGIN ---- TLS-ECDH-ECDSA-WITH-CAMELLIA-256-GCM-SHA384
+./test-wget: line 7:  6870 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-ECDH-ECDSA-WITH-CAMELLIA-256-GCM-SHA384
+RESULT: SSL FAIL
+END ------ TLS-ECDH-ECDSA-WITH-CAMELLIA-256-GCM-SHA384
+
+BEGIN ---- TLS-ECDH-ECDSA-WITH-CAMELLIA-256-CBC-SHA384
+./test-wget: line 7:  6877 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-ECDH-ECDSA-WITH-CAMELLIA-256-CBC-SHA384
+RESULT: SSL FAIL
+END ------ TLS-ECDH-ECDSA-WITH-CAMELLIA-256-CBC-SHA384
+
+BEGIN ---- TLS-RSA-WITH-AES-128-GCM-SHA256
+./test-wget: line 7:  6884 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-RSA-WITH-AES-128-GCM-SHA256
+RESULT: SSL OK
+END ------ TLS-RSA-WITH-AES-128-GCM-SHA256
+
+BEGIN ---- TLS-RSA-WITH-AES-128-CCM
+./test-wget: line 7:  6891 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-RSA-WITH-AES-128-CCM
+RESULT: SSL FAIL
+END ------ TLS-RSA-WITH-AES-128-CCM
+
+BEGIN ---- TLS-RSA-WITH-AES-128-CBC-SHA256
+./test-wget: line 7:  6898 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-RSA-WITH-AES-128-CBC-SHA256
+RESULT: SSL OK
+END ------ TLS-RSA-WITH-AES-128-CBC-SHA256
+
+BEGIN ---- TLS-RSA-WITH-AES-128-CBC-SHA
+./test-wget: line 7:  6905 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-RSA-WITH-AES-128-CBC-SHA
+RESULT: SSL OK
+END ------ TLS-RSA-WITH-AES-128-CBC-SHA
+
+BEGIN ---- TLS-ECDH-RSA-WITH-AES-128-GCM-SHA256
+./test-wget: line 7:  6912 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-ECDH-RSA-WITH-AES-128-GCM-SHA256
+RESULT: SSL OK
+END ------ TLS-ECDH-RSA-WITH-AES-128-GCM-SHA256
+
+BEGIN ---- TLS-ECDH-RSA-WITH-AES-128-CBC-SHA256
+./test-wget: line 7:  6919 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-ECDH-RSA-WITH-AES-128-CBC-SHA256
+RESULT: SSL OK
+END ------ TLS-ECDH-RSA-WITH-AES-128-CBC-SHA256
+
+BEGIN ---- TLS-ECDH-RSA-WITH-AES-128-CBC-SHA
+./test-wget: line 7:  6926 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-ECDH-RSA-WITH-AES-128-CBC-SHA
+RESULT: SSL OK
+END ------ TLS-ECDH-RSA-WITH-AES-128-CBC-SHA
+
+BEGIN ---- TLS-ECDH-ECDSA-WITH-AES-128-GCM-SHA256
+./test-wget: line 7:  6933 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-ECDH-ECDSA-WITH-AES-128-GCM-SHA256
+RESULT: SSL OK
+END ------ TLS-ECDH-ECDSA-WITH-AES-128-GCM-SHA256
+
+BEGIN ---- TLS-ECDH-ECDSA-WITH-AES-128-CBC-SHA256
+./test-wget: line 7:  6940 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-ECDH-ECDSA-WITH-AES-128-CBC-SHA256
+RESULT: SSL OK
+END ------ TLS-ECDH-ECDSA-WITH-AES-128-CBC-SHA256
+
+BEGIN ---- TLS-ECDH-ECDSA-WITH-AES-128-CBC-SHA
+./test-wget: line 7:  6947 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-ECDH-ECDSA-WITH-AES-128-CBC-SHA
+RESULT: SSL OK
+END ------ TLS-ECDH-ECDSA-WITH-AES-128-CBC-SHA
+
+BEGIN ---- TLS-RSA-WITH-AES-128-CCM-8
+./test-wget: line 7:  6954 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-RSA-WITH-AES-128-CCM-8
+RESULT: SSL FAIL
+END ------ TLS-RSA-WITH-AES-128-CCM-8
+
+BEGIN ---- TLS-RSA-WITH-CAMELLIA-128-GCM-SHA256
+./test-wget: line 7:  6961 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-RSA-WITH-CAMELLIA-128-GCM-SHA256
+RESULT: SSL FAIL
+END ------ TLS-RSA-WITH-CAMELLIA-128-GCM-SHA256
+
+BEGIN ---- TLS-RSA-WITH-CAMELLIA-128-CBC-SHA256
+./test-wget: line 7:  6968 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-RSA-WITH-CAMELLIA-128-CBC-SHA256
+RESULT: SSL FAIL
+END ------ TLS-RSA-WITH-CAMELLIA-128-CBC-SHA256
+
+BEGIN ---- TLS-RSA-WITH-CAMELLIA-128-CBC-SHA
+./test-wget: line 7:  6975 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-RSA-WITH-CAMELLIA-128-CBC-SHA
+RESULT: SSL OK
+END ------ TLS-RSA-WITH-CAMELLIA-128-CBC-SHA
+
+BEGIN ---- TLS-ECDH-RSA-WITH-CAMELLIA-128-GCM-SHA256
+./test-wget: line 7:  6982 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-ECDH-RSA-WITH-CAMELLIA-128-GCM-SHA256
+RESULT: SSL FAIL
+END ------ TLS-ECDH-RSA-WITH-CAMELLIA-128-GCM-SHA256
+
+BEGIN ---- TLS-ECDH-RSA-WITH-CAMELLIA-128-CBC-SHA256
+./test-wget: line 7:  6989 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-ECDH-RSA-WITH-CAMELLIA-128-CBC-SHA256
+RESULT: SSL FAIL
+END ------ TLS-ECDH-RSA-WITH-CAMELLIA-128-CBC-SHA256
+
+BEGIN ---- TLS-ECDH-ECDSA-WITH-CAMELLIA-128-GCM-SHA256
+./test-wget: line 7:  6996 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-ECDH-ECDSA-WITH-CAMELLIA-128-GCM-SHA256
+RESULT: SSL FAIL
+END ------ TLS-ECDH-ECDSA-WITH-CAMELLIA-128-GCM-SHA256
+
+BEGIN ---- TLS-ECDH-ECDSA-WITH-CAMELLIA-128-CBC-SHA256
+./test-wget: line 7:  7003 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-ECDH-ECDSA-WITH-CAMELLIA-128-CBC-SHA256
+RESULT: SSL FAIL
+END ------ TLS-ECDH-ECDSA-WITH-CAMELLIA-128-CBC-SHA256
+
+BEGIN ---- TLS-RSA-WITH-3DES-EDE-CBC-SHA
+./test-wget: line 7:  7010 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-RSA-WITH-3DES-EDE-CBC-SHA
+RESULT: SSL OK
+END ------ TLS-RSA-WITH-3DES-EDE-CBC-SHA
+
+BEGIN ---- TLS-ECDH-RSA-WITH-3DES-EDE-CBC-SHA
+./test-wget: line 7:  7017 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-ECDH-RSA-WITH-3DES-EDE-CBC-SHA
+RESULT: SSL OK
+END ------ TLS-ECDH-RSA-WITH-3DES-EDE-CBC-SHA
+
+BEGIN ---- TLS-ECDH-ECDSA-WITH-3DES-EDE-CBC-SHA
+./test-wget: line 7:  7024 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-ECDH-ECDSA-WITH-3DES-EDE-CBC-SHA
+RESULT: SSL OK
+END ------ TLS-ECDH-ECDSA-WITH-3DES-EDE-CBC-SHA
+
+BEGIN ---- TLS-RSA-PSK-WITH-AES-256-GCM-SHA384
+./test-wget: line 7:  7031 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-RSA-PSK-WITH-AES-256-GCM-SHA384
+RESULT: SSL FAIL
+END ------ TLS-RSA-PSK-WITH-AES-256-GCM-SHA384
+
+BEGIN ---- TLS-RSA-PSK-WITH-AES-256-CBC-SHA384
+./test-wget: line 7:  7038 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-RSA-PSK-WITH-AES-256-CBC-SHA384
+RESULT: SSL FAIL
+END ------ TLS-RSA-PSK-WITH-AES-256-CBC-SHA384
+
+BEGIN ---- TLS-RSA-PSK-WITH-AES-256-CBC-SHA
+./test-wget: line 7:  7045 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-RSA-PSK-WITH-AES-256-CBC-SHA
+RESULT: SSL FAIL
+END ------ TLS-RSA-PSK-WITH-AES-256-CBC-SHA
+
+BEGIN ---- TLS-RSA-PSK-WITH-CAMELLIA-256-GCM-SHA384
+./test-wget: line 7:  7052 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-RSA-PSK-WITH-CAMELLIA-256-GCM-SHA384
+RESULT: SSL FAIL
+END ------ TLS-RSA-PSK-WITH-CAMELLIA-256-GCM-SHA384
+
+BEGIN ---- TLS-RSA-PSK-WITH-CAMELLIA-256-CBC-SHA384
+./test-wget: line 7:  7059 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-RSA-PSK-WITH-CAMELLIA-256-CBC-SHA384
+RESULT: SSL FAIL
+END ------ TLS-RSA-PSK-WITH-CAMELLIA-256-CBC-SHA384
+
+BEGIN ---- TLS-RSA-PSK-WITH-AES-128-GCM-SHA256
+./test-wget: line 7:  7066 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-RSA-PSK-WITH-AES-128-GCM-SHA256
+RESULT: SSL FAIL
+END ------ TLS-RSA-PSK-WITH-AES-128-GCM-SHA256
+
+BEGIN ---- TLS-RSA-PSK-WITH-AES-128-CBC-SHA256
+./test-wget: line 7:  7073 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-RSA-PSK-WITH-AES-128-CBC-SHA256
+RESULT: SSL FAIL
+END ------ TLS-RSA-PSK-WITH-AES-128-CBC-SHA256
+
+BEGIN ---- TLS-RSA-PSK-WITH-AES-128-CBC-SHA
+./test-wget: line 7:  7080 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-RSA-PSK-WITH-AES-128-CBC-SHA
+RESULT: SSL FAIL
+END ------ TLS-RSA-PSK-WITH-AES-128-CBC-SHA
+
+BEGIN ---- TLS-RSA-PSK-WITH-CAMELLIA-128-GCM-SHA256
+./test-wget: line 7:  7087 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-RSA-PSK-WITH-CAMELLIA-128-GCM-SHA256
+RESULT: SSL FAIL
+END ------ TLS-RSA-PSK-WITH-CAMELLIA-128-GCM-SHA256
+
+BEGIN ---- TLS-RSA-PSK-WITH-CAMELLIA-128-CBC-SHA256
+./test-wget: line 7:  7094 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-RSA-PSK-WITH-CAMELLIA-128-CBC-SHA256
+RESULT: SSL FAIL
+END ------ TLS-RSA-PSK-WITH-CAMELLIA-128-CBC-SHA256
+
+BEGIN ---- TLS-RSA-PSK-WITH-3DES-EDE-CBC-SHA
+./test-wget: line 7:  7101 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-RSA-PSK-WITH-3DES-EDE-CBC-SHA
+RESULT: SSL FAIL
+END ------ TLS-RSA-PSK-WITH-3DES-EDE-CBC-SHA
+
+BEGIN ---- TLS-PSK-WITH-AES-256-GCM-SHA384
+./test-wget: line 7:  7108 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-PSK-WITH-AES-256-GCM-SHA384
+RESULT: SSL FAIL
+END ------ TLS-PSK-WITH-AES-256-GCM-SHA384
+
+BEGIN ---- TLS-PSK-WITH-AES-256-CCM
+./test-wget: line 7:  7115 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-PSK-WITH-AES-256-CCM
+RESULT: SSL FAIL
+END ------ TLS-PSK-WITH-AES-256-CCM
+
+BEGIN ---- TLS-PSK-WITH-AES-256-CBC-SHA384
+./test-wget: line 7:  7122 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-PSK-WITH-AES-256-CBC-SHA384
+RESULT: SSL FAIL
+END ------ TLS-PSK-WITH-AES-256-CBC-SHA384
+
+BEGIN ---- TLS-PSK-WITH-AES-256-CBC-SHA
+./test-wget: line 7:  7129 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-PSK-WITH-AES-256-CBC-SHA
+RESULT: SSL FAIL
+END ------ TLS-PSK-WITH-AES-256-CBC-SHA
+
+BEGIN ---- TLS-PSK-WITH-CAMELLIA-256-GCM-SHA384
+./test-wget: line 7:  7136 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-PSK-WITH-CAMELLIA-256-GCM-SHA384
+RESULT: SSL FAIL
+END ------ TLS-PSK-WITH-CAMELLIA-256-GCM-SHA384
+
+BEGIN ---- TLS-PSK-WITH-CAMELLIA-256-CBC-SHA384
+./test-wget: line 7:  7143 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-PSK-WITH-CAMELLIA-256-CBC-SHA384
+RESULT: SSL FAIL
+END ------ TLS-PSK-WITH-CAMELLIA-256-CBC-SHA384
+
+BEGIN ---- TLS-PSK-WITH-AES-256-CCM-8
+./test-wget: line 7:  7150 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-PSK-WITH-AES-256-CCM-8
+RESULT: SSL FAIL
+END ------ TLS-PSK-WITH-AES-256-CCM-8
+
+BEGIN ---- TLS-PSK-WITH-AES-128-GCM-SHA256
+./test-wget: line 7:  7157 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-PSK-WITH-AES-128-GCM-SHA256
+RESULT: SSL FAIL
+END ------ TLS-PSK-WITH-AES-128-GCM-SHA256
+
+BEGIN ---- TLS-PSK-WITH-AES-128-CCM
+./test-wget: line 7:  7164 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-PSK-WITH-AES-128-CCM
+RESULT: SSL FAIL
+END ------ TLS-PSK-WITH-AES-128-CCM
+
+BEGIN ---- TLS-PSK-WITH-AES-128-CBC-SHA256
+./test-wget: line 7:  7171 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-PSK-WITH-AES-128-CBC-SHA256
+RESULT: SSL FAIL
+END ------ TLS-PSK-WITH-AES-128-CBC-SHA256
+
+BEGIN ---- TLS-PSK-WITH-AES-128-CBC-SHA
+./test-wget: line 7:  7178 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-PSK-WITH-AES-128-CBC-SHA
+RESULT: SSL FAIL
+END ------ TLS-PSK-WITH-AES-128-CBC-SHA
+
+BEGIN ---- TLS-PSK-WITH-CAMELLIA-128-GCM-SHA256
+./test-wget: line 7:  7185 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-PSK-WITH-CAMELLIA-128-GCM-SHA256
+RESULT: SSL FAIL
+END ------ TLS-PSK-WITH-CAMELLIA-128-GCM-SHA256
+
+BEGIN ---- TLS-PSK-WITH-CAMELLIA-128-CBC-SHA256
+./test-wget: line 7:  7192 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-PSK-WITH-CAMELLIA-128-CBC-SHA256
+RESULT: SSL FAIL
+END ------ TLS-PSK-WITH-CAMELLIA-128-CBC-SHA256
+
+BEGIN ---- TLS-PSK-WITH-AES-128-CCM-8
+./test-wget: line 7:  7199 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-PSK-WITH-AES-128-CCM-8
+RESULT: SSL FAIL
+END ------ TLS-PSK-WITH-AES-128-CCM-8
+
+BEGIN ---- TLS-PSK-WITH-3DES-EDE-CBC-SHA
+./test-wget: line 7:  7206 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-PSK-WITH-3DES-EDE-CBC-SHA
+RESULT: SSL FAIL
+END ------ TLS-PSK-WITH-3DES-EDE-CBC-SHA
+
+BEGIN ---- TLS-ECDHE-ECDSA-WITH-RC4-128-SHA
+./test-wget: line 7:  7213 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-ECDHE-ECDSA-WITH-RC4-128-SHA
+RESULT: SSL OK
+END ------ TLS-ECDHE-ECDSA-WITH-RC4-128-SHA
+
+BEGIN ---- TLS-ECDHE-RSA-WITH-RC4-128-SHA
+./test-wget: line 7:  7220 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-ECDHE-RSA-WITH-RC4-128-SHA
+RESULT: SSL OK
+END ------ TLS-ECDHE-RSA-WITH-RC4-128-SHA
+
+BEGIN ---- TLS-ECDHE-PSK-WITH-RC4-128-SHA
+./test-wget: line 7:  7227 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-ECDHE-PSK-WITH-RC4-128-SHA
+RESULT: SSL FAIL
+END ------ TLS-ECDHE-PSK-WITH-RC4-128-SHA
+
+BEGIN ---- TLS-DHE-PSK-WITH-RC4-128-SHA
+./test-wget: line 7:  7234 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-DHE-PSK-WITH-RC4-128-SHA
+RESULT: SSL FAIL
+END ------ TLS-DHE-PSK-WITH-RC4-128-SHA
+
+BEGIN ---- TLS-RSA-WITH-RC4-128-SHA
+./test-wget: line 7:  7241 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-RSA-WITH-RC4-128-SHA
+RESULT: SSL OK
+END ------ TLS-RSA-WITH-RC4-128-SHA
+
+BEGIN ---- TLS-RSA-WITH-RC4-128-MD5
+./test-wget: line 7:  7248 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-RSA-WITH-RC4-128-MD5
+RESULT: SSL OK
+END ------ TLS-RSA-WITH-RC4-128-MD5
+
+BEGIN ---- TLS-ECDH-RSA-WITH-RC4-128-SHA
+./test-wget: line 7:  7255 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-ECDH-RSA-WITH-RC4-128-SHA
+RESULT: SSL OK
+END ------ TLS-ECDH-RSA-WITH-RC4-128-SHA
+
+BEGIN ---- TLS-ECDH-ECDSA-WITH-RC4-128-SHA
+./test-wget: line 7:  7262 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget OK   TLS-ECDH-ECDSA-WITH-RC4-128-SHA
+RESULT: SSL OK
+END ------ TLS-ECDH-ECDSA-WITH-RC4-128-SHA
+
+BEGIN ---- TLS-RSA-PSK-WITH-RC4-128-SHA
+./test-wget: line 7:  7269 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-RSA-PSK-WITH-RC4-128-SHA
+RESULT: SSL FAIL
+END ------ TLS-RSA-PSK-WITH-RC4-128-SHA
+
+BEGIN ---- TLS-PSK-WITH-RC4-128-SHA
+./test-wget: line 7:  7276 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
+RESULT: wget FAIL TLS-PSK-WITH-RC4-128-SHA
+RESULT: SSL FAIL
+END ------ TLS-PSK-WITH-RC4-128-SHA
+./test-wget: line 172:  7283 Terminated: 15          programs/ssl/ssl_server2 force_ciphersuite=$SUITE >&/dev/null
