@@ -532,7 +532,10 @@ cleanup:
 
 static int _check_p_range(const dhm_context *ctx )
 {
-    return ! (ctx->len < 64 || ctx->len > 512);
+    if (ctx->len < 64 || ctx->len > 512) {
+        return -1;
+    }
+    return 0;
 }
 
 /* and public */

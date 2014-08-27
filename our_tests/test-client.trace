@@ -1,0 +1,4283 @@
+----------------------------------------------------------------
+--      Test PolarSSL ssl_server2 using `ssl_client2`         --
+----------------------------------------------------------------
+
+BEGIN ---- TLS-ECDHE-ECDSA-WITH-AES-256-GCM-SHA384
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDHE-ECDSA-WITH-AES-256-GCM-SHA384 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 152 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDHE-ECDSA-WITH-AES-256-GCM-SHA384</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDHE-ECDSA-WITH-AES-256-GCM-SHA384
+RESULT: SSL OK
+our_tests/test-client: line 11: 17096 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDHE-ECDSA-WITH-AES-256-GCM-SHA384
+
+BEGIN ---- TLS-ECDHE-RSA-WITH-AES-256-GCM-SHA384
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDHE-RSA-WITH-AES-256-GCM-SHA384 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 150 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDHE-RSA-WITH-AES-256-GCM-SHA384</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDHE-RSA-WITH-AES-256-GCM-SHA384
+RESULT: SSL OK
+our_tests/test-client: line 11: 17103 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDHE-RSA-WITH-AES-256-GCM-SHA384
+
+BEGIN ---- TLS-DHE-RSA-WITH-AES-256-GCM-SHA384
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-DHE-RSA-WITH-AES-256-GCM-SHA384 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 148 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-DHE-RSA-WITH-AES-256-GCM-SHA384</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-DHE-RSA-WITH-AES-256-GCM-SHA384
+RESULT: SSL OK
+our_tests/test-client: line 11: 17110 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-DHE-RSA-WITH-AES-256-GCM-SHA384
+
+BEGIN ---- TLS-ECDHE-ECDSA-WITH-AES-256-CCM
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDHE-ECDSA-WITH-AES-256-CCM ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 145 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDHE-ECDSA-WITH-AES-256-CCM</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDHE-ECDSA-WITH-AES-256-CCM
+RESULT: SSL OK
+our_tests/test-client: line 11: 17117 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDHE-ECDSA-WITH-AES-256-CCM
+
+BEGIN ---- TLS-DHE-RSA-WITH-AES-256-CCM
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-DHE-RSA-WITH-AES-256-CCM ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 141 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-DHE-RSA-WITH-AES-256-CCM</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-DHE-RSA-WITH-AES-256-CCM
+RESULT: SSL OK
+our_tests/test-client: line 11: 17124 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-DHE-RSA-WITH-AES-256-CCM
+
+BEGIN ---- TLS-ECDHE-ECDSA-WITH-AES-256-CBC-SHA384
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDHE-ECDSA-WITH-AES-256-CBC-SHA384 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 152 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDHE-ECDSA-WITH-AES-256-CBC-SHA384</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDHE-ECDSA-WITH-AES-256-CBC-SHA384
+RESULT: SSL OK
+our_tests/test-client: line 11: 17131 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDHE-ECDSA-WITH-AES-256-CBC-SHA384
+
+BEGIN ---- TLS-ECDHE-RSA-WITH-AES-256-CBC-SHA384
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDHE-RSA-WITH-AES-256-CBC-SHA384 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 150 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDHE-RSA-WITH-AES-256-CBC-SHA384</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDHE-RSA-WITH-AES-256-CBC-SHA384
+RESULT: SSL OK
+our_tests/test-client: line 11: 17138 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDHE-RSA-WITH-AES-256-CBC-SHA384
+
+BEGIN ---- TLS-DHE-RSA-WITH-AES-256-CBC-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-DHE-RSA-WITH-AES-256-CBC-SHA256 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 148 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-DHE-RSA-WITH-AES-256-CBC-SHA256</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-DHE-RSA-WITH-AES-256-CBC-SHA256
+RESULT: SSL OK
+our_tests/test-client: line 11: 17145 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-DHE-RSA-WITH-AES-256-CBC-SHA256
+
+BEGIN ---- TLS-ECDHE-ECDSA-WITH-AES-256-CBC-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDHE-ECDSA-WITH-AES-256-CBC-SHA ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 149 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDHE-ECDSA-WITH-AES-256-CBC-SHA</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDHE-ECDSA-WITH-AES-256-CBC-SHA
+RESULT: SSL OK
+our_tests/test-client: line 11: 17152 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDHE-ECDSA-WITH-AES-256-CBC-SHA
+
+BEGIN ---- TLS-ECDHE-RSA-WITH-AES-256-CBC-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDHE-RSA-WITH-AES-256-CBC-SHA ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 147 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDHE-RSA-WITH-AES-256-CBC-SHA</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDHE-RSA-WITH-AES-256-CBC-SHA
+RESULT: SSL OK
+our_tests/test-client: line 11: 17159 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDHE-RSA-WITH-AES-256-CBC-SHA
+
+BEGIN ---- TLS-DHE-RSA-WITH-AES-256-CBC-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-DHE-RSA-WITH-AES-256-CBC-SHA ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 145 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-DHE-RSA-WITH-AES-256-CBC-SHA</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-DHE-RSA-WITH-AES-256-CBC-SHA
+RESULT: SSL OK
+our_tests/test-client: line 11: 17166 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-DHE-RSA-WITH-AES-256-CBC-SHA
+
+BEGIN ---- TLS-ECDHE-ECDSA-WITH-AES-256-CCM-8
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDHE-ECDSA-WITH-AES-256-CCM-8 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 147 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDHE-ECDSA-WITH-AES-256-CCM-8</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDHE-ECDSA-WITH-AES-256-CCM-8
+RESULT: SSL OK
+our_tests/test-client: line 11: 17173 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDHE-ECDSA-WITH-AES-256-CCM-8
+
+BEGIN ---- TLS-DHE-RSA-WITH-AES-256-CCM-8
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-DHE-RSA-WITH-AES-256-CCM-8 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 143 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-DHE-RSA-WITH-AES-256-CCM-8</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-DHE-RSA-WITH-AES-256-CCM-8
+RESULT: SSL OK
+our_tests/test-client: line 11: 17180 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-DHE-RSA-WITH-AES-256-CCM-8
+
+BEGIN ---- TLS-ECDHE-ECDSA-WITH-CAMELLIA-256-GCM-SHA384
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDHE-ECDSA-WITH-CAMELLIA-256-GCM-SHA384 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 157 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDHE-ECDSA-WITH-CAMELLIA-256-GCM-SHA384</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDHE-ECDSA-WITH-CAMELLIA-256-GCM-SHA384
+RESULT: SSL OK
+our_tests/test-client: line 11: 17187 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDHE-ECDSA-WITH-CAMELLIA-256-GCM-SHA384
+
+BEGIN ---- TLS-ECDHE-RSA-WITH-CAMELLIA-256-GCM-SHA384
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDHE-RSA-WITH-CAMELLIA-256-GCM-SHA384 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 155 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDHE-RSA-WITH-CAMELLIA-256-GCM-SHA384</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDHE-RSA-WITH-CAMELLIA-256-GCM-SHA384
+RESULT: SSL OK
+our_tests/test-client: line 11: 17194 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDHE-RSA-WITH-CAMELLIA-256-GCM-SHA384
+
+BEGIN ---- TLS-DHE-RSA-WITH-CAMELLIA-256-GCM-SHA384
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-DHE-RSA-WITH-CAMELLIA-256-GCM-SHA384 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 153 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-DHE-RSA-WITH-CAMELLIA-256-GCM-SHA384</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-DHE-RSA-WITH-CAMELLIA-256-GCM-SHA384
+RESULT: SSL OK
+our_tests/test-client: line 11: 17201 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-DHE-RSA-WITH-CAMELLIA-256-GCM-SHA384
+
+BEGIN ---- TLS-ECDHE-ECDSA-WITH-CAMELLIA-256-CBC-SHA384
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDHE-ECDSA-WITH-CAMELLIA-256-CBC-SHA384 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 157 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDHE-ECDSA-WITH-CAMELLIA-256-CBC-SHA384</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDHE-ECDSA-WITH-CAMELLIA-256-CBC-SHA384
+RESULT: SSL OK
+our_tests/test-client: line 11: 17208 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDHE-ECDSA-WITH-CAMELLIA-256-CBC-SHA384
+
+BEGIN ---- TLS-ECDHE-RSA-WITH-CAMELLIA-256-CBC-SHA384
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDHE-RSA-WITH-CAMELLIA-256-CBC-SHA384 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 155 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDHE-RSA-WITH-CAMELLIA-256-CBC-SHA384</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDHE-RSA-WITH-CAMELLIA-256-CBC-SHA384
+RESULT: SSL OK
+our_tests/test-client: line 11: 17215 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDHE-RSA-WITH-CAMELLIA-256-CBC-SHA384
+
+BEGIN ---- TLS-DHE-RSA-WITH-CAMELLIA-256-CBC-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-DHE-RSA-WITH-CAMELLIA-256-CBC-SHA256 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 153 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-DHE-RSA-WITH-CAMELLIA-256-CBC-SHA256</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-DHE-RSA-WITH-CAMELLIA-256-CBC-SHA256
+RESULT: SSL OK
+our_tests/test-client: line 11: 17222 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-DHE-RSA-WITH-CAMELLIA-256-CBC-SHA256
+
+BEGIN ---- TLS-DHE-RSA-WITH-CAMELLIA-256-CBC-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-DHE-RSA-WITH-CAMELLIA-256-CBC-SHA ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 150 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-DHE-RSA-WITH-CAMELLIA-256-CBC-SHA</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-DHE-RSA-WITH-CAMELLIA-256-CBC-SHA
+RESULT: SSL OK
+our_tests/test-client: line 11: 17229 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-DHE-RSA-WITH-CAMELLIA-256-CBC-SHA
+
+BEGIN ---- TLS-ECDHE-ECDSA-WITH-AES-128-GCM-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDHE-ECDSA-WITH-AES-128-GCM-SHA256 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 152 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDHE-ECDSA-WITH-AES-128-GCM-SHA256</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDHE-ECDSA-WITH-AES-128-GCM-SHA256
+RESULT: SSL OK
+our_tests/test-client: line 11: 17236 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDHE-ECDSA-WITH-AES-128-GCM-SHA256
+
+BEGIN ---- TLS-ECDHE-RSA-WITH-AES-128-GCM-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDHE-RSA-WITH-AES-128-GCM-SHA256 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 150 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDHE-RSA-WITH-AES-128-GCM-SHA256</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDHE-RSA-WITH-AES-128-GCM-SHA256
+RESULT: SSL OK
+our_tests/test-client: line 11: 17243 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDHE-RSA-WITH-AES-128-GCM-SHA256
+
+BEGIN ---- TLS-DHE-RSA-WITH-AES-128-GCM-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-DHE-RSA-WITH-AES-128-GCM-SHA256 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 148 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-DHE-RSA-WITH-AES-128-GCM-SHA256</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-DHE-RSA-WITH-AES-128-GCM-SHA256
+RESULT: SSL OK
+our_tests/test-client: line 11: 17250 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-DHE-RSA-WITH-AES-128-GCM-SHA256
+
+BEGIN ---- TLS-ECDHE-ECDSA-WITH-AES-128-CCM
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDHE-ECDSA-WITH-AES-128-CCM ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 145 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDHE-ECDSA-WITH-AES-128-CCM</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDHE-ECDSA-WITH-AES-128-CCM
+RESULT: SSL OK
+our_tests/test-client: line 11: 17257 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDHE-ECDSA-WITH-AES-128-CCM
+
+BEGIN ---- TLS-DHE-RSA-WITH-AES-128-CCM
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-DHE-RSA-WITH-AES-128-CCM ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 141 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-DHE-RSA-WITH-AES-128-CCM</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-DHE-RSA-WITH-AES-128-CCM
+RESULT: SSL OK
+our_tests/test-client: line 11: 17264 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-DHE-RSA-WITH-AES-128-CCM
+
+BEGIN ---- TLS-ECDHE-ECDSA-WITH-AES-128-CBC-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDHE-ECDSA-WITH-AES-128-CBC-SHA256 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 152 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDHE-ECDSA-WITH-AES-128-CBC-SHA256</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDHE-ECDSA-WITH-AES-128-CBC-SHA256
+RESULT: SSL OK
+our_tests/test-client: line 11: 17271 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDHE-ECDSA-WITH-AES-128-CBC-SHA256
+
+BEGIN ---- TLS-ECDHE-RSA-WITH-AES-128-CBC-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDHE-RSA-WITH-AES-128-CBC-SHA256 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 150 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDHE-RSA-WITH-AES-128-CBC-SHA256</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDHE-RSA-WITH-AES-128-CBC-SHA256
+RESULT: SSL OK
+our_tests/test-client: line 11: 17278 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDHE-RSA-WITH-AES-128-CBC-SHA256
+
+BEGIN ---- TLS-DHE-RSA-WITH-AES-128-CBC-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-DHE-RSA-WITH-AES-128-CBC-SHA256 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 148 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-DHE-RSA-WITH-AES-128-CBC-SHA256</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-DHE-RSA-WITH-AES-128-CBC-SHA256
+RESULT: SSL OK
+our_tests/test-client: line 11: 17285 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-DHE-RSA-WITH-AES-128-CBC-SHA256
+
+BEGIN ---- TLS-ECDHE-ECDSA-WITH-AES-128-CBC-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDHE-ECDSA-WITH-AES-128-CBC-SHA ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 149 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDHE-ECDSA-WITH-AES-128-CBC-SHA</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDHE-ECDSA-WITH-AES-128-CBC-SHA
+RESULT: SSL OK
+our_tests/test-client: line 11: 17292 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDHE-ECDSA-WITH-AES-128-CBC-SHA
+
+BEGIN ---- TLS-ECDHE-RSA-WITH-AES-128-CBC-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDHE-RSA-WITH-AES-128-CBC-SHA ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 147 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDHE-RSA-WITH-AES-128-CBC-SHA</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDHE-RSA-WITH-AES-128-CBC-SHA
+RESULT: SSL OK
+our_tests/test-client: line 11: 17299 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDHE-RSA-WITH-AES-128-CBC-SHA
+
+BEGIN ---- TLS-DHE-RSA-WITH-AES-128-CBC-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-DHE-RSA-WITH-AES-128-CBC-SHA ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 145 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-DHE-RSA-WITH-AES-128-CBC-SHA</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-DHE-RSA-WITH-AES-128-CBC-SHA
+RESULT: SSL OK
+our_tests/test-client: line 11: 17306 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-DHE-RSA-WITH-AES-128-CBC-SHA
+
+BEGIN ---- TLS-ECDHE-ECDSA-WITH-AES-128-CCM-8
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDHE-ECDSA-WITH-AES-128-CCM-8 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 147 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDHE-ECDSA-WITH-AES-128-CCM-8</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDHE-ECDSA-WITH-AES-128-CCM-8
+RESULT: SSL OK
+our_tests/test-client: line 11: 17313 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDHE-ECDSA-WITH-AES-128-CCM-8
+
+BEGIN ---- TLS-DHE-RSA-WITH-AES-128-CCM-8
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-DHE-RSA-WITH-AES-128-CCM-8 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 143 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-DHE-RSA-WITH-AES-128-CCM-8</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-DHE-RSA-WITH-AES-128-CCM-8
+RESULT: SSL OK
+our_tests/test-client: line 11: 17320 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-DHE-RSA-WITH-AES-128-CCM-8
+
+BEGIN ---- TLS-ECDHE-ECDSA-WITH-CAMELLIA-128-GCM-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDHE-ECDSA-WITH-CAMELLIA-128-GCM-SHA256 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 157 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDHE-ECDSA-WITH-CAMELLIA-128-GCM-SHA256</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDHE-ECDSA-WITH-CAMELLIA-128-GCM-SHA256
+RESULT: SSL OK
+our_tests/test-client: line 11: 17327 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDHE-ECDSA-WITH-CAMELLIA-128-GCM-SHA256
+
+BEGIN ---- TLS-ECDHE-RSA-WITH-CAMELLIA-128-GCM-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDHE-RSA-WITH-CAMELLIA-128-GCM-SHA256 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 155 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDHE-RSA-WITH-CAMELLIA-128-GCM-SHA256</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDHE-RSA-WITH-CAMELLIA-128-GCM-SHA256
+RESULT: SSL OK
+our_tests/test-client: line 11: 17334 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDHE-RSA-WITH-CAMELLIA-128-GCM-SHA256
+
+BEGIN ---- TLS-DHE-RSA-WITH-CAMELLIA-128-GCM-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-DHE-RSA-WITH-CAMELLIA-128-GCM-SHA256 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 153 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-DHE-RSA-WITH-CAMELLIA-128-GCM-SHA256</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-DHE-RSA-WITH-CAMELLIA-128-GCM-SHA256
+RESULT: SSL OK
+our_tests/test-client: line 11: 17341 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-DHE-RSA-WITH-CAMELLIA-128-GCM-SHA256
+
+BEGIN ---- TLS-ECDHE-ECDSA-WITH-CAMELLIA-128-CBC-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDHE-ECDSA-WITH-CAMELLIA-128-CBC-SHA256 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 157 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDHE-ECDSA-WITH-CAMELLIA-128-CBC-SHA256</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDHE-ECDSA-WITH-CAMELLIA-128-CBC-SHA256
+RESULT: SSL OK
+our_tests/test-client: line 11: 17348 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDHE-ECDSA-WITH-CAMELLIA-128-CBC-SHA256
+
+BEGIN ---- TLS-ECDHE-RSA-WITH-CAMELLIA-128-CBC-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDHE-RSA-WITH-CAMELLIA-128-CBC-SHA256 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 155 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDHE-RSA-WITH-CAMELLIA-128-CBC-SHA256</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDHE-RSA-WITH-CAMELLIA-128-CBC-SHA256
+RESULT: SSL OK
+our_tests/test-client: line 11: 17355 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDHE-RSA-WITH-CAMELLIA-128-CBC-SHA256
+
+BEGIN ---- TLS-DHE-RSA-WITH-CAMELLIA-128-CBC-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-DHE-RSA-WITH-CAMELLIA-128-CBC-SHA256 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 153 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-DHE-RSA-WITH-CAMELLIA-128-CBC-SHA256</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-DHE-RSA-WITH-CAMELLIA-128-CBC-SHA256
+RESULT: SSL OK
+our_tests/test-client: line 11: 17362 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-DHE-RSA-WITH-CAMELLIA-128-CBC-SHA256
+
+BEGIN ---- TLS-DHE-RSA-WITH-CAMELLIA-128-CBC-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-DHE-RSA-WITH-CAMELLIA-128-CBC-SHA ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 150 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-DHE-RSA-WITH-CAMELLIA-128-CBC-SHA</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-DHE-RSA-WITH-CAMELLIA-128-CBC-SHA
+RESULT: SSL OK
+our_tests/test-client: line 11: 17369 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-DHE-RSA-WITH-CAMELLIA-128-CBC-SHA
+
+BEGIN ---- TLS-ECDHE-ECDSA-WITH-3DES-EDE-CBC-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDHE-ECDSA-WITH-3DES-EDE-CBC-SHA ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 150 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDHE-ECDSA-WITH-3DES-EDE-CBC-SHA</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDHE-ECDSA-WITH-3DES-EDE-CBC-SHA
+RESULT: SSL OK
+our_tests/test-client: line 11: 17376 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDHE-ECDSA-WITH-3DES-EDE-CBC-SHA
+
+BEGIN ---- TLS-ECDHE-RSA-WITH-3DES-EDE-CBC-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDHE-RSA-WITH-3DES-EDE-CBC-SHA ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 148 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDHE-RSA-WITH-3DES-EDE-CBC-SHA</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDHE-RSA-WITH-3DES-EDE-CBC-SHA
+RESULT: SSL OK
+our_tests/test-client: line 11: 17383 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDHE-RSA-WITH-3DES-EDE-CBC-SHA
+
+BEGIN ---- TLS-DHE-RSA-WITH-3DES-EDE-CBC-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-DHE-RSA-WITH-3DES-EDE-CBC-SHA ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 146 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-DHE-RSA-WITH-3DES-EDE-CBC-SHA</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-DHE-RSA-WITH-3DES-EDE-CBC-SHA
+RESULT: SSL OK
+our_tests/test-client: line 11: 17390 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-DHE-RSA-WITH-3DES-EDE-CBC-SHA
+
+BEGIN ---- TLS-DHE-PSK-WITH-AES-256-GCM-SHA384
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-DHE-PSK-WITH-AES-256-GCM-SHA384
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17397 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-DHE-PSK-WITH-AES-256-GCM-SHA384
+
+BEGIN ---- TLS-DHE-PSK-WITH-AES-256-CCM
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-DHE-PSK-WITH-AES-256-CCM
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17404 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-DHE-PSK-WITH-AES-256-CCM
+
+BEGIN ---- TLS-ECDHE-PSK-WITH-AES-256-CBC-SHA384
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-ECDHE-PSK-WITH-AES-256-CBC-SHA384
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17411 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDHE-PSK-WITH-AES-256-CBC-SHA384
+
+BEGIN ---- TLS-DHE-PSK-WITH-AES-256-CBC-SHA384
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-DHE-PSK-WITH-AES-256-CBC-SHA384
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17418 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-DHE-PSK-WITH-AES-256-CBC-SHA384
+
+BEGIN ---- TLS-ECDHE-PSK-WITH-AES-256-CBC-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-ECDHE-PSK-WITH-AES-256-CBC-SHA
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17425 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDHE-PSK-WITH-AES-256-CBC-SHA
+
+BEGIN ---- TLS-DHE-PSK-WITH-AES-256-CBC-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-DHE-PSK-WITH-AES-256-CBC-SHA
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17432 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-DHE-PSK-WITH-AES-256-CBC-SHA
+
+BEGIN ---- TLS-DHE-PSK-WITH-CAMELLIA-256-GCM-SHA384
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-DHE-PSK-WITH-CAMELLIA-256-GCM-SHA384
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17439 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-DHE-PSK-WITH-CAMELLIA-256-GCM-SHA384
+
+BEGIN ---- TLS-ECDHE-PSK-WITH-CAMELLIA-256-CBC-SHA384
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-ECDHE-PSK-WITH-CAMELLIA-256-CBC-SHA384
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17446 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDHE-PSK-WITH-CAMELLIA-256-CBC-SHA384
+
+BEGIN ---- TLS-DHE-PSK-WITH-CAMELLIA-256-CBC-SHA384
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-DHE-PSK-WITH-CAMELLIA-256-CBC-SHA384
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17453 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-DHE-PSK-WITH-CAMELLIA-256-CBC-SHA384
+
+BEGIN ---- TLS-DHE-PSK-WITH-AES-256-CCM-8
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-DHE-PSK-WITH-AES-256-CCM-8
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17460 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-DHE-PSK-WITH-AES-256-CCM-8
+
+BEGIN ---- TLS-DHE-PSK-WITH-AES-128-GCM-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-DHE-PSK-WITH-AES-128-GCM-SHA256
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17467 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-DHE-PSK-WITH-AES-128-GCM-SHA256
+
+BEGIN ---- TLS-DHE-PSK-WITH-AES-128-CCM
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-DHE-PSK-WITH-AES-128-CCM
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17474 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-DHE-PSK-WITH-AES-128-CCM
+
+BEGIN ---- TLS-ECDHE-PSK-WITH-AES-128-CBC-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-ECDHE-PSK-WITH-AES-128-CBC-SHA256
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17481 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDHE-PSK-WITH-AES-128-CBC-SHA256
+
+BEGIN ---- TLS-DHE-PSK-WITH-AES-128-CBC-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-DHE-PSK-WITH-AES-128-CBC-SHA256
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17488 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-DHE-PSK-WITH-AES-128-CBC-SHA256
+
+BEGIN ---- TLS-ECDHE-PSK-WITH-AES-128-CBC-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-ECDHE-PSK-WITH-AES-128-CBC-SHA
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17495 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDHE-PSK-WITH-AES-128-CBC-SHA
+
+BEGIN ---- TLS-DHE-PSK-WITH-AES-128-CBC-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-DHE-PSK-WITH-AES-128-CBC-SHA
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17502 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-DHE-PSK-WITH-AES-128-CBC-SHA
+
+BEGIN ---- TLS-DHE-PSK-WITH-CAMELLIA-128-GCM-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-DHE-PSK-WITH-CAMELLIA-128-GCM-SHA256
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17509 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-DHE-PSK-WITH-CAMELLIA-128-GCM-SHA256
+
+BEGIN ---- TLS-DHE-PSK-WITH-CAMELLIA-128-CBC-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-DHE-PSK-WITH-CAMELLIA-128-CBC-SHA256
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17516 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-DHE-PSK-WITH-CAMELLIA-128-CBC-SHA256
+
+BEGIN ---- TLS-ECDHE-PSK-WITH-CAMELLIA-128-CBC-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-ECDHE-PSK-WITH-CAMELLIA-128-CBC-SHA256
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17523 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDHE-PSK-WITH-CAMELLIA-128-CBC-SHA256
+
+BEGIN ---- TLS-DHE-PSK-WITH-AES-128-CCM-8
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-DHE-PSK-WITH-AES-128-CCM-8
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17530 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-DHE-PSK-WITH-AES-128-CCM-8
+
+BEGIN ---- TLS-ECDHE-PSK-WITH-3DES-EDE-CBC-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-ECDHE-PSK-WITH-3DES-EDE-CBC-SHA
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17537 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDHE-PSK-WITH-3DES-EDE-CBC-SHA
+
+BEGIN ---- TLS-DHE-PSK-WITH-3DES-EDE-CBC-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-DHE-PSK-WITH-3DES-EDE-CBC-SHA
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17544 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-DHE-PSK-WITH-3DES-EDE-CBC-SHA
+
+BEGIN ---- TLS-RSA-WITH-AES-256-GCM-SHA384
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-RSA-WITH-AES-256-GCM-SHA384 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 144 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-RSA-WITH-AES-256-GCM-SHA384</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-RSA-WITH-AES-256-GCM-SHA384
+RESULT: SSL OK
+our_tests/test-client: line 11: 17551 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-RSA-WITH-AES-256-GCM-SHA384
+
+BEGIN ---- TLS-RSA-WITH-AES-256-CCM
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-RSA-WITH-AES-256-CCM ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 137 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-RSA-WITH-AES-256-CCM</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-RSA-WITH-AES-256-CCM
+RESULT: SSL OK
+our_tests/test-client: line 11: 17558 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-RSA-WITH-AES-256-CCM
+
+BEGIN ---- TLS-RSA-WITH-AES-256-CBC-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-RSA-WITH-AES-256-CBC-SHA256 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 144 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-RSA-WITH-AES-256-CBC-SHA256</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-RSA-WITH-AES-256-CBC-SHA256
+RESULT: SSL OK
+our_tests/test-client: line 11: 17565 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-RSA-WITH-AES-256-CBC-SHA256
+
+BEGIN ---- TLS-RSA-WITH-AES-256-CBC-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-RSA-WITH-AES-256-CBC-SHA ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 141 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-RSA-WITH-AES-256-CBC-SHA</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-RSA-WITH-AES-256-CBC-SHA
+RESULT: SSL OK
+our_tests/test-client: line 11: 17572 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-RSA-WITH-AES-256-CBC-SHA
+
+BEGIN ---- TLS-ECDH-RSA-WITH-AES-256-GCM-SHA384
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDH-RSA-WITH-AES-256-GCM-SHA384 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 149 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDH-RSA-WITH-AES-256-GCM-SHA384</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDH-RSA-WITH-AES-256-GCM-SHA384
+RESULT: SSL OK
+our_tests/test-client: line 11: 17579 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDH-RSA-WITH-AES-256-GCM-SHA384
+
+BEGIN ---- TLS-ECDH-RSA-WITH-AES-256-CBC-SHA384
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDH-RSA-WITH-AES-256-CBC-SHA384 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 149 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDH-RSA-WITH-AES-256-CBC-SHA384</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDH-RSA-WITH-AES-256-CBC-SHA384
+RESULT: SSL OK
+our_tests/test-client: line 11: 17586 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDH-RSA-WITH-AES-256-CBC-SHA384
+
+BEGIN ---- TLS-ECDH-RSA-WITH-AES-256-CBC-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDH-RSA-WITH-AES-256-CBC-SHA ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 146 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDH-RSA-WITH-AES-256-CBC-SHA</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDH-RSA-WITH-AES-256-CBC-SHA
+RESULT: SSL OK
+our_tests/test-client: line 11: 17593 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDH-RSA-WITH-AES-256-CBC-SHA
+
+BEGIN ---- TLS-ECDH-ECDSA-WITH-AES-256-GCM-SHA384
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDH-ECDSA-WITH-AES-256-GCM-SHA384 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 151 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDH-ECDSA-WITH-AES-256-GCM-SHA384</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDH-ECDSA-WITH-AES-256-GCM-SHA384
+RESULT: SSL OK
+our_tests/test-client: line 11: 17600 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDH-ECDSA-WITH-AES-256-GCM-SHA384
+
+BEGIN ---- TLS-ECDH-ECDSA-WITH-AES-256-CBC-SHA384
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDH-ECDSA-WITH-AES-256-CBC-SHA384 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 151 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDH-ECDSA-WITH-AES-256-CBC-SHA384</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDH-ECDSA-WITH-AES-256-CBC-SHA384
+RESULT: SSL OK
+our_tests/test-client: line 11: 17607 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDH-ECDSA-WITH-AES-256-CBC-SHA384
+
+BEGIN ---- TLS-ECDH-ECDSA-WITH-AES-256-CBC-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDH-ECDSA-WITH-AES-256-CBC-SHA ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 148 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDH-ECDSA-WITH-AES-256-CBC-SHA</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDH-ECDSA-WITH-AES-256-CBC-SHA
+RESULT: SSL OK
+our_tests/test-client: line 11: 17614 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDH-ECDSA-WITH-AES-256-CBC-SHA
+
+BEGIN ---- TLS-RSA-WITH-AES-256-CCM-8
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-RSA-WITH-AES-256-CCM-8 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 139 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-RSA-WITH-AES-256-CCM-8</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-RSA-WITH-AES-256-CCM-8
+RESULT: SSL OK
+our_tests/test-client: line 11: 17621 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-RSA-WITH-AES-256-CCM-8
+
+BEGIN ---- TLS-RSA-WITH-CAMELLIA-256-GCM-SHA384
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-RSA-WITH-CAMELLIA-256-GCM-SHA384 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 149 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-RSA-WITH-CAMELLIA-256-GCM-SHA384</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-RSA-WITH-CAMELLIA-256-GCM-SHA384
+RESULT: SSL OK
+our_tests/test-client: line 11: 17628 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-RSA-WITH-CAMELLIA-256-GCM-SHA384
+
+BEGIN ---- TLS-RSA-WITH-CAMELLIA-256-CBC-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-RSA-WITH-CAMELLIA-256-CBC-SHA256 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 149 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-RSA-WITH-CAMELLIA-256-CBC-SHA256</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-RSA-WITH-CAMELLIA-256-CBC-SHA256
+RESULT: SSL OK
+our_tests/test-client: line 11: 17635 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-RSA-WITH-CAMELLIA-256-CBC-SHA256
+
+BEGIN ---- TLS-RSA-WITH-CAMELLIA-256-CBC-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-RSA-WITH-CAMELLIA-256-CBC-SHA ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 146 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-RSA-WITH-CAMELLIA-256-CBC-SHA</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-RSA-WITH-CAMELLIA-256-CBC-SHA
+RESULT: SSL OK
+our_tests/test-client: line 11: 17642 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-RSA-WITH-CAMELLIA-256-CBC-SHA
+
+BEGIN ---- TLS-ECDH-RSA-WITH-CAMELLIA-256-GCM-SHA384
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDH-RSA-WITH-CAMELLIA-256-GCM-SHA384 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 154 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDH-RSA-WITH-CAMELLIA-256-GCM-SHA384</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDH-RSA-WITH-CAMELLIA-256-GCM-SHA384
+RESULT: SSL OK
+our_tests/test-client: line 11: 17649 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDH-RSA-WITH-CAMELLIA-256-GCM-SHA384
+
+BEGIN ---- TLS-ECDH-RSA-WITH-CAMELLIA-256-CBC-SHA384
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDH-RSA-WITH-CAMELLIA-256-CBC-SHA384 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 154 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDH-RSA-WITH-CAMELLIA-256-CBC-SHA384</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDH-RSA-WITH-CAMELLIA-256-CBC-SHA384
+RESULT: SSL OK
+our_tests/test-client: line 11: 17656 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDH-RSA-WITH-CAMELLIA-256-CBC-SHA384
+
+BEGIN ---- TLS-ECDH-ECDSA-WITH-CAMELLIA-256-GCM-SHA384
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDH-ECDSA-WITH-CAMELLIA-256-GCM-SHA384 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 156 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDH-ECDSA-WITH-CAMELLIA-256-GCM-SHA384</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDH-ECDSA-WITH-CAMELLIA-256-GCM-SHA384
+RESULT: SSL OK
+our_tests/test-client: line 11: 17663 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDH-ECDSA-WITH-CAMELLIA-256-GCM-SHA384
+
+BEGIN ---- TLS-ECDH-ECDSA-WITH-CAMELLIA-256-CBC-SHA384
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDH-ECDSA-WITH-CAMELLIA-256-CBC-SHA384 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 156 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDH-ECDSA-WITH-CAMELLIA-256-CBC-SHA384</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDH-ECDSA-WITH-CAMELLIA-256-CBC-SHA384
+RESULT: SSL OK
+our_tests/test-client: line 11: 17670 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDH-ECDSA-WITH-CAMELLIA-256-CBC-SHA384
+
+BEGIN ---- TLS-RSA-WITH-AES-128-GCM-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-RSA-WITH-AES-128-GCM-SHA256 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 144 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-RSA-WITH-AES-128-GCM-SHA256</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-RSA-WITH-AES-128-GCM-SHA256
+RESULT: SSL OK
+our_tests/test-client: line 11: 17677 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-RSA-WITH-AES-128-GCM-SHA256
+
+BEGIN ---- TLS-RSA-WITH-AES-128-CCM
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-RSA-WITH-AES-128-CCM ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 137 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-RSA-WITH-AES-128-CCM</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-RSA-WITH-AES-128-CCM
+RESULT: SSL OK
+our_tests/test-client: line 11: 17684 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-RSA-WITH-AES-128-CCM
+
+BEGIN ---- TLS-RSA-WITH-AES-128-CBC-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-RSA-WITH-AES-128-CBC-SHA256 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 144 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-RSA-WITH-AES-128-CBC-SHA256</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-RSA-WITH-AES-128-CBC-SHA256
+RESULT: SSL OK
+our_tests/test-client: line 11: 17691 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-RSA-WITH-AES-128-CBC-SHA256
+
+BEGIN ---- TLS-RSA-WITH-AES-128-CBC-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-RSA-WITH-AES-128-CBC-SHA ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 141 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-RSA-WITH-AES-128-CBC-SHA</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-RSA-WITH-AES-128-CBC-SHA
+RESULT: SSL OK
+our_tests/test-client: line 11: 17698 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-RSA-WITH-AES-128-CBC-SHA
+
+BEGIN ---- TLS-ECDH-RSA-WITH-AES-128-GCM-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDH-RSA-WITH-AES-128-GCM-SHA256 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 149 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDH-RSA-WITH-AES-128-GCM-SHA256</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDH-RSA-WITH-AES-128-GCM-SHA256
+RESULT: SSL OK
+our_tests/test-client: line 11: 17705 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDH-RSA-WITH-AES-128-GCM-SHA256
+
+BEGIN ---- TLS-ECDH-RSA-WITH-AES-128-CBC-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDH-RSA-WITH-AES-128-CBC-SHA256 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 149 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDH-RSA-WITH-AES-128-CBC-SHA256</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDH-RSA-WITH-AES-128-CBC-SHA256
+RESULT: SSL OK
+our_tests/test-client: line 11: 17712 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDH-RSA-WITH-AES-128-CBC-SHA256
+
+BEGIN ---- TLS-ECDH-RSA-WITH-AES-128-CBC-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDH-RSA-WITH-AES-128-CBC-SHA ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 146 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDH-RSA-WITH-AES-128-CBC-SHA</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDH-RSA-WITH-AES-128-CBC-SHA
+RESULT: SSL OK
+our_tests/test-client: line 11: 17719 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDH-RSA-WITH-AES-128-CBC-SHA
+
+BEGIN ---- TLS-ECDH-ECDSA-WITH-AES-128-GCM-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDH-ECDSA-WITH-AES-128-GCM-SHA256 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 151 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDH-ECDSA-WITH-AES-128-GCM-SHA256</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDH-ECDSA-WITH-AES-128-GCM-SHA256
+RESULT: SSL OK
+our_tests/test-client: line 11: 17726 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDH-ECDSA-WITH-AES-128-GCM-SHA256
+
+BEGIN ---- TLS-ECDH-ECDSA-WITH-AES-128-CBC-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDH-ECDSA-WITH-AES-128-CBC-SHA256 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 151 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDH-ECDSA-WITH-AES-128-CBC-SHA256</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDH-ECDSA-WITH-AES-128-CBC-SHA256
+RESULT: SSL OK
+our_tests/test-client: line 11: 17733 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDH-ECDSA-WITH-AES-128-CBC-SHA256
+
+BEGIN ---- TLS-ECDH-ECDSA-WITH-AES-128-CBC-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDH-ECDSA-WITH-AES-128-CBC-SHA ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 148 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDH-ECDSA-WITH-AES-128-CBC-SHA</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDH-ECDSA-WITH-AES-128-CBC-SHA
+RESULT: SSL OK
+our_tests/test-client: line 11: 17740 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDH-ECDSA-WITH-AES-128-CBC-SHA
+
+BEGIN ---- TLS-RSA-WITH-AES-128-CCM-8
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-RSA-WITH-AES-128-CCM-8 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 139 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-RSA-WITH-AES-128-CCM-8</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-RSA-WITH-AES-128-CCM-8
+RESULT: SSL OK
+our_tests/test-client: line 11: 17747 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-RSA-WITH-AES-128-CCM-8
+
+BEGIN ---- TLS-RSA-WITH-CAMELLIA-128-GCM-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-RSA-WITH-CAMELLIA-128-GCM-SHA256 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 149 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-RSA-WITH-CAMELLIA-128-GCM-SHA256</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-RSA-WITH-CAMELLIA-128-GCM-SHA256
+RESULT: SSL OK
+our_tests/test-client: line 11: 17754 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-RSA-WITH-CAMELLIA-128-GCM-SHA256
+
+BEGIN ---- TLS-RSA-WITH-CAMELLIA-128-CBC-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-RSA-WITH-CAMELLIA-128-CBC-SHA256 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 149 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-RSA-WITH-CAMELLIA-128-CBC-SHA256</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-RSA-WITH-CAMELLIA-128-CBC-SHA256
+RESULT: SSL OK
+our_tests/test-client: line 11: 17761 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-RSA-WITH-CAMELLIA-128-CBC-SHA256
+
+BEGIN ---- TLS-RSA-WITH-CAMELLIA-128-CBC-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-RSA-WITH-CAMELLIA-128-CBC-SHA ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 146 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-RSA-WITH-CAMELLIA-128-CBC-SHA</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-RSA-WITH-CAMELLIA-128-CBC-SHA
+RESULT: SSL OK
+our_tests/test-client: line 11: 17768 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-RSA-WITH-CAMELLIA-128-CBC-SHA
+
+BEGIN ---- TLS-ECDH-RSA-WITH-CAMELLIA-128-GCM-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDH-RSA-WITH-CAMELLIA-128-GCM-SHA256 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 154 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDH-RSA-WITH-CAMELLIA-128-GCM-SHA256</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDH-RSA-WITH-CAMELLIA-128-GCM-SHA256
+RESULT: SSL OK
+our_tests/test-client: line 11: 17775 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDH-RSA-WITH-CAMELLIA-128-GCM-SHA256
+
+BEGIN ---- TLS-ECDH-RSA-WITH-CAMELLIA-128-CBC-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDH-RSA-WITH-CAMELLIA-128-CBC-SHA256 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 154 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDH-RSA-WITH-CAMELLIA-128-CBC-SHA256</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDH-RSA-WITH-CAMELLIA-128-CBC-SHA256
+RESULT: SSL OK
+our_tests/test-client: line 11: 17782 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDH-RSA-WITH-CAMELLIA-128-CBC-SHA256
+
+BEGIN ---- TLS-ECDH-ECDSA-WITH-CAMELLIA-128-GCM-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDH-ECDSA-WITH-CAMELLIA-128-GCM-SHA256 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 156 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDH-ECDSA-WITH-CAMELLIA-128-GCM-SHA256</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDH-ECDSA-WITH-CAMELLIA-128-GCM-SHA256
+RESULT: SSL OK
+our_tests/test-client: line 11: 17789 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDH-ECDSA-WITH-CAMELLIA-128-GCM-SHA256
+
+BEGIN ---- TLS-ECDH-ECDSA-WITH-CAMELLIA-128-CBC-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDH-ECDSA-WITH-CAMELLIA-128-CBC-SHA256 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 156 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDH-ECDSA-WITH-CAMELLIA-128-CBC-SHA256</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDH-ECDSA-WITH-CAMELLIA-128-CBC-SHA256
+RESULT: SSL OK
+our_tests/test-client: line 11: 17796 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDH-ECDSA-WITH-CAMELLIA-128-CBC-SHA256
+
+BEGIN ---- TLS-RSA-WITH-3DES-EDE-CBC-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-RSA-WITH-3DES-EDE-CBC-SHA ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 142 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-RSA-WITH-3DES-EDE-CBC-SHA</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-RSA-WITH-3DES-EDE-CBC-SHA
+RESULT: SSL OK
+our_tests/test-client: line 11: 17803 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-RSA-WITH-3DES-EDE-CBC-SHA
+
+BEGIN ---- TLS-ECDH-RSA-WITH-3DES-EDE-CBC-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDH-RSA-WITH-3DES-EDE-CBC-SHA ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 147 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDH-RSA-WITH-3DES-EDE-CBC-SHA</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDH-RSA-WITH-3DES-EDE-CBC-SHA
+RESULT: SSL OK
+our_tests/test-client: line 11: 17810 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDH-RSA-WITH-3DES-EDE-CBC-SHA
+
+BEGIN ---- TLS-ECDH-ECDSA-WITH-3DES-EDE-CBC-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDH-ECDSA-WITH-3DES-EDE-CBC-SHA ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 149 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDH-ECDSA-WITH-3DES-EDE-CBC-SHA</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDH-ECDSA-WITH-3DES-EDE-CBC-SHA
+RESULT: SSL OK
+our_tests/test-client: line 11: 17817 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDH-ECDSA-WITH-3DES-EDE-CBC-SHA
+
+BEGIN ---- TLS-RSA-PSK-WITH-AES-256-GCM-SHA384
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-RSA-PSK-WITH-AES-256-GCM-SHA384
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17824 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-RSA-PSK-WITH-AES-256-GCM-SHA384
+
+BEGIN ---- TLS-RSA-PSK-WITH-AES-256-CBC-SHA384
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-RSA-PSK-WITH-AES-256-CBC-SHA384
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17831 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-RSA-PSK-WITH-AES-256-CBC-SHA384
+
+BEGIN ---- TLS-RSA-PSK-WITH-AES-256-CBC-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-RSA-PSK-WITH-AES-256-CBC-SHA
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17838 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-RSA-PSK-WITH-AES-256-CBC-SHA
+
+BEGIN ---- TLS-RSA-PSK-WITH-CAMELLIA-256-GCM-SHA384
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-RSA-PSK-WITH-CAMELLIA-256-GCM-SHA384
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17845 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-RSA-PSK-WITH-CAMELLIA-256-GCM-SHA384
+
+BEGIN ---- TLS-RSA-PSK-WITH-CAMELLIA-256-CBC-SHA384
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-RSA-PSK-WITH-CAMELLIA-256-CBC-SHA384
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17852 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-RSA-PSK-WITH-CAMELLIA-256-CBC-SHA384
+
+BEGIN ---- TLS-RSA-PSK-WITH-AES-128-GCM-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-RSA-PSK-WITH-AES-128-GCM-SHA256
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17859 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-RSA-PSK-WITH-AES-128-GCM-SHA256
+
+BEGIN ---- TLS-RSA-PSK-WITH-AES-128-CBC-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-RSA-PSK-WITH-AES-128-CBC-SHA256
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17866 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-RSA-PSK-WITH-AES-128-CBC-SHA256
+
+BEGIN ---- TLS-RSA-PSK-WITH-AES-128-CBC-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-RSA-PSK-WITH-AES-128-CBC-SHA
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17873 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-RSA-PSK-WITH-AES-128-CBC-SHA
+
+BEGIN ---- TLS-RSA-PSK-WITH-CAMELLIA-128-GCM-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-RSA-PSK-WITH-CAMELLIA-128-GCM-SHA256
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17880 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-RSA-PSK-WITH-CAMELLIA-128-GCM-SHA256
+
+BEGIN ---- TLS-RSA-PSK-WITH-CAMELLIA-128-CBC-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-RSA-PSK-WITH-CAMELLIA-128-CBC-SHA256
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17887 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-RSA-PSK-WITH-CAMELLIA-128-CBC-SHA256
+
+BEGIN ---- TLS-RSA-PSK-WITH-3DES-EDE-CBC-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-RSA-PSK-WITH-3DES-EDE-CBC-SHA
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17894 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-RSA-PSK-WITH-3DES-EDE-CBC-SHA
+
+BEGIN ---- TLS-PSK-WITH-AES-256-GCM-SHA384
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-PSK-WITH-AES-256-GCM-SHA384
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17901 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-PSK-WITH-AES-256-GCM-SHA384
+
+BEGIN ---- TLS-PSK-WITH-AES-256-CCM
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-PSK-WITH-AES-256-CCM
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17908 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-PSK-WITH-AES-256-CCM
+
+BEGIN ---- TLS-PSK-WITH-AES-256-CBC-SHA384
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-PSK-WITH-AES-256-CBC-SHA384
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17915 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-PSK-WITH-AES-256-CBC-SHA384
+
+BEGIN ---- TLS-PSK-WITH-AES-256-CBC-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-PSK-WITH-AES-256-CBC-SHA
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17922 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-PSK-WITH-AES-256-CBC-SHA
+
+BEGIN ---- TLS-PSK-WITH-CAMELLIA-256-GCM-SHA384
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-PSK-WITH-CAMELLIA-256-GCM-SHA384
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17929 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-PSK-WITH-CAMELLIA-256-GCM-SHA384
+
+BEGIN ---- TLS-PSK-WITH-CAMELLIA-256-CBC-SHA384
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-PSK-WITH-CAMELLIA-256-CBC-SHA384
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17936 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-PSK-WITH-CAMELLIA-256-CBC-SHA384
+
+BEGIN ---- TLS-PSK-WITH-AES-256-CCM-8
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-PSK-WITH-AES-256-CCM-8
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17943 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-PSK-WITH-AES-256-CCM-8
+
+BEGIN ---- TLS-PSK-WITH-AES-128-GCM-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-PSK-WITH-AES-128-GCM-SHA256
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17950 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-PSK-WITH-AES-128-GCM-SHA256
+
+BEGIN ---- TLS-PSK-WITH-AES-128-CCM
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-PSK-WITH-AES-128-CCM
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17957 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-PSK-WITH-AES-128-CCM
+
+BEGIN ---- TLS-PSK-WITH-AES-128-CBC-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-PSK-WITH-AES-128-CBC-SHA256
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17964 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-PSK-WITH-AES-128-CBC-SHA256
+
+BEGIN ---- TLS-PSK-WITH-AES-128-CBC-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-PSK-WITH-AES-128-CBC-SHA
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17971 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-PSK-WITH-AES-128-CBC-SHA
+
+BEGIN ---- TLS-PSK-WITH-CAMELLIA-128-GCM-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-PSK-WITH-CAMELLIA-128-GCM-SHA256
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17978 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-PSK-WITH-CAMELLIA-128-GCM-SHA256
+
+BEGIN ---- TLS-PSK-WITH-CAMELLIA-128-CBC-SHA256
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-PSK-WITH-CAMELLIA-128-CBC-SHA256
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17985 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-PSK-WITH-CAMELLIA-128-CBC-SHA256
+
+BEGIN ---- TLS-PSK-WITH-AES-128-CCM-8
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-PSK-WITH-AES-128-CCM-8
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17992 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-PSK-WITH-AES-128-CCM-8
+
+BEGIN ---- TLS-PSK-WITH-3DES-EDE-CBC-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-PSK-WITH-3DES-EDE-CBC-SHA
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 17999 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-PSK-WITH-3DES-EDE-CBC-SHA
+
+BEGIN ---- TLS-ECDHE-ECDSA-WITH-RC4-128-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDHE-ECDSA-WITH-RC4-128-SHA ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 145 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDHE-ECDSA-WITH-RC4-128-SHA</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDHE-ECDSA-WITH-RC4-128-SHA
+RESULT: SSL OK
+our_tests/test-client: line 11: 18006 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDHE-ECDSA-WITH-RC4-128-SHA
+
+BEGIN ---- TLS-ECDHE-RSA-WITH-RC4-128-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDHE-RSA-WITH-RC4-128-SHA ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 143 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDHE-RSA-WITH-RC4-128-SHA</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDHE-RSA-WITH-RC4-128-SHA
+RESULT: SSL OK
+our_tests/test-client: line 11: 18013 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDHE-RSA-WITH-RC4-128-SHA
+
+BEGIN ---- TLS-ECDHE-PSK-WITH-RC4-128-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-ECDHE-PSK-WITH-RC4-128-SHA
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 18020 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDHE-PSK-WITH-RC4-128-SHA
+
+BEGIN ---- TLS-DHE-PSK-WITH-RC4-128-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-DHE-PSK-WITH-RC4-128-SHA
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 18027 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-DHE-PSK-WITH-RC4-128-SHA
+
+BEGIN ---- TLS-RSA-WITH-RC4-128-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-RSA-WITH-RC4-128-SHA ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 137 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-RSA-WITH-RC4-128-SHA</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-RSA-WITH-RC4-128-SHA
+RESULT: SSL OK
+our_tests/test-client: line 11: 18034 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-RSA-WITH-RC4-128-SHA
+
+BEGIN ---- TLS-RSA-WITH-RC4-128-MD5
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-RSA-WITH-RC4-128-MD5 ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 137 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-RSA-WITH-RC4-128-MD5</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-RSA-WITH-RC4-128-MD5
+RESULT: SSL OK
+our_tests/test-client: line 11: 18041 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-RSA-WITH-RC4-128-MD5
+
+BEGIN ---- TLS-ECDH-RSA-WITH-RC4-128-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDH-RSA-WITH-RC4-128-SHA ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 142 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDH-RSA-WITH-RC4-128-SHA</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDH-RSA-WITH-RC4-128-SHA
+RESULT: SSL OK
+our_tests/test-client: line 11: 18048 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDH-RSA-WITH-RC4-128-SHA
+
+BEGIN ---- TLS-ECDH-ECDSA-WITH-RC4-128-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... ok
+    [ Protocol is TLSv1.2 ]
+    [ Ciphersuite is TLS-ECDH-ECDSA-WITH-RC4-128-SHA ]
+  . Verifying peer X.509 certificate... ok
+  . Peer certificate information    ...
+      cert. version     : 3
+      serial number     : 04
+      issuer name       : C=NL, O=PolarSSL, CN=PolarSSL Test CA
+      subject name      : C=NL, O=PolarSSL, CN=PolarSSL Client 2
+      issued
+  < Read from client: 34 bytes read
+
+GET / HTTP/1.0
+Extra-header: 
+
+
+  > Write to client: 144 bytes written in 1 fragments
+
+HTTP/1.0 200 OK
+Content-Type: text/html
+
+<h2>PolarSSL Test Server</h2>
+<p>Successful connection using: TLS-ECDH-ECDSA-WITH-RC4-128-SHA</p>
+
+  . Closing the connection... ok
+  . Waiting for a remote connection ...RESULT: ssl_client2 OK   TLS-ECDH-ECDSA-WITH-RC4-128-SHA
+RESULT: SSL OK
+our_tests/test-client: line 11: 18055 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-ECDH-ECDSA-WITH-RC4-128-SHA
+
+BEGIN ---- TLS-RSA-PSK-WITH-RC4-128-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-RSA-PSK-WITH-RC4-128-SHA
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 18062 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-RSA-PSK-WITH-RC4-128-SHA
+
+BEGIN ---- TLS-PSK-WITH-RC4-128-SHA
+
+  . Seeding the random number generator... ok
+  . Loading the CA root certificate ... ok (0 skipped)
+  . Loading the server cert. and key... ok
+  . Bind on tcp://localhost:4433/ ... ok
+  . Setting up the SSL/TLS structure... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake... failed
+  ! ssl_handshake returned -0x7380
+
+Last error was: -29568 - SSL - The server has no ciphersuites in common with the client
+
+  . Waiting for a remote connection ...RESULT: ssl_client2 FAIL TLS-PSK-WITH-RC4-128-SHA
+RESULT: SSL FAIL
+our_tests/test-client: line 11: 18069 Terminated: 15          programs/ssl/ssl_server2
+END ------ TLS-PSK-WITH-RC4-128-SHA
