@@ -1215,6 +1215,7 @@ static int ssl_parse_server_hello( ssl_context *ssl )
 
 #if defined(POLARSSL_KEY_EXCHANGE_DHE_RSA_ENABLED) ||                       \
     defined(POLARSSL_KEY_EXCHANGE_DHE_PSK_ENABLED)
+/* 這個函數我們不用了! */
 static int ssl_parse_server_dh_params( ssl_context *ssl, unsigned char **p,
                                        unsigned char *end )
 {
@@ -1251,7 +1252,6 @@ static int ssl_parse_server_dh_params( ssl_context *ssl, unsigned char **p,
 #else
     {
         int rlen = -1;
-        /* TODO: 檢查 DHM 參數是否合宜 */
         ret = ssl->handshake->dhif_info->read_ske_params(
                 ssl->handshake->dhif_ctx, &rlen, *p, end - *p);
         *p += rlen;
@@ -1306,6 +1306,7 @@ static int ssl_check_server_ecdh_params( const ssl_context *ssl )
 #if defined(POLARSSL_KEY_EXCHANGE_ECDHE_RSA_ENABLED) ||                     \
     defined(POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED) ||                   \
     defined(POLARSSL_KEY_EXCHANGE_ECDHE_PSK_ENABLED)
+/* 這個函數我們不用了! */
 static int ssl_parse_server_ecdh_params( ssl_context *ssl,
                                          unsigned char **p,
                                          unsigned char *end )
@@ -1338,7 +1339,6 @@ static int ssl_parse_server_ecdh_params( ssl_context *ssl,
 #else
     {
         int rlen = -1;
-        /* TODO Check supported ECDH parameters */
         ret = ssl->handshake->dhif_info->read_ske_params(
                 ssl->handshake->dhif_ctx, &rlen, *p, end - *p);
         *p += rlen;
@@ -1547,19 +1547,13 @@ static int ssl_parse_server_key_exchange( ssl_context *ssl )
     int ret;
     const ssl_ciphersuite_t *ciphersuite_info = ssl->transform_negotiate->ciphersuite_info;
     unsigned char *p, *end;
-#if defined(POLARSSL_KEY_EXCHANGE_DHE_RSA_ENABLED) ||                       \
-    defined(POLARSSL_KEY_EXCHANGE_ECDHE_RSA_ENABLED) ||                     \
-    defined(POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED)
     size_t sig_len, params_len;
     unsigned char hash[64];
     md_type_t md_alg = POLARSSL_MD_NONE;
     size_t hashlen;
     pk_type_t pk_alg = POLARSSL_PK_NONE;
-#endif
-
     SSL_DEBUG_MSG( 2, ( "=> parse server key exchange" ) );
 
-#if defined(POLARSSL_KEY_EXCHANGE_RSA_ENABLED)
     if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_RSA )
     {
         SSL_DEBUG_MSG( 2, ( "<= skip parse server key exchange" ) );
@@ -1568,20 +1562,10 @@ static int ssl_parse_server_key_exchange( ssl_context *ssl )
     }
     ((void) p);
     ((void) end);
-#endif
 
-#if defined(POLARSSL_KEY_EXCHANGE_ECDH_RSA_ENABLED) || \
-    defined(POLARSSL_KEY_EXCHANGE_ECDH_ECDSA_ENABLED)
     if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDH_RSA ||
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDH_ECDSA )
     {
-#ifdef __BEFORE
-        if( ( ret = ssl_get_ecdh_params_from_cert( ssl ) ) != 0 )
-        {
-            SSL_DEBUG_RET( 1, "ssl_get_ecdh_params_from_cert", ret );
-            return( ret );
-        }
-#else
         /* It is the first time we use ECDH, so we should alloc it first */
         ssl->handshake->dhif_info = &ecdh_info2;
         if (ssl->handshake->dhif_ctx == NULL) {
@@ -1594,9 +1578,9 @@ static int ssl_parse_server_key_exchange( ssl_context *ssl )
                 ssl->handshake->dhif_ctx,
                 pk_ec(ssl->session_negotiate->peer_cert->pk) );
         if (ret != 0) {
+            SSL_DEBUG_RET( 1, "ssl_get_ecdh_params_from_cert", ret );
             return ret;
         }
-#endif
 
         SSL_DEBUG_MSG( 2, ( "<= skip parse server key exchange" ) );
         ssl->state++;
@@ -1604,8 +1588,6 @@ static int ssl_parse_server_key_exchange( ssl_context *ssl )
     }
     ((void) p);
     ((void) end);
-#endif /* POLARSSL_KEY_EXCHANGE_ECDH_RSA_ENABLED ||
-          POLARSSL_KEY_EXCHANGE_ECDH_ECDSA_ENABLED */
 
     if( ( ret = ssl_read_record( ssl ) ) != 0 )
     {
@@ -1640,7 +1622,6 @@ static int ssl_parse_server_key_exchange( ssl_context *ssl )
     end = ssl->in_msg + ssl->in_hslen;
     SSL_DEBUG_BUF( 3,   "server key exchange", p, ssl->in_hslen - 4 );
 
-#if defined(POLARSSL_KEY_EXCHANGE__SOME__PSK_ENABLED)
     if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_PSK ||
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_RSA_PSK ||
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_DHE_PSK ||
@@ -1652,67 +1633,51 @@ static int ssl_parse_server_key_exchange( ssl_context *ssl )
             return( POLARSSL_ERR_SSL_BAD_HS_SERVER_KEY_EXCHANGE );
         }
     } /* FALLTROUGH */
-#endif /* POLARSSL_KEY_EXCHANGE__SOME__PSK_ENABLED */
 
-#if defined(POLARSSL_KEY_EXCHANGE_PSK_ENABLED) ||                       \
-    defined(POLARSSL_KEY_EXCHANGE_RSA_PSK_ENABLED)
     if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_PSK ||
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_RSA_PSK )
         ; /* nothing more to do */
     else
-#endif /* POLARSSL_KEY_EXCHANGE_PSK_ENABLED ||
-          POLARSSL_KEY_EXCHANGE_RSA_PSK_ENABLED */
-#if defined(POLARSSL_KEY_EXCHANGE_DHE_RSA_ENABLED) ||                       \
-    defined(POLARSSL_KEY_EXCHANGE_DHE_PSK_ENABLED)
     if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_DHE_RSA ||
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_DHE_PSK )
     {
-        /* It is the first time we use DHM, so we should alloc it first */
         ssl->handshake->dhif_info = &dhm_info2;
         if (ssl->handshake->dhif_ctx == NULL) {
             ssl->handshake->dhif_ctx = ssl->handshake->dhif_info->ctx_alloc();
         }
-
-        if( ssl_parse_server_dh_params( ssl, &p, end ) != 0 )
-        {
-            SSL_DEBUG_MSG( 1, ( "bad server key exchange message" ) );
-            return( POLARSSL_ERR_SSL_BAD_HS_SERVER_KEY_EXCHANGE );
-        }
     }
     else
-#endif /* POLARSSL_KEY_EXCHANGE_DHE_RSA_ENABLED ||
-          POLARSSL_KEY_EXCHANGE_DHE_PSK_ENABLED */
-#if defined(POLARSSL_KEY_EXCHANGE_ECDHE_RSA_ENABLED) ||                     \
-    defined(POLARSSL_KEY_EXCHANGE_ECDHE_PSK_ENABLED) ||                     \
-    defined(POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED)
     if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_RSA ||
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_PSK ||
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA )
     {
-        /* It _MIGHT_ be the first time we use ECDH, so we should alloc it first */
         ssl->handshake->dhif_info = &ecdh_info2;
         if (ssl->handshake->dhif_ctx == NULL) {
             ssl->handshake->dhif_ctx = ssl->handshake->dhif_info->ctx_alloc();
         }
-
-        if( ssl_parse_server_ecdh_params( ssl, &p, end ) != 0 )
-        {
-            SSL_DEBUG_MSG( 1, ( "bad server key exchange message" ) );
-            return( POLARSSL_ERR_SSL_BAD_HS_SERVER_KEY_EXCHANGE );
-        }
     }
     else
-#endif /* POLARSSL_KEY_EXCHANGE_ECDHE_RSA_ENABLED ||
-          POLARSSL_KEY_EXCHANGE_ECDHE_PSK_ENABLED ||
-          POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED */
     {
         SSL_DEBUG_MSG( 1, ( "should never happen" ) );
         return( POLARSSL_ERR_SSL_INTERNAL_ERROR );
     }
 
-#if defined(POLARSSL_KEY_EXCHANGE_DHE_RSA_ENABLED) ||                       \
-    defined(POLARSSL_KEY_EXCHANGE_ECDHE_RSA_ENABLED) ||                     \
-    defined(POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED)
+    if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_DHE_RSA   ||
+        ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_DHE_PSK   ||
+        ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_RSA ||
+        ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_PSK ||
+        ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA )
+    {
+        int rlen = -1;
+        ret = ssl->handshake->dhif_info->read_ske_params(
+                ssl->handshake->dhif_ctx, &rlen, p, end - p);
+        p += rlen;
+        if (ret != 0) {
+            SSL_DEBUG_MSG( 1, ( "bad server key exchange message" ) );
+            return( POLARSSL_ERR_SSL_BAD_HS_SERVER_KEY_EXCHANGE );
+        }
+    }
+
     if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_DHE_RSA ||
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_RSA ||
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA )
@@ -1873,9 +1838,6 @@ static int ssl_parse_server_key_exchange( ssl_context *ssl )
             return( ret );
         }
     }
-#endif /* POLARSSL_KEY_EXCHANGE_DHE_RSA_ENABLED ||
-          POLARSSL_KEY_EXCHANGE_ECDHE_RSA_ENABLED ||
-          POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED */
 
 exit:
     ssl->state++;

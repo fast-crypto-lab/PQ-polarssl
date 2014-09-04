@@ -4,6 +4,9 @@
 # quicker
 #
 
+get_dir() { echo "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"; }
+DIR="$(get_dir)"
+
 echo '----------------------------------------------------------------'
 echo '--      Test PolarSSL ssl_server2 using `wget`                --'
 echo '----------------------------------------------------------------'
@@ -152,22 +155,22 @@ TLS-PSK-WITH-RC4-128-SHA \
 ; do
 	echo
 	echo "BEGIN ---- $SUITE"
-	programs/ssl/ssl_server2 force_ciphersuite=$SUITE &>/dev/null  &
+	"$DIR/../programs/ssl/ssl_server2" force_ciphersuite=$SUITE &>/dev/null &
 	SERVER_PID=$!
 	sleep .3
 
-	rm -f _tmp
-	if wget -q --no-check-certificate -O _tmp https://localhost:4433/; then
+	rm -f "$DIR/_tmp"
+	if wget -q --no-check-certificate -O "$DIR/_tmp" https://localhost:4433/; then
 		echo "RESULT: wget OK   $SUITE"
 	else
 		echo "RESULT: wget FAIL $SUITE"
 	fi
-	if grep -q "Successful connection using: $SUITE" _tmp; then
+	if grep -q "Successful connection using: $SUITE" "$DIR/_tmp"; then
 		echo "RESULT: SSL OK"
 	else
 		echo "RESULT: SSL FAIL"
 	fi
-	rm -f _tmp
+	rm -f "$DIR/_tmp"
 
 	sleep .1
 	kill $SERVER_PID
