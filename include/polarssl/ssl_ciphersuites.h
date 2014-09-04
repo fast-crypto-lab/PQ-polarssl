@@ -233,6 +233,11 @@ extern "C" {
 #define TLS_ECDHE_ECDSA_WITH_AES_128_CCM_8      0xC0AE  /**< TLS 1.2 */
 #define TLS_ECDHE_ECDSA_WITH_AES_256_CCM_8      0xC0AF  /**< TLS 1.2 */
 
+#define TLS_LATTICEE_TTS_WITH_AES_128_GCM_SHA256        0xCC00 /* Ours */
+#define TLS_LATTICEE_RAINBOW_WITH_AES_128_GCM_SHA256    0xCC01 /* Ours */
+#define TLS_LATTICEE_RSA_WITH_AES_128_GCM_SHA256        0xCC02 /* Ours */
+#define TLS_LATTICEE_ECDSA_WITH_AES_128_GCM_SHA256      0xCC03 /* Ours */
+
 /* Reminder: update _ssl_premaster_secret when adding a new key exchange */
 typedef enum {
     POLARSSL_KEY_EXCHANGE_NONE = 0,
@@ -246,6 +251,10 @@ typedef enum {
     POLARSSL_KEY_EXCHANGE_ECDHE_PSK,
     POLARSSL_KEY_EXCHANGE_ECDH_RSA,
     POLARSSL_KEY_EXCHANGE_ECDH_ECDSA,
+    OUR_KEY_EXCHANGE_LATTICEE_TTS,
+    OUR_KEY_EXCHANGE_LATTICEE_RAINBOW,
+    OUR_KEY_EXCHANGE_LATTICEE_RSA,
+    OUR_KEY_EXCHANGE_LATTICEE_ECDSA,
 } key_exchange_type_t;
 
 typedef struct _ssl_ciphersuite_t ssl_ciphersuite_t;

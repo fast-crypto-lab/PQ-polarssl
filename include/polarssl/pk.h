@@ -100,6 +100,8 @@ typedef enum {
     POLARSSL_PK_ECDSA,
     POLARSSL_PK_RSA_ALT,
     POLARSSL_PK_RSASSA_PSS,
+    OUR_PK_TTS,
+    OUR_PK_RAINBOW,
 } pk_type_t;
 
 /**
