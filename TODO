@@ -231,3 +231,35 @@ Next internal meeting date: 8/20 Wed 10:30 am @MD631
 預計下次開會 8/27 (三)
 看大家 debug 狀況
 
+
+2014/09/04 Thu 16:23:33
+------------------------
+
+# Code Modification
+
+    1. Lattice DH (Implemenetation & interface)
+    2. TTS / Rainbow (Implemenetation & interface)
+    3. Unify the  ECDHE/DHE program flow
+    4. Survey X.509 fnctions in PolarSSL
+
+# Paper Work
+
+    主打: (1) Full PQ TLS (2) Embedded Systems
+
+    1. Introduction (做的事情/別人做的/我們的貢獻)      [滷]
+    2. PQ Sign Intro (and our chosen parameters)        [陳]
+       PQ DH Intro (and our chosen parameters)          [張]
+    3. PolarSSL Intro & How to incorporate to PolarSSL  [郭]
+        (1) 建立 DH interface                           [吳]
+        (2) 把原本的 code 改成使用 interface            [陳]
+        (3) 把新的 PK 加進 PolarSSL 的 pk interface     [陳]
+        (4) 新的 public key 跟 x509 certificate         [吳]
+    4. Experiments
+        Correctness Test (unitest/Black)                [吳]
+        Performance and throughput analysis             [??]
+    5. Conclusion (嘴炮)                                [滷]
+
+Paper Draft:         9/08 (一)
+Next meeting time:   9/09 (二)
+Manuscript deadline: 9/10 (三)
+
