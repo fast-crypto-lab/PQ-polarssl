@@ -54,6 +54,8 @@
 #include "polarssl/pkcs12.h"
 #endif
 
+#include "rainbow_tts/rainbow.h"
+
 #if defined(POLARSSL_PLATFORM_C)
 #include "polarssl/platform.h"
 #else
@@ -532,6 +534,41 @@ static int pk_get_rsapubkey( unsigned char **p,
 }
 #endif /* POLARSSL_RSA_C */
 
+
+
+
+
+
+static int pk_get_ttspubkey( unsigned char **p,
+                             const unsigned char *end,
+                             tts_context *tts )
+{
+    int ret;
+    size_t len;
+
+    if ( ( ret = asn1_get_tag( p, end, &len,
+                    ASN1_BIT_STRING) ) != 0 ) {
+        return POLARSSL_ERR_PK_INVALID_PUBKEY;
+    }
+
+    if( *p + len != end ) {
+        return( POLARSSL_ERR_PK_INVALID_PUBKEY +
+                POLARSSL_ERR_ASN1_LENGTH_MISMATCH );
+    }
+
+    if ( len != PUBKEY_SIZE_BYTE ) {
+        return( POLARSSL_ERR_PK_INVALID_PUBKEY +
+                POLARSSL_ERR_ASN1_LENGTH_MISMATCH );
+    }
+
+    memcpy( &tts->pk, *p, len );
+
+    *p += len;
+    return 0;
+
+}
+
+
 /* Get a PK algorithm identifier
  *
  *  AlgorithmIdentifier  ::=  SEQUENCE  {
@@ -618,6 +655,11 @@ int pk_parse_subpubkey( unsigned char **p, const unsigned char *end,
             ret = pk_get_ecpubkey( p, end, pk_ec( *pk ) );
     } else
 #endif /* POLARSSL_ECP_C */
+    if( pk_alg == OUR_PK_TTS)
+    {
+        ret = pk_get_ttspubkey( p, end, pk_tts( *pk ) );
+    }
+    else
         ret = POLARSSL_ERR_PK_UNKNOWN_PK_ALG;
 
     if( ret == 0 && *p != end )
@@ -833,6 +875,33 @@ static int pk_parse_key_sec1_der( ecp_keypair *eck,
     return( 0 );
 }
 #endif /* POLARSSL_ECP_C */
+
+static int pk_parse_key_tts_der( tts_context *tts,
+                                 const unsigned char *key,
+                                 size_t keylen )
+{
+    int ret;
+    size_t len;
+    unsigned char *p, *end;
+
+    p = (unsigned char *) key;
+    end = p + keylen;
+
+    if( ( ret = asn1_get_tag( &p, end, &len, ASN1_BIT_STRING ) ) != 0 )
+    {
+        return( POLARSSL_ERR_PK_KEY_INVALID_FORMAT + ret );
+    }
+
+    end = p + len;
+
+    if (len != SECKEY_SIZE_BYTE) {
+        /* need a proper error code here */
+        return POLARSSL_ERR_PK_KEY_INVALID_FORMAT;
+    }
+
+    memcpy( &tts->sk, p, len );
+    return 0;
+}
 
 /*
  * Parse an unencrypted PKCS#8 encoded private key
@@ -1114,6 +1183,42 @@ int pk_parse_key( pk_context *pk,
     else if( ret != POLARSSL_ERR_PEM_NO_HEADER_FOOTER_PRESENT )
         return( ret );
 #endif /* POLARSSL_ECP_C */
+
+
+/*----- BEGIN TTS PRIVATE KEY -----*/
+
+    ret = pem_read_buffer( &pem,
+                           "-----BEGIN TTS PRIVATE KEY-----",
+                           "-----END TTS PRIVATE KEY-----",
+                           key, pwd, pwdlen, &len );
+    if( ret == 0 )
+    {
+        if( ( pk_info = pk_info_from_type( OUR_PK_TTS ) ) == NULL )
+            return( POLARSSL_ERR_PK_UNKNOWN_PK_ALG );
+
+        if( ( ret = pk_init_ctx( pk, pk_info                   ) ) != 0 ||
+            ( ret = pk_parse_key_tts_der( pk_tts( *pk ),
+                                          pem.buf, pem.buflen ) ) != 0 )
+        {
+            pk_free( pk );
+        }
+
+        pem_free( &pem );
+        return( ret );
+    }
+    else if( ret == POLARSSL_ERR_PEM_PASSWORD_MISMATCH )
+        return( POLARSSL_ERR_PK_PASSWORD_MISMATCH );
+    else if( ret == POLARSSL_ERR_PEM_PASSWORD_REQUIRED )
+        return( POLARSSL_ERR_PK_PASSWORD_REQUIRED );
+    else if( ret != POLARSSL_ERR_PEM_NO_HEADER_FOOTER_PRESENT )
+        return( ret );
+
+/*----- END TTS PRIVATE KEY -----*/
+
+
+
+
+
 
     ret = pem_read_buffer( &pem,
                            "-----BEGIN PRIVATE KEY-----",

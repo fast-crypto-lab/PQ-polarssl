@@ -40,6 +40,11 @@ uint8_t tc[40];
 } seckey_t;
 
 
+typedef struct {
+    pubkey_t pk;
+    seckey_t sk;
+} tts_context;
+
 
 /* public interface */
 

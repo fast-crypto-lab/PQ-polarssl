@@ -455,11 +455,6 @@ const pk_info_t rsa_alt_info = {
 
 #if defined(__TTS__)
 
-typedef struct {
-    pubkey_t pk;
-    seckey_t sk;
-} tts_context;
-
 /* Not sure the sementic of this function */
 static size_t tts_get_size( const void *ctx )
 {

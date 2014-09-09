@@ -48,6 +48,8 @@
 #include "polarssl/pem.h"
 #endif
 
+#include "rainbow_tts/rainbow.h"
+
 #if defined(POLARSSL_PLATFORM_C)
 #include "polarssl/platform.h"
 #else
@@ -129,6 +131,24 @@ static int pk_write_ec_param( unsigned char **p, unsigned char *start,
 }
 #endif /* POLARSSL_ECP_C */
 
+static int pk_write_tts_pubkey( unsigned char **p, unsigned char *start,
+                                tts_context *tts )
+{
+    int ret = 0;
+    size_t len = PUBKEY_SIZE_BYTE;
+
+    if( *p - start < (int) len )
+        return( POLARSSL_ERR_ASN1_BUF_TOO_SMALL );
+
+    *p -= len;
+    memcpy( *p, &tts->pk, len );
+
+    ASN1_CHK_ADD( len, asn1_write_len( p, start, len ) );
+    ASN1_CHK_ADD( len, asn1_write_tag( p, start, ASN1_BIT_STRING ) );
+
+    return (int) len;
+}
+
 int pk_write_pubkey( unsigned char **p, unsigned char *start,
                      const pk_context *key )
 {
@@ -145,6 +165,9 @@ int pk_write_pubkey( unsigned char **p, unsigned char *start,
         ASN1_CHK_ADD( len, pk_write_ec_pubkey( p, start, pk_ec( *key ) ) );
     else
 #endif
+    if( pk_get_type( key) == OUR_PK_TTS )
+        ASN1_CHK_ADD( len, pk_write_tts_pubkey( p, start, pk_tts( *key ) ) );
+    else
         return( POLARSSL_ERR_PK_FEATURE_UNAVAILABLE );
 
     return( (int) len );
@@ -279,6 +302,24 @@ int pk_write_key_der( pk_context *key, unsigned char *buf, size_t size )
     }
     else
 #endif /* POLARSSL_ECP_C */
+    if( pk_get_type( key ) == OUR_PK_TTS )
+    {
+
+        len += SECKEY_SIZE_BYTE;
+
+        if( c - buf < (int) len )
+            return( POLARSSL_ERR_ASN1_BUF_TOO_SMALL );
+
+        c -= len;
+        memcpy( c, &pk_tts( *key )->sk, len );
+
+        ASN1_CHK_ADD( len, asn1_write_len( &c, buf, len ) );
+        ASN1_CHK_ADD( len, asn1_write_tag( &c, buf, ASN1_BIT_STRING ) );
+
+        return (int) len;
+
+    }
+    else
         return( POLARSSL_ERR_PK_FEATURE_UNAVAILABLE );
 
     return( (int) len );
@@ -342,6 +383,12 @@ int pk_write_key_pem( pk_context *key, unsigned char *buf, size_t size )
     }
     else
 #endif
+    if ( pk_get_type( key ) == OUR_PK_TTS )
+    {
+        begin = "-----BEGIN TTS PRIVATE KEY-----";
+        end = "-----END TTS PRIVATE KEY-----";
+    }
+    else
         return( POLARSSL_ERR_PK_FEATURE_UNAVAILABLE );
 
     if( ( ret = pem_write_buffer( begin, end,

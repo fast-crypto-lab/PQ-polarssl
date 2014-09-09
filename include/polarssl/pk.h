@@ -85,6 +85,9 @@
 #endif /* POLARSSL_ECP_C */
 
 
+#define pk_tts( pk )       ( (tts_context *) (pk).pk_ctx )
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
