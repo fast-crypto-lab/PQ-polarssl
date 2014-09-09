@@ -43,7 +43,7 @@ APPS =	aes/aescrypt2	aes/crypt_and_hash	\
 	test/selftest		test/ssl_test		\
 	util/pem2der		util/strerror		\
 	x509/cert_app		x509/crl_app		\
-	x509/cert_req
+	x509/cert_req		x509/cert_write
 
 ifdef OPENSSL
 APPS +=	test/o_p_test
@@ -240,6 +240,10 @@ x509/crl_app: x509/crl_app.c ../library/libpolarssl.a
 x509/cert_req: x509/cert_req.c ../library/libpolarssl.a
 	echo   "  CC    x509/cert_req.c"
 	$(CC) $(CFLAGS) $(OFLAGS) x509/cert_req.c    $(LDFLAGS) -o $@
+
+x509/cert_write: x509/cert_write.c ../library/libpolarssl.a
+	echo   "  CC    x509/cert_write.c"
+	$(CC) $(CFLAGS) $(OFLAGS) x509/cert_write.c    $(LDFLAGS) -o $@
 
 clean:
 ifndef WINDOWS

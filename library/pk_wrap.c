@@ -449,4 +449,120 @@ const pk_info_t rsa_alt_info = {
     NULL,
 };
 
+// TODO: Define static functions
+
+#include "rainbow_tts/rainbow.h"
+
+#if defined(__TTS__)
+
+typedef struct {
+    pubkey_t pk;
+    seckey_t sk;
+} tts_context;
+
+/* Not sure the sementic of this function */
+static size_t tts_get_size( const void *ctx )
+{
+    return 8 * (PUBKEY_SIZE_BYTE + SECKEY_SIZE_BYTE);
+}
+
+static int tts_can_do( pk_type_t type )
+{
+    return type == OUR_PK_TTS;
+}
+
+static int tts_verify( void *ctx, md_type_t md_alg,
+                       const unsigned char *hash, size_t hash_len,
+                       const unsigned char *sig, size_t sig_len )
+{
+    int ret;
+
+    if (hash_len < DIGEST_SIZE_BYTE) {
+        /* In fact we need another error code here */
+        return POLARSSL_ERR_PK_SIG_LEN_MISMATCH;
+    }
+
+    if (sig_len != SIGNATURE_SIZE_BYTE) {
+        return POLARSSL_ERR_PK_SIG_LEN_MISMATCH;
+    }
+
+    // int verify_bin(
+    //          const uint8_t * md192b ,
+    //          const uint8_t * key ,
+    //          const uint8_t * s320b );
+
+    ret = verify_bin( hash, &((tts_context *) ctx)->pk, sig );
+    if (ret != 0) {
+        /* In fact we need a proper error code here */
+        return -1;
+    }
+    return 0;
+}
+
+static int tts_sign( void *ctx, md_type_t md_alg,
+                   const unsigned char *hash, size_t hash_len,
+                   unsigned char *sig, size_t *sig_len,
+                   int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
+{
+    if (hash_len < DIGEST_SIZE_BYTE) {
+        /* In fact we need another error code here */
+        return POLARSSL_ERR_PK_SIG_LEN_MISMATCH;
+    }
+
+    *sig_len = SIGNATURE_SIZE_BYTE;
+
+    return sign_bin(sig, &((tts_context *) ctx)->sk, hash, f_rng, p_rng);
+}
+
+static void *tts_alloc( void )
+{
+    void *ctx = polarssl_malloc( sizeof( tts_context ) );
+
+    if( ctx != NULL )
+    {
+        memset( ctx, 0, sizeof( tts_context ) );
+    }
+
+    return( ctx );
+}
+
+static void tts_free( void *ctx )
+{
+    polarssl_zeroize( ctx, sizeof( tts_context ) );
+    polarssl_free( ctx );
+}
+
+const pk_info_t tts_info = {
+    OUR_PK_TTS,
+    "OUR_TTS",
+    tts_get_size,
+    tts_can_do,
+    tts_verify,
+    tts_sign,
+    NULL,
+    NULL,
+    tts_alloc,
+    tts_free,
+    NULL,
+};
+
+#else
+
+// TODO: Define static functions
+const pk_info_t rainbow_info = {
+    OUR_PK_RAINBOW,
+    "OUR_RAINBOW",
+    rainbow_get_size,
+    rainbow_can_do,
+    rainbow_verify,
+    rainbow_sign,
+    NULL,
+    NULL,
+    rainbow_alloc,
+    rainbow_free,
+    NULL,
+};
+
+#endif
+
 #endif /* POLARSSL_PK_C */
