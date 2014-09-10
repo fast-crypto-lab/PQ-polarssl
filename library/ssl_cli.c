@@ -2065,32 +2065,12 @@ static int ssl_write_client_key_exchange( ssl_context *ssl )
 
     SSL_DEBUG_MSG( 2, ( "=> write client key exchange" ) );
 
-#if defined(POLARSSL_KEY_EXCHANGE_DHE_RSA_ENABLED)
-    if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_DHE_RSA )
+    if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_DHE_RSA ||
+	ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_RSA ||
+	ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA ||
+	ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDH_RSA ||
+	ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDH_ECDSA )
     {
-#ifdef __BEFORE
-        /*
-         * DHM key exchange -- send G^X mod P
-         */
-        n = ssl->handshake->dhm_ctx.len;
-
-        ssl->out_msg[4] = (unsigned char)( n >> 8 );
-        ssl->out_msg[5] = (unsigned char)( n      );
-        i = 6;
-
-        ret = dhm_make_public( &ssl->handshake->dhm_ctx,
-                                (int) mpi_size( &ssl->handshake->dhm_ctx.P ),
-                               &ssl->out_msg[i], n,
-                                ssl->f_rng, ssl->p_rng );
-        if( ret != 0 )
-        {
-            SSL_DEBUG_RET( 1, "dhm_make_public", ret );
-            return( ret );
-        }
-
-        SSL_DEBUG_MPI( 3, "DHM: X ", &ssl->handshake->dhm_ctx.X  );
-        SSL_DEBUG_MPI( 3, "DHM: GX", &ssl->handshake->dhm_ctx.GX );
-#else
         ret = ssl->handshake->dhif_info->gen_public(
                 ssl->handshake->dhif_ctx,
                 ssl->f_rng, ssl->p_rng );
@@ -2107,23 +2087,6 @@ static int ssl_write_client_key_exchange( ssl_context *ssl )
         if (ret != 0) {
             return ret;
         }
-#endif
-
-#ifdef __BEFORE
-        ssl->handshake->pmslen = POLARSSL_PREMASTER_SIZE;
-
-        if( ( ret = dhm_calc_secret( &ssl->handshake->dhm_ctx,
-                                      ssl->handshake->premaster,
-                                     &ssl->handshake->pmslen,
-                                      ssl->f_rng, ssl->p_rng ) ) != 0 )
-        {
-            SSL_DEBUG_RET( 1, "dhm_calc_secret", ret );
-            return( ret );
-        }
-
-        SSL_DEBUG_MPI( 3, "DHM: K ", &ssl->handshake->dhm_ctx.K  );
-#else
-        ssl->handshake->pmslen = POLARSSL_PREMASTER_SIZE;
 
         ret = ssl->handshake->dhif_info->compute_shared(
                 ssl->handshake->dhif_ctx,
@@ -2136,101 +2099,15 @@ static int ssl_write_client_key_exchange( ssl_context *ssl )
         ret = ssl->handshake->dhif_info->write_premaster(
                 &ssl->handshake->pmslen,
                 ssl->handshake->premaster,
-                /* WTF POLARSSL_PREMASTER_SIZE,
-                 * buffer size should be enough */
+                /* WTF buffer size should be enough */
                 ssl->handshake->dhif_info->getsize_premaster(ssl->handshake->dhif_ctx),
                 ssl->handshake->dhif_ctx);
         if (ret) {
             return ret;
         }
 
-#endif
     }
     else
-#endif /* POLARSSL_KEY_EXCHANGE_DHE_RSA_ENABLED */
-#if defined(POLARSSL_KEY_EXCHANGE_ECDHE_RSA_ENABLED) ||                     \
-    defined(POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED) ||                   \
-    defined(POLARSSL_KEY_EXCHANGE_ECDH_RSA_ENABLED) ||                      \
-    defined(POLARSSL_KEY_EXCHANGE_ECDH_ECDSA_ENABLED)
-    if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_RSA ||
-        ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA ||
-        ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDH_RSA ||
-        ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDH_ECDSA )
-    {
-#ifdef __BEFORE
-        /*
-         * ECDH key exchange -- send client public value
-         */
-        i = 4;
-        ret = ecdh_make_public( &ssl->handshake->ecdh_ctx,
-                                &n,
-                                &ssl->out_msg[i], 1000,
-                                ssl->f_rng, ssl->p_rng );
-        if( ret != 0 )
-        {
-            SSL_DEBUG_RET( 1, "ecdh_make_public", ret );
-            return( ret );
-        }
-
-        SSL_DEBUG_ECP( 3, "ECDH: Q", &ssl->handshake->ecdh_ctx.Q );
-#else
-        ret = ssl->handshake->dhif_info->gen_public(
-                ssl->handshake->dhif_ctx,
-                ssl->f_rng, ssl->p_rng );
-        if (ret != 0) {
-            return ret;
-        }
-
-        i = 4;
-        ret = ssl->handshake->dhif_info->write_public(
-                &n, &ssl->out_msg[i],
-                /* WTF 1000, */
-                ssl->handshake->dhif_info->getsize_public(ssl->handshake->dhif_ctx),
-                ssl->handshake->dhif_ctx );
-        if (ret != 0) {
-            return ret;
-        }
-#endif
-
-#ifdef __BEFORE
-        if( ( ret = ecdh_calc_secret( &ssl->handshake->ecdh_ctx,
-                                      &ssl->handshake->pmslen,
-                                       ssl->handshake->premaster,
-                                       POLARSSL_MPI_MAX_SIZE,
-                                       ssl->f_rng, ssl->p_rng ) ) != 0 )
-        {
-            SSL_DEBUG_RET( 1, "ecdh_calc_secret", ret );
-            return( ret );
-        }
-
-        SSL_DEBUG_MPI( 3, "ECDH: z", &ssl->handshake->ecdh_ctx.z );
-#else
-        ret = ssl->handshake->dhif_info->compute_shared(
-                ssl->handshake->dhif_ctx,
-                ssl->f_rng,
-                ssl->p_rng);
-        if (ret) {
-            return ret;
-        }
-
-        ret = ssl->handshake->dhif_info->write_premaster(
-                &ssl->handshake->pmslen,
-                ssl->handshake->premaster,
-                /* WTF POLARSSL_MPI_MAX_SIZE,
-                 * buffer size should be enough */
-                ssl->handshake->dhif_info->getsize_premaster(ssl->handshake->dhif_ctx),
-                ssl->handshake->dhif_ctx);
-        if (ret) {
-            return ret;
-        }
-
-#endif
-    }
-    else
-#endif /* POLARSSL_KEY_EXCHANGE_ECDHE_RSA_ENABLED ||
-          POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED ||
-          POLARSSL_KEY_EXCHANGE_ECDH_RSA_ENABLED ||
-          POLARSSL_KEY_EXCHANGE_ECDH_ECDSA_ENABLED */
 #if defined(POLARSSL_KEY_EXCHANGE__SOME__PSK_ENABLED)
     if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_PSK ||
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_RSA_PSK ||
@@ -2251,43 +2128,18 @@ static int ssl_write_client_key_exchange( ssl_context *ssl )
         memcpy( ssl->out_msg + i, ssl->psk_identity, ssl->psk_identity_len );
         i += ssl->psk_identity_len;
 
-#if defined(POLARSSL_KEY_EXCHANGE_PSK_ENABLED)
         if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_PSK )
         {
             n = 0;
         }
-        else
-#endif
-#if defined(POLARSSL_KEY_EXCHANGE_RSA_PSK_ENABLED)
-        if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_RSA_PSK )
+	else if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_RSA_PSK )
         {
             if( ( ret = ssl_write_encrypted_pms( ssl, i, &n, 2 ) ) != 0 )
                 return( ret );
         }
-        else
-#endif
-#if defined(POLARSSL_KEY_EXCHANGE_DHE_PSK_ENABLED)
-        if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_DHE_PSK )
+        else if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_DHE_PSK ||
+	    ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_PSK )
         {
-#ifdef __BEFORE
-            /*
-             * ClientDiffieHellmanPublic public (DHM send G^X mod P)
-             */
-            n = ssl->handshake->dhm_ctx.len;
-
-            ssl->out_msg[i++] = (unsigned char)( n >> 8 );
-            ssl->out_msg[i++] = (unsigned char)( n      );
-
-            ret = dhm_make_public( &ssl->handshake->dhm_ctx,
-                    (int) mpi_size( &ssl->handshake->dhm_ctx.P ),
-                    &ssl->out_msg[i], n,
-                    ssl->f_rng, ssl->p_rng );
-            if( ret != 0 )
-            {
-                SSL_DEBUG_RET( 1, "dhm_make_public", ret );
-                return( ret );
-            }
-#else
             ret = ssl->handshake->dhif_info->gen_public(
                     ssl->handshake->dhif_ctx,
                     ssl->f_rng, ssl->p_rng );
@@ -2304,48 +2156,8 @@ static int ssl_write_client_key_exchange( ssl_context *ssl )
                 return ret;
             }
 
-#endif
         }
-        else
-#endif /* POLARSSL_KEY_EXCHANGE_DHE_PSK_ENABLED */
-#if defined(POLARSSL_KEY_EXCHANGE_ECDHE_PSK_ENABLED)
-        if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_PSK )
-        {
-#ifdef __BEFORE
-            /*
-             * ClientECDiffieHellmanPublic public;
-             */
-            ret = ecdh_make_public( &ssl->handshake->ecdh_ctx, &n,
-                    &ssl->out_msg[i], SSL_MAX_CONTENT_LEN - i,
-                    ssl->f_rng, ssl->p_rng );
-            if( ret != 0 )
-            {
-                SSL_DEBUG_RET( 1, "ecdh_make_public", ret );
-                return( ret );
-            }
-            SSL_DEBUG_ECP( 3, "ECDH: Q", &ssl->handshake->ecdh_ctx.Q );
-
-#else
-            ret = ssl->handshake->dhif_info->gen_public(
-                ssl->handshake->dhif_ctx,
-                ssl->f_rng, ssl->p_rng );
-            if (ret != 0) {
-                return ret;
-            }
-
-            i = 4;
-            ret = ssl->handshake->dhif_info->write_public(
-                    &n, &ssl->out_msg[i],
-                    /* WTF Buffer size = ???! */
-                    ssl->handshake->dhif_info->getsize_public(ssl->handshake->dhif_ctx),
-                    ssl->handshake->dhif_ctx );
-            if (ret != 0) {
-                return ret;
-            }
-#endif
-        }
-        else
-#endif /* POLARSSL_KEY_EXCHANGE_ECDHE_PSK_ENABLED */
+	else
         {
             SSL_DEBUG_MSG( 1, ( "should never happen" ) );
             return( POLARSSL_ERR_SSL_INTERNAL_ERROR );
