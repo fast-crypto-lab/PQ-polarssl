@@ -30,6 +30,7 @@ APPS =	aes/aescrypt2	aes/crypt_and_hash	\
 	pkey/mpi_demo		pkey/pk_decrypt		\
 	pkey/pk_encrypt		pkey/pk_sign		\
 	pkey/pk_verify		pkey/rsa_genkey		\
+	pkey/tts_genkey \
 	pkey/rsa_decrypt	pkey/rsa_encrypt	\
 	pkey/rsa_sign		pkey/rsa_verify		\
 	pkey/rsa_sign_pss	pkey/rsa_verify_pss \
@@ -136,6 +137,10 @@ pkey/pk_verify: pkey/pk_verify.c ../library/libpolarssl.a
 pkey/rsa_genkey: pkey/rsa_genkey.c ../library/libpolarssl.a
 	echo   "  CC    pkey/rsa_genkey.c"
 	$(CC) $(CFLAGS) $(OFLAGS) pkey/rsa_genkey.c  $(LDFLAGS) -o $@
+
+pkey/tts_genkey: pkey/tts_genkey.c ../library/libpolarssl.a
+	echo   "  CC    pkey/tts_genkey.c"
+	$(CC) $(CFLAGS) $(OFLAGS) pkey/tts_genkey.c  $(LDFLAGS) -o $@
 
 pkey/rsa_sign: pkey/rsa_sign.c ../library/libpolarssl.a
 	echo   "  CC    pkey/rsa_sign.c"
