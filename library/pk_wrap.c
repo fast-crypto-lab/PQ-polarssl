@@ -453,12 +453,10 @@ const pk_info_t rsa_alt_info = {
 
 #include "rainbow_tts/rainbow.h"
 
-#if defined(__TTS__)
-
 /* Not sure the sementic of this function */
 static size_t tts_get_size( const void *ctx )
 {
-    return 8 * (PUBKEY_SIZE_BYTE + SECKEY_SIZE_BYTE);
+    return 8 * (TTS_PUBKEY_SIZE_BYTE + TTS_SECKEY_SIZE_BYTE);
 }
 
 static int tts_can_do( pk_type_t type )
@@ -466,18 +464,18 @@ static int tts_can_do( pk_type_t type )
     return type == OUR_PK_TTS;
 }
 
-static int tts_verify( void *ctx, md_type_t md_alg,
+static int __tts_verify( void *ctx, md_type_t md_alg,
                        const unsigned char *hash, size_t hash_len,
                        const unsigned char *sig, size_t sig_len )
 {
     int ret;
 
-    if (hash_len < DIGEST_SIZE_BYTE) {
+    if (hash_len < TTS_DIGEST_SIZE_BYTE) {
         /* In fact we need another error code here */
         return POLARSSL_ERR_PK_SIG_LEN_MISMATCH;
     }
 
-    if (sig_len != SIGNATURE_SIZE_BYTE) {
+    if (sig_len != TTS_SIGNATURE_SIZE_BYTE) {
         return POLARSSL_ERR_PK_SIG_LEN_MISMATCH;
     }
 
@@ -486,7 +484,7 @@ static int tts_verify( void *ctx, md_type_t md_alg,
     //          const uint8_t * key ,
     //          const uint8_t * s320b );
 
-    ret = verify_bin( hash, &((tts_context *) ctx)->pk, sig );
+    ret = tts_verify( hash, &((tts_context *) ctx)->pk, sig );
     if (ret != 0) {
         /* In fact we need a proper error code here */
         return -1;
@@ -494,19 +492,19 @@ static int tts_verify( void *ctx, md_type_t md_alg,
     return 0;
 }
 
-static int tts_sign( void *ctx, md_type_t md_alg,
+static int __tts_sign( void *ctx, md_type_t md_alg,
                    const unsigned char *hash, size_t hash_len,
                    unsigned char *sig, size_t *sig_len,
                    int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
 {
-    if (hash_len < DIGEST_SIZE_BYTE) {
+    if (hash_len < TTS_DIGEST_SIZE_BYTE) {
         /* In fact we need another error code here */
         return POLARSSL_ERR_PK_SIG_LEN_MISMATCH;
     }
 
-    *sig_len = SIGNATURE_SIZE_BYTE;
+    *sig_len = TTS_SIGNATURE_SIZE_BYTE;
 
-    return sign_bin(sig, &((tts_context *) ctx)->sk, hash, f_rng, p_rng);
+    return tts_sign(sig, &((tts_context *) ctx)->sk, hash);
 }
 
 static void *tts_alloc( void )
@@ -532,8 +530,8 @@ const pk_info_t tts_info = {
     "OUR_TTS",
     tts_get_size,
     tts_can_do,
-    tts_verify,
-    tts_sign,
+    __tts_verify,
+    __tts_sign,
     NULL,
     NULL,
     tts_alloc,
@@ -541,9 +539,72 @@ const pk_info_t tts_info = {
     NULL,
 };
 
-#else
+static size_t rainbow_get_size( const void *ctx )
+{
+    return 8 * (RB_PUBKEY_SIZE_BYTE + RB_SECKEY_SIZE_BYTE);
+}
 
-// TODO: Define static functions
+static int rainbow_can_do( pk_type_t type )
+{
+    return type == OUR_PK_RAINBOW;
+}
+
+static int rainbow_verify( void *ctx, md_type_t md_alg,
+                       const unsigned char *hash, size_t hash_len,
+                       const unsigned char *sig, size_t sig_len )
+{
+    int ret;
+
+    if (hash_len < RB_DIGEST_SIZE_BYTE) {
+        /* In fact we need another error code here */
+        return POLARSSL_ERR_PK_SIG_LEN_MISMATCH;
+    }
+
+    if (sig_len != RB_SIGNATURE_SIZE_BYTE) {
+        return POLARSSL_ERR_PK_SIG_LEN_MISMATCH;
+    }
+
+    ret = rb_verify( hash, &((rainbow_context *) ctx)->pk, sig );
+    if (ret != 0) {
+        /* In fact we need a proper error code here */
+        return -1;
+    }
+    return 0;
+}
+
+static int rainbow_sign( void *ctx, md_type_t md_alg,
+                   const unsigned char *hash, size_t hash_len,
+                   unsigned char *sig, size_t *sig_len,
+                   int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
+{
+    if (hash_len < RB_DIGEST_SIZE_BYTE) {
+        /* In fact we need another error code here */
+        return POLARSSL_ERR_PK_SIG_LEN_MISMATCH;
+    }
+
+    *sig_len = RB_SIGNATURE_SIZE_BYTE;
+
+    return rb_sign(sig, &((rainbow_context *) ctx)->sk, hash);
+}
+
+static void *rainbow_alloc( void )
+{
+    void *ctx = polarssl_malloc( sizeof( rainbow_context ) );
+
+    if( ctx != NULL )
+    {
+        memset( ctx, 0, sizeof( rainbow_context ) );
+    }
+
+    return( ctx );
+}
+
+static void rainbow_free( void *ctx )
+{
+    polarssl_zeroize( ctx, sizeof( rainbow_context ) );
+    polarssl_free( ctx );
+}
+
 const pk_info_t rainbow_info = {
     OUR_PK_RAINBOW,
     "OUR_RAINBOW",
@@ -557,7 +618,5 @@ const pk_info_t rainbow_info = {
     rainbow_free,
     NULL,
 };
-
-#endif
 
 #endif /* POLARSSL_PK_C */

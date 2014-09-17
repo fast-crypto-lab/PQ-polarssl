@@ -5,10 +5,10 @@
 
 #define __RAINBOW__
 
-#define __DEBUG__
+//#define __DEBUG__
 
 //#define __CRYPTO_EBATS__
 
-//#define __POLARSSL__
+#define __POLARSSL__
 
 #endif

@@ -1,10 +1,10 @@
-#include "run_config.h"
+#include "rainbow_tts/run_config.h"
 
-#include "rainbow.h"
+#include "rainbow_tts/rainbow.h"
 
-#include "linear31.h"
+#include "rainbow_tts/linear31.h"
 
-#include "_hash_sha256.h"
+#include "rainbow_tts/_hash_sha256.h"
 
 
 

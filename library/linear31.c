@@ -1,6 +1,6 @@
-#include "run_config.h"
+#include "rainbow_tts/run_config.h"
 
-#include "linear31.h"
+#include "rainbow_tts/linear31.h"
 
 
 /* ==================== */

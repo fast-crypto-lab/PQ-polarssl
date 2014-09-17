@@ -9,8 +9,6 @@ extern "C" {
 #include "run_config.h"
 #include "linear31.h"
 
-
-
 /* TTS public interface */
 
 
@@ -31,6 +29,11 @@ uint8_t l2_coefpi[20][42];
 uint8_t t[40][40];
 uint8_t tc[40];
 } tts_seckey_t;
+
+typedef struct {
+    qpoly_64x40_t    pk;
+    tts_seckey_t     sk;
+} tts_context;
 
 #endif /*  __TTS__ */
 
@@ -68,6 +71,11 @@ uint8_t ol2nd_rowmat[20][20];
 uint8_t t[40][40];
 uint8_t tc[40];
 } rb_seckey_t;
+
+typedef struct {
+    qpoly_64x40_t    pk;
+    rb_seckey_t      sk;
+} rainbow_context;
 
 #endif /* __RAINBOW__ */
 

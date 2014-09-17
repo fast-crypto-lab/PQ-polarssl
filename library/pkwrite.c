@@ -135,7 +135,7 @@ static int pk_write_tts_pubkey( unsigned char **p, unsigned char *start,
                                 tts_context *tts )
 {
     int ret = 0;
-    size_t len = PUBKEY_SIZE_BYTE;
+    size_t len = TTS_PUBKEY_SIZE_BYTE;
 
     if( *p - start < (int) len )
         return( POLARSSL_ERR_ASN1_BUF_TOO_SMALL );
@@ -305,7 +305,7 @@ int pk_write_key_der( pk_context *key, unsigned char *buf, size_t size )
     if( pk_get_type( key ) == OUR_PK_TTS )
     {
 
-        len += SECKEY_SIZE_BYTE;
+        len += TTS_SECKEY_SIZE_BYTE;
 
         if( c - buf < (int) len )
             return( POLARSSL_ERR_ASN1_BUF_TOO_SMALL );

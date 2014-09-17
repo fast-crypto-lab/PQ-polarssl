@@ -556,7 +556,7 @@ static int pk_get_ttspubkey( unsigned char **p,
                 POLARSSL_ERR_ASN1_LENGTH_MISMATCH );
     }
 
-    if ( len != PUBKEY_SIZE_BYTE ) {
+    if ( len != TTS_PUBKEY_SIZE_BYTE ) {
         return( POLARSSL_ERR_PK_INVALID_PUBKEY +
                 POLARSSL_ERR_ASN1_LENGTH_MISMATCH );
     }
@@ -894,7 +894,7 @@ static int pk_parse_key_tts_der( tts_context *tts,
 
     end = p + len;
 
-    if (len != SECKEY_SIZE_BYTE) {
+    if (len != TTS_SECKEY_SIZE_BYTE) {
         /* need a proper error code here */
         return POLARSSL_ERR_PK_KEY_INVALID_FORMAT;
     }
