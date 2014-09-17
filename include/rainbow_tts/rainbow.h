@@ -10,14 +10,16 @@ extern "C" {
 #include "linear31.h"
 
 
-typedef qpoly_64x40_t pubkey_t;
 
+/* TTS public interface */
 
-typedef struct {
-uint8_t s[64][64];
-uint8_t sc[64];
 
 #if defined(__TTS__)
+
+typedef struct {
+uint8_t extra_random[32];
+uint8_t s[64][64];
+uint8_t sc[64];
 uint8_t l1_sigma[24];
 uint8_t l1_coefsigma[24];
 uint8_t l1_pi[20][24];
@@ -26,44 +28,61 @@ uint8_t l2_sigma[44];
 uint8_t l2_coefsigma[44];
 uint8_t l2_pi[20][44];
 uint8_t l2_coefpi[20][42];
-#else  /* RAINBOW */
+uint8_t t[40][40];
+uint8_t tc[40];
+} tts_seckey_t;
+
+#endif /*  __TTS__ */
+
+
+#define TTS_SECKEY_SIZE_BYTE 8608
+#define TTS_PUBKEY_SIZE_BYTE 53600
+#define TTS_DIGEST_SIZE_BYTE 24
+#define TTS_SIGNATURE_SIZE_BYTE 40
+
+
+int tts_genkey( uint8_t * pubkey , uint8_t *seckey , int (*f_rng)(void *, unsigned char *, size_t), void *p_rng );
+
+int tts_sign( uint8_t * s320b , const uint8_t * key , const uint8_t * md192b );
+
+int tts_verify( const uint8_t * md192b , const uint8_t * key , const uint8_t * s320b );
+
+
+
+
+
+/* rainbow public interface */
+
+
+#if defined(__RAINBOW__)
+
+typedef struct {
+uint8_t s[64][64];
+uint8_t sc[64];
 qpoly_24x20_t vv1st;
 uint8_t ov1st_rowmat[20][20][24];
 uint8_t ol1st_rowmat[20][20];
 qpoly_44x20_t vv2nd;
 uint8_t ov2nd_rowmat[20][20][44];
 uint8_t ol2nd_rowmat[20][20];
-#endif /*  __TTS__ */
-
 uint8_t t[40][40];
 uint8_t tc[40];
-} seckey_t;
+} rb_seckey_t;
+
+#endif /* __RAINBOW__ */
 
 
-typedef struct {
-    pubkey_t pk;
-    seckey_t sk;
-} tts_context;
+#define RB_SECKEY_SIZE_BYTE 60960
+#define RB_PUBKEY_SIZE_BYTE TTS_PUBKEY_SIZE_BYTE
+#define RB_DIGEST_SIZE_BYTE TTS_DIGEST_SIZE_BYTE
+#define RB_SIGNATURE_SIZE_BYTE TTS_SIGNATURE_SIZE_BYTE
 
 
-/* public interface */
+int rb_genkey( uint8_t * pubkey , uint8_t *seckey , int (*f_rng)(void *, unsigned char *, size_t), void *p_rng );
 
-#if defined(__TTS__)
-#define SECKEY_SIZE_BYTE 8576
-#else /* rainbow */
-#define SECKEY_SIZE_BYTE 60960
-#endif /* __TTS__ */
+int rb_sign( uint8_t * s320b , const uint8_t * key , const uint8_t * md192b );
 
-#define PUBKEY_SIZE_BYTE 53600
-#define DIGEST_SIZE_BYTE 24
-#define SIGNATURE_SIZE_BYTE 40
-
-
-int genkey_pack( uint8_t * pubkey , uint8_t *seckey , int (*f_rng)(void *, unsigned char *, size_t), void *p_rng );
-
-int sign_bin( uint8_t * s320b , const seckey_t * key , const uint8_t * md192b , int (*f_rng)(void *, unsigned char *, size_t), void *p_rng );
-
-int verify_bin( const uint8_t * md192b , const uint8_t * key , const uint8_t * s320b );
+#define rb_verify tts_verify
 
 
 #ifdef __cplusplus

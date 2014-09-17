@@ -3,8 +3,12 @@
 
 #define __TTS__
 
-//#define __DEBUG__
+#define __RAINBOW__
+
+#define __DEBUG__
 
 //#define __CRYPTO_EBATS__
+
+//#define __POLARSSL__
 
 #endif

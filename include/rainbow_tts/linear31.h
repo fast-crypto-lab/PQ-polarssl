@@ -7,7 +7,9 @@ extern "C" {
 #endif
 
 #include "run_config.h"
-#include <stdio.h>
+
+
+#include <stdlib.h>  /* for size_t */
 
 
 #if defined(__DEBUG__)
@@ -24,7 +26,7 @@ typedef unsigned short uint16_t;
 typedef unsigned uint32_t;
 typedef unsigned long long uint64_t;
 
-#endif
+#endif /* _STDINT_H */
 
 /* GF(31) library */
 
@@ -37,7 +39,7 @@ static inline uint8_t fast_mod31_32( unsigned a )
 	return r;
 }
 
-static inline uint8_t full_mod31_32( unsigned a )
+static inline uint8_t full_mod31_32( uint32_t a )
 {
 #if 0
 	uint8_t r = fast_mod31_32(a); /* 6 bit */
@@ -115,9 +117,11 @@ static inline uint8_t remove_31( uint8_t a )
 
 static inline void div31(unsigned * q , unsigned *r , unsigned max24bit )
 {
-	*q = (0x84210842ULL * max24bit)>>36;
-	*r = max24bit + (*q) - ((*q)<<5);
-	if(31<=*r) { *r-=31; *q+=1; } /* should we try to remove this ??? */
+	unsigned qq = (0x84210842ULL * max24bit)>>36;
+	unsigned rr = max24bit + qq - (qq<<5);
+	unsigned msk = (~(rr-31))>>5;
+	*q = qq + (msk&1);
+	*r = rr - (rr&msk);
 }
 
 static inline uint32_t cvt_bin24_31x5( const uint8_t * gfv )
@@ -129,7 +133,7 @@ static inline uint32_t cvt_bin24_31x5( const uint8_t * gfv )
 	return (r<<5)-r+gfv[0];
 }
 
-static inline void cvt_31x5_bin24( uint8_t * gfv , uint32_t bv )
+static inline void cvt_31x5_bin24( uint8_t * gfv , uint32_t bv ) /* stored full info of bin24 in gf31x5*/
 {
 	uint32_t r;
 	uint32_t bin24 = bv&0xffffff;
@@ -138,6 +142,59 @@ static inline void cvt_31x5_bin24( uint8_t * gfv , uint32_t bv )
 	div31( &bin24 , & r , bin24 ); gfv[2] = r;
 	div31( &bin24 , & r , bin24 ); gfv[3] = r; gfv[4] = bin24;
 }
+
+static inline void cvt_31x4_bin24( uint8_t * gfv , uint32_t bv ) /* for rand() */
+{
+	uint32_t r;
+	uint32_t bin24 = bv&0xffffff;
+	div31( &bin24 , & r , bin24 ); gfv[0] = r;
+	div31( &bin24 , & r , bin24 ); gfv[1] = r;
+	div31( &bin24 , & r , bin24 ); gfv[2] = r;
+	div31( &bin24 , & r , bin24 ); gfv[3] = r;
+}
+
+static inline uint8_t cvt_31x6p5_bin32( uint8_t * gfv , uint32_t bv ) /* gfv[0~5]: full, gfv_6: 0~4 */
+{
+	uint32_t r;
+	div31( &bv , & r , bv ); gfv[0] = r;
+	div31( &bv , & r , bv ); gfv[1] = r;
+	div31( &bv , & r , bv ); gfv[2] = r;
+	div31( &bv , & r , bv ); gfv[3] = r;
+	div31( &bv , & r , bv ); gfv[4] = r;
+	div31( &bv , & r , bv ); gfv[5] = r;
+	/* *gfv_6 = bv; */
+	return bv;
+}
+
+static inline void cvt_31x13_bin64( uint8_t * gfv , uint32_t bv0 , uint32_t bv1 )
+{
+	uint8_t gfv0,gfv1;
+	gfv0 = cvt_31x6p5_bin32( gfv , bv0 );
+	gfv1 = cvt_31x6p5_bin32( &gfv[6] , bv1 );
+	gfv[12] = gfv0 + gfv1*5;
+}
+
+static inline uint32_t cvt_bin32_31x6p5( const uint8_t * gfv , uint8_t gfv_6 )
+{
+	uint32_t r=gfv_6;
+	r = (r<<5)-r+gfv[5];
+	r = (r<<5)-r+gfv[4];
+	r = (r<<5)-r+gfv[3];
+	r = (r<<5)-r+gfv[2];
+	r = (r<<5)-r+gfv[1];
+	return r*31+gfv[0];
+}
+
+
+static inline void cvt_bin64_31x13( uint32_t *bv0 , uint32_t *bv1 , const uint8_t * gfv )
+{
+	uint8_t gfv0,gfv1;
+	gfv1 = gfv[12]/5;
+	gfv0 = gfv[12]-(gfv1*5);
+	*bv0 = cvt_bin32_31x6p5( gfv , gfv0 );
+	*bv1 = cvt_bin32_31x6p5( &gfv[6] , gfv1 );
+}
+
 
 static inline void cvt_bin96_31x20( uint32_t * bv , const uint8_t * gfv )
 {
@@ -311,13 +368,13 @@ inline static void mat_dump32( const char * s , const uint32_t * vec , unsigned 
 
 #else
 
-inline static void vec_dump( const char * s , const uint8_t * vec , unsigned len ) {}
+inline static void vec_dump(const char * s , const uint32_t * vec , unsigned len) { ((void)s);((void)vec);((void)len); }
 
-inline static void vec_dump32( const char * s , const uint32_t * vec , unsigned len ) {}
+inline static void vec_dump32(const char * s , const uint32_t * vec , unsigned len) { ((void)s);((void)vec);((void)len); }
 
-inline static void mat_dump( const char * s , const uint8_t * vec , unsigned len ) {}
+inline static void mat_dump(const char * s , const uint32_t * vec , unsigned len) { ((void)s);((void)vec);((void)len); }
 
-inline static void mat_dump32( const char * s , const uint32_t * vec , unsigned len ) {}
+inline static void mat_dump32(const char * s , const uint32_t * vec , unsigned len) { ((void)s);((void)vec);((void)len); }
 
 #endif /* defined(__DEBUG__) */
 

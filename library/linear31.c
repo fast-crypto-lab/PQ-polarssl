@@ -1,6 +1,6 @@
-#include "rainbow_tts/run_config.h"
+#include "run_config.h"
 
-#include "rainbow_tts/linear31.h"
+#include "linear31.h"
 
 
 /* ==================== */
@@ -29,13 +29,13 @@ int dummy_rng(void *state,unsigned char * bytes , size_t len )
 void vec_rand( uint8_t * vec , unsigned len , int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
 {
 	unsigned i,j;
-	uint8_t gftmp[5];
+	uint8_t gftmp[6];
 	uint32_t tmp = 0;
-	for(i=0;i<len;i+=4){
-		f_rng(p_rng,(unsigned char*)&tmp,3);
+	for(i=0;i<len;i+=6){
+		f_rng(p_rng,(unsigned char*)&tmp,4);
 		/*randombytes((uint8_t *)&tmp,3);*/
-		cvt_31x5_bin24( gftmp , tmp );
-		for(j=0;j<4;j++) {
+		cvt_31x6p5_bin32( gftmp , tmp );
+		for(j=0;j<6;j++) {
 			if(i+j>=len) break;
 			vec[i+j]=gftmp[j];
 		}
@@ -190,8 +190,8 @@ static inline void vec_mad( uint8_t * accu_r , const uint8_t * vec , unsigned c 
 void mat_rand( uint8_t * mat , uint8_t * invmat , unsigned len , int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
 {
 	unsigned i,j;
-	uint8_t tmat[64*64*2];
-	uint8_t tmp_swap[64*2];
+	uint8_t tmat[80*80*2];
+	uint8_t tmp_swap[80*2];
 	uint8_t *ptr;
 	uint8_t *tptr;
 	uint8_t tmp;
@@ -257,46 +257,47 @@ inline static void vec_fullreduce32_inp( uint32_t *vec , unsigned len )
 
 int solve_linear20( uint8_t * r , uint32_t * rowmat , const uint8_t * inp )
 {
-	uint32_t cons[20];
-	uint32_t swap[20];
+	static const unsigned w = 20;
+	uint32_t cons[w];
+	uint32_t swap[w];
 	unsigned i,j;
 	uint32_t pivot,tmp;
-	vec_assign32( cons , inp , 20 );
+	vec_assign32( cons , inp , w );
 
-	for(i=0;i<20;i++){
-		pivot = rowmat[i*20+i] = remove_31( full_mod31_32(rowmat[i*20+i]) );
+	for(i=0;i<w;i++){
+		pivot = rowmat[i*w+i] = remove_31( full_mod31_32(rowmat[i*w+i]) );
 		if( 0 == pivot ) {
-			for(j=i+1;j<20;j++){
-				pivot = rowmat[j*20+i] = remove_31( full_mod31_32(rowmat[j*20+i]) );
+			for(j=i+1;j<w;j++){
+				pivot = rowmat[j*w+i] = remove_31( full_mod31_32(rowmat[j*w+i]) );
 				if( 0 == pivot ) continue;
 				tmp = cons[i]; cons[i]=cons[j]; cons[j]=tmp;
-				vec_assign((uint8_t*)swap,(uint8_t*)(&rowmat[i*20+i]),(20-i)*4);
-				vec_assign((uint8_t*)(&rowmat[i*20+i]),(uint8_t*)(&rowmat[j*20+i]),(20-i)*4);
-				vec_assign((uint8_t*)(&rowmat[j*20+i]),(uint8_t*)swap,(20-i)*4);
+				vec_assign((uint8_t*)swap,(uint8_t*)(&rowmat[i*w+i]),(w-i)*4);
+				vec_assign((uint8_t*)(&rowmat[i*w+i]),(uint8_t*)(&rowmat[j*w+i]),(w-i)*4);
+				vec_assign((uint8_t*)(&rowmat[j*w+i]),(uint8_t*)swap,(w-i)*4);
 				break;
 			}
 		}
 		pivot = inv_31( pivot );
 		if( 0 == pivot ) return -1;
-		if(20>(i+1)) {
-			vec_mul32_inp(&rowmat[i*20+i+1],pivot,20-(i+1));
-			vec_fullreduce32_inp(&rowmat[i*20+i+1],20-(i+1));
+		if(w>(i+1)) {
+			vec_mul32_inp(&rowmat[i*w+i+1],pivot,w-(i+1));
+			vec_fullreduce32_inp(&rowmat[i*w+i+1],w-(i+1));
 		}
 		cons[i] = full_mod31_32( cons[i]*pivot );
 
-		for(j=i+1;j<20;j++){
-			tmp = remove_31( full_mod31_32(rowmat[j*20+i]) );
+		for(j=i+1;j<w;j++){
+			tmp = remove_31( full_mod31_32(rowmat[j*w+i]) );
 			if(0==tmp) continue;
 			tmp=negative_31(tmp);
-			vec_mad3232( &rowmat[j*20+i+1] , &rowmat[i*20+i+1] , tmp , 20-(i+1) );
+			vec_mad3232( &rowmat[j*w+i+1] , &rowmat[i*w+i+1] , tmp , w-(i+1) );
 			cons[j] += cons[i]*tmp;
 		}
 	}
 
-	r[19] = cons[19];
-	for(i=19;i>0;i--){
+	r[w-1] = cons[w-1];
+	for(i=w-1;i>0;i--){
 		unsigned t = i-1;
-		r[t] = cons[t] + negative_31( vec_dot32( &rowmat[t*20+i] , &r[i] , 20-i ) );
+		r[t] = cons[t] + negative_31( vec_dot32( &rowmat[t*w+i] , &r[i] , w-i ) );
 	}
 	return 0;
 }
@@ -353,25 +354,27 @@ static inline void vec_mul8(uint8_t * r, const uint8_t * vec , unsigned c , unsi
 
 void interpolate_64x40( qpoly_64x40_t * poly , void (*q_poly)(uint8_t *r,const void*,const uint8_t*), const void *key )
 {
-	uint8_t t[64];
-	uint8_t rn1[40];
+	static const unsigned n = 64;
+	static const unsigned m = 40;
+	uint8_t t[n];
+	uint8_t rn1[m];
 	unsigned i,j;
 
-	vec_setzero(t,64);
-	for(i=0;i<64;i++){
+	vec_setzero(t,n);
+	for(i=0;i<n;i++){
 		t[i]=1;
 		q_poly(poly->l[i],key,t);
 		t[i]=negative_31(1);
 		q_poly(rn1,key,t);
 		t[i]=0;
 
-		vec_add(rn1,poly->l[i],40);
-		vec_mul8(poly->q[IDX(i,64)],rn1,16,40); /* 16 = 1/2 */
+		vec_add(rn1,poly->l[i],m);
+		vec_mul8(poly->q[IDX(i,n)],rn1,16,m); /* 16 = 1/2 */
 
-		vec_negative(rn1,poly->q[IDX(i,64)],40);
-		vec_add(poly->l[i],rn1,40);
-		vec_fullreduce(poly->l[i],40);
-		vec_fullreduce(poly->q[IDX(i,64)],40);
+		vec_negative(rn1,poly->q[IDX(i,n)],m);
+		vec_add(poly->l[i],rn1,m);
+		vec_fullreduce(poly->l[i],m);
+		vec_fullreduce(poly->q[IDX(i,n)],m);
 #if defined(X__DEBUG__)
 printf("IDX(%d,64)=%d\n",i,IDX(i,64));
 vec_dump("q: ",poly->q[IDX(i,64)],40);
@@ -379,30 +382,30 @@ vec_dump("l: ",poly->l[i],40);
 #endif
 	}
 
-	for(i=0;i<64;i++){
-		unsigned base = IDX(i,64);
-		for(j=i+1;j<64;j++) {
+	for(i=0;i<n;i++){
+		unsigned base = IDX(i,n);
+		for(j=i+1;j<n;j++) {
 			t[i]=1;
 			t[j]=1;
 			q_poly(poly->q[base+j-i],key,t);
 			t[i]=0;
 			t[j]=0;
 
-			vec_negative(rn1,poly->l[i],40);
-			vec_add(poly->q[base+j-i],rn1,40);
-			vec_fullreduce(poly->q[base+j-i],40);
+			vec_negative(rn1,poly->l[i],m);
+			vec_add(poly->q[base+j-i],rn1,m);
+			vec_fullreduce(poly->q[base+j-i],m);
 
-			vec_negative(rn1,poly->l[j],40);
-			vec_add(poly->q[base+j-i],rn1,40);
-			vec_fullreduce(poly->q[base+j-i],40);
+			vec_negative(rn1,poly->l[j],m);
+			vec_add(poly->q[base+j-i],rn1,m);
+			vec_fullreduce(poly->q[base+j-i],m);
 
-			vec_negative(rn1,poly->q[base],40);
-			vec_add(poly->q[base+j-i],rn1,40);
-			vec_fullreduce(poly->q[base+j-i],40);
+			vec_negative(rn1,poly->q[base],m);
+			vec_add(poly->q[base+j-i],rn1,m);
+			vec_fullreduce(poly->q[base+j-i],m);
 
-			vec_negative(rn1,poly->q[IDX(j,64)],40);
-			vec_add(poly->q[base+j-i],rn1,40);
-			vec_fullreduce(poly->q[base+j-i],40);
+			vec_negative(rn1,poly->q[IDX(j,n)],m);
+			vec_add(poly->q[base+j-i],rn1,m);
+			vec_fullreduce(poly->q[base+j-i],m);
 #if defined(X__DEBUG__)
 printf("(%d,%d)->%d\n",i,j,base+j-i);
 vec_dump("q: ",poly->q[base+j-i],40);
