@@ -894,12 +894,14 @@ static int pk_parse_key_tts_der( tts_context *tts,
 
     end = p + len;
 
-    if (len != TTS_SECKEY_SIZE_BYTE) {
+    if (len != TTS_SECKEY_SIZE_BYTE + TTS_PUBKEY_SIZE_BYTE) {
         /* need a proper error code here */
         return POLARSSL_ERR_PK_KEY_INVALID_FORMAT;
     }
 
-    memcpy( &tts->sk, p, len );
+    memcpy( &tts->sk, p,                        TTS_SECKEY_SIZE_BYTE );
+    memcpy( &tts->pk, p + TTS_SECKEY_SIZE_BYTE, TTS_PUBKEY_SIZE_BYTE );
+
     return 0;
 }
 

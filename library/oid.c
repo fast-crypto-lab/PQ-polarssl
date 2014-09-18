@@ -402,6 +402,11 @@ static const oid_pk_alg_t oid_pk_alg[] =
         POLARSSL_PK_ECKEY_DH,
     },
     {
+        // TODO: add TTS signature entry here...
+        // Add the OID_OUR_ALG_TTS macro here...
+        { ADD_LEN( OID_OUR_ALG_TTS ), "id-ttsKeyExchange", "TTS" }, OUR_PK_TTS
+    },
+    {
         { NULL, 0, NULL, NULL },
         0,
     },

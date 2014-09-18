@@ -143,6 +143,8 @@ static int pk_write_tts_pubkey( unsigned char **p, unsigned char *start,
     *p -= len;
     memcpy( *p, &tts->pk, len );
 
+    printf("The first byte of tts->pk = %d", ((int *) &tts->pk)[0] );
+
     ASN1_CHK_ADD( len, asn1_write_len( p, start, len ) );
     ASN1_CHK_ADD( len, asn1_write_tag( p, start, ASN1_BIT_STRING ) );
 
@@ -165,8 +167,14 @@ int pk_write_pubkey( unsigned char **p, unsigned char *start,
         ASN1_CHK_ADD( len, pk_write_ec_pubkey( p, start, pk_ec( *key ) ) );
     else
 #endif
-    if( pk_get_type( key) == OUR_PK_TTS )
+    if( pk_get_type( key) == OUR_PK_TTS ) {
+        unsigned char **hack = p;
+        printf("\nbefore pk_write_tts_pubkey, p = %d\n", hack[0][0] );
+        printf("\n p = %p\n", *p);
         ASN1_CHK_ADD( len, pk_write_tts_pubkey( p, start, pk_tts( *key ) ) );
+        printf("\nafter pk_write_tts_pubkey, hack = %d\n", hack[0][0] );
+        printf("\n p = %p\n", *p);
+    }
     else
         return( POLARSSL_ERR_PK_FEATURE_UNAVAILABLE );
 
@@ -197,6 +205,10 @@ int pk_write_pubkey_der( pk_context *key, unsigned char *buf, size_t size )
 
     ASN1_CHK_ADD( len, asn1_write_len( &c, buf, len ) );
     ASN1_CHK_ADD( len, asn1_write_tag( &c, buf, ASN1_BIT_STRING ) );
+
+    /* If we return here (do not write OID)
+     * the result will look OK... */
+    /* return len; */
 
     if( ( ret = oid_get_oid_by_pk_alg( pk_get_type( key ),
                                        &oid, &oid_len ) ) != 0 )
@@ -305,13 +317,14 @@ int pk_write_key_der( pk_context *key, unsigned char *buf, size_t size )
     if( pk_get_type( key ) == OUR_PK_TTS )
     {
 
-        len += TTS_SECKEY_SIZE_BYTE;
+        len += TTS_SECKEY_SIZE_BYTE + TTS_PUBKEY_SIZE_BYTE;
 
         if( c - buf < (int) len )
             return( POLARSSL_ERR_ASN1_BUF_TOO_SMALL );
 
         c -= len;
-        memcpy( c, &pk_tts( *key )->sk, len );
+        memcpy( c,                        &pk_tts( *key )->sk, TTS_SECKEY_SIZE_BYTE );
+        memcpy( c + TTS_SECKEY_SIZE_BYTE, &pk_tts( *key )->pk, TTS_PUBKEY_SIZE_BYTE );
 
         ASN1_CHK_ADD( len, asn1_write_len( &c, buf, len ) );
         ASN1_CHK_ADD( len, asn1_write_tag( &c, buf, ASN1_BIT_STRING ) );
@@ -338,7 +351,7 @@ int pk_write_key_der( pk_context *key, unsigned char *buf, size_t size )
 int pk_write_pubkey_pem( pk_context *key, unsigned char *buf, size_t size )
 {
     int ret;
-    unsigned char output_buf[4096];
+    unsigned char output_buf[128000];
     size_t olen = 0;
 
     if( ( ret = pk_write_pubkey_der( key, output_buf,
@@ -360,7 +373,7 @@ int pk_write_pubkey_pem( pk_context *key, unsigned char *buf, size_t size )
 int pk_write_key_pem( pk_context *key, unsigned char *buf, size_t size )
 {
     int ret;
-    unsigned char output_buf[4096];
+    unsigned char output_buf[128000];
     const char *begin, *end;
     size_t olen = 0;
 
@@ -385,8 +398,8 @@ int pk_write_key_pem( pk_context *key, unsigned char *buf, size_t size )
 #endif
     if ( pk_get_type( key ) == OUR_PK_TTS )
     {
-        begin = "-----BEGIN TTS PRIVATE KEY-----";
-        end = "-----END TTS PRIVATE KEY-----";
+        begin = "-----BEGIN TTS PRIVATE KEY-----\n";
+        end = "-----END TTS PRIVATE KEY-----\n";
     }
     else
         return( POLARSSL_ERR_PK_FEATURE_UNAVAILABLE );

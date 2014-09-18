@@ -14,6 +14,9 @@
 //#include "polarssl/rsa.h"
 #include "rainbow_tts/rainbow.h"
 
+
+extern const pk_info_t tts_info;
+
 static int myrand( void *rng_state, unsigned char *output, size_t len )
 {
 #if !defined(__OpenBSD__)
@@ -39,11 +42,16 @@ int main( int argc, char *argv[] )
     int ret;
     //rsa_context rsa;
     tts_context tts;
+    pk_context ctx;
     entropy_context entropy;
     ctr_drbg_context ctr_drbg;
     FILE *fpub  = NULL;
     FILE *fpriv = NULL;
     const char *pers = "tts_genkey";
+
+    unsigned char large_buffer[256000];
+    ctx.pk_info = &tts_info;
+    ctx.pk_ctx = &tts;
 
     ((void) argc);
     ((void) argv);
@@ -72,12 +80,12 @@ int main( int argc, char *argv[] )
         goto exit;
     }
 
-    printf( " ok\n  . Exporting the public  key in tts_pub.txt...." );
+    printf( " ok\n  . Exporting the public  key in tts_pub.pem...." );
     fflush( stdout );
 
-    if( ( fpub = fopen( "tts_pub.txt", "wb+" ) ) == NULL )
+    if( ( fpub = fopen( "tts_pub.pem", "wb+" ) ) == NULL )
     {
-        printf( " failed\n  ! could not open tts_pub.txt for writing\n\n" );
+        printf( " failed\n  ! could not open tts_pub.pem for writing\n\n" );
         ret = 1;
         goto exit;
     }
@@ -88,14 +96,16 @@ int main( int argc, char *argv[] )
     //     printf( " failed\n  ! mpi_write_file returned %d\n\n", ret );
     //     goto exit;
     // }
-    fwrite( &tts.pk, 1, sizeof(tts.pk), fpub );
+    ///////fwrite( &tts.pk, 1, sizeof(tts.pk), fpub );
+    pk_write_pubkey_pem( &ctx, large_buffer, 256000 );
+    fwrite( large_buffer, 1, 256000, fpub );
 
-    printf( " ok\n  . Exporting the private key in tts_priv.txt..." );
+    printf( " ok\n  . Exporting the private key in tts_priv.pem..." );
     fflush( stdout );
 
-    if( ( fpriv = fopen( "tts_priv.txt", "wb+" ) ) == NULL )
+    if( ( fpriv = fopen( "tts_priv.pem", "wb+" ) ) == NULL )
     {
-        printf( " failed\n  ! could not open tts_priv.txt for writing\n" );
+        printf( " failed\n  ! could not open tts_priv.pem for writing\n" );
         ret = 1;
         goto exit;
     }
@@ -112,7 +122,8 @@ int main( int argc, char *argv[] )
     //     printf( " failed\n  ! mpi_write_file returned %d\n\n", ret );
     //     goto exit;
     // }
-    fwrite( &tts.sk, 1, sizeof(tts.sk), fpriv );
+    pk_write_key_pem( &ctx, large_buffer, 256000 );
+    fwrite( large_buffer, 1, 256000, fpriv );
 
 /*
     printf( " ok\n  . Generating the certificate..." );
