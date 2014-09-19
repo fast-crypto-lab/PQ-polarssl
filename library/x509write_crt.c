@@ -172,7 +172,7 @@ int x509write_crt_set_basic_constraints( x509write_cert *ctx,
 int x509write_crt_set_subject_key_identifier( x509write_cert *ctx )
 {
     int ret;
-    unsigned char buf[POLARSSL_MPI_MAX_SIZE * 2 + 20]; /* tag, length + 2xMPI */
+    unsigned char buf[256000]; /* tag, length + 2xMPI */
     unsigned char *c = buf + sizeof(buf);
     size_t len = 0;
 
@@ -194,7 +194,7 @@ int x509write_crt_set_subject_key_identifier( x509write_cert *ctx )
 int x509write_crt_set_authority_key_identifier( x509write_cert *ctx )
 {
     int ret;
-    unsigned char buf[POLARSSL_MPI_MAX_SIZE * 2 + 20]; /* tag, length + 2xMPI */
+    unsigned char buf[256000]; /* tag, length + 2xMPI */
     unsigned char *c = buf + sizeof(buf);
     size_t len = 0;
 
@@ -316,6 +316,7 @@ int x509write_crt_der( x509write_cert *ctx, unsigned char *buf, size_t size,
     if( ( ret = oid_get_oid_by_sig_alg( pk_alg, ctx->md_alg,
                                         &sig_oid, &sig_oid_len ) ) != 0 )
     {
+        printf("oid_get_oid_by_sig_alg() returns nonzero -%x", -ret);
         return( ret );
     }
 
@@ -429,12 +430,13 @@ int x509write_crt_pem( x509write_cert *crt, unsigned char *buf, size_t size,
                        void *p_rng )
 {
     int ret;
-    unsigned char output_buf[4096];
+    unsigned char output_buf[256000];
     size_t olen = 0;
 
     if( ( ret = x509write_crt_der( crt, output_buf, sizeof(output_buf),
                                    f_rng, p_rng ) ) < 0 )
     {
+        printf("\nthe return value of x509write_crt_der() is -%x\n", -ret);
         return( ret );
     }
 
@@ -442,6 +444,7 @@ int x509write_crt_pem( x509write_cert *crt, unsigned char *buf, size_t size,
                                   output_buf + sizeof(output_buf) - ret,
                                   ret, buf, size, &olen ) ) != 0 )
     {
+        printf("\nthe return value of pem_write_buffer() is -%x\n", -ret);
         return( ret );
     }
 

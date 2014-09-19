@@ -60,4 +60,6 @@ extern const pk_info_t ecdsa_info;
 
 extern const pk_info_t rsa_alt_info;
 
+extern const pk_info_t tts_info;
+
 #endif /* POLARSSL_PK_WRAP_H */

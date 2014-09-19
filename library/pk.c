@@ -44,6 +44,8 @@
 #include "polarssl/ecdsa.h"
 #endif
 
+#include "rainbow_tts/rainbow.h"
+
 /* Implementation that should never be optimized out by the compiler */
 static void polarssl_zeroize( void *v, size_t n ) {
     volatile unsigned char *p = v; while( n-- ) *p++ = 0;
@@ -94,6 +96,8 @@ const pk_info_t * pk_info_from_type( pk_type_t pk_type )
         case POLARSSL_PK_ECDSA:
             return( &ecdsa_info );
 #endif
+        case OUR_PK_TTS:
+            return( &tts_info );
         /* POLARSSL_PK_RSA_ALT omitted on purpose */
         default:
             return( NULL );

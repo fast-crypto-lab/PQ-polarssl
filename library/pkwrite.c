@@ -137,8 +137,10 @@ static int pk_write_tts_pubkey( unsigned char **p, unsigned char *start,
     int ret = 0;
     size_t len = TTS_PUBKEY_SIZE_BYTE;
 
-    if( *p - start < (int) len )
+    if( *p - start < (int) len ) {
+        printf(""); // TODO
         return( POLARSSL_ERR_ASN1_BUF_TOO_SMALL );
+    }
 
     *p -= len;
     memcpy( *p, &tts->pk, len );

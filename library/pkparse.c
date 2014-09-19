@@ -1195,8 +1195,10 @@ int pk_parse_key( pk_context *pk,
                            key, pwd, pwdlen, &len );
     if( ret == 0 )
     {
-        if( ( pk_info = pk_info_from_type( OUR_PK_TTS ) ) == NULL )
+        if( ( pk_info = pk_info_from_type( OUR_PK_TTS ) ) == NULL ) {
+            printf("\n PROGRAM DIE HERE ... \n");
             return( POLARSSL_ERR_PK_UNKNOWN_PK_ALG );
+        }
 
         if( ( ret = pk_init_ctx( pk, pk_info                   ) ) != 0 ||
             ( ret = pk_parse_key_tts_der( pk_tts( *pk ),

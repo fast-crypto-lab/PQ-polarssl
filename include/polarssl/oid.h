@@ -372,6 +372,8 @@
  *   ecdsa-with-SHA2(3) 4 } */
 #define OID_ECDSA_SHA512            OID_ANSI_X9_62_SIG_SHA2 "\x04"
 
+#define OID_OUR_ALG_TTS_SHA256      OID_ANSI_X9_62_SIG_SHA2 "\x05"
+
 #ifdef __cplusplus
 extern "C" {
 #endif

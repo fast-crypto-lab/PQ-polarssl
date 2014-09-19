@@ -104,11 +104,11 @@ int write_certificate( x509write_cert *crt, const char *output_file,
 {
     int ret;
     FILE *f;
-    unsigned char output_buf[4096];
+    unsigned char output_buf[256000];
     size_t len = 0;
 
-    memset( output_buf, 0, 4096 );
-    if( ( ret = x509write_crt_pem( crt, output_buf, 4096, f_rng, p_rng ) ) < 0 )
+    memset( output_buf, 0, sizeof(output_buf) );
+    if( ( ret = x509write_crt_pem( crt, output_buf, sizeof(output_buf), f_rng, p_rng ) ) < 0 )
         return( ret );
 
     len = strlen( (char *) output_buf );
@@ -206,7 +206,7 @@ int main( int argc, char *argv[] )
      * Set to sane values
      */
     x509write_crt_init( &crt );
-    x509write_crt_set_md_alg( &crt, POLARSSL_MD_SHA1 );
+    x509write_crt_set_md_alg( &crt, POLARSSL_MD_SHA256 );
     pk_init( &loaded_issuer_key );
     pk_init( &loaded_subject_key );
     mpi_init( &serial );
