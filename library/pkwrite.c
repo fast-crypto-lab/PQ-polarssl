@@ -194,8 +194,11 @@ int pk_write_pubkey_der( pk_context *key, unsigned char *buf, size_t size )
 
     ASN1_CHK_ADD( len, pk_write_pubkey( &c, buf, key ) );
 
-    if( c - buf < 1 )
+    printf("size = %d", size);
+    if( c - buf < 1 ) {
+        printf("QQQ 1");
         return( POLARSSL_ERR_ASN1_BUF_TOO_SMALL );
+    }
 
     /*
      *  SubjectPublicKeyInfo  ::=  SEQUENCE  {
@@ -215,6 +218,7 @@ int pk_write_pubkey_der( pk_context *key, unsigned char *buf, size_t size )
     if( ( ret = oid_get_oid_by_pk_alg( pk_get_type( key ),
                                        &oid, &oid_len ) ) != 0 )
     {
+        printf("*** QQQ 2 ret =%d", ret);
         return( ret );
     }
 
@@ -359,6 +363,7 @@ int pk_write_pubkey_pem( pk_context *key, unsigned char *buf, size_t size )
     if( ( ret = pk_write_pubkey_der( key, output_buf,
                                      sizeof(output_buf) ) ) < 0 )
     {
+        printf("QQ 1\n");
         return( ret );
     }
 
@@ -366,6 +371,7 @@ int pk_write_pubkey_pem( pk_context *key, unsigned char *buf, size_t size )
                                   output_buf + sizeof(output_buf) - ret,
                                   ret, buf, size, &olen ) ) != 0 )
     {
+        printf("QQ 2\n");
         return( ret );
     }
 

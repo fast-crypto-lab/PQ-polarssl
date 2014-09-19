@@ -280,6 +280,8 @@
  *     schemes(1) ecdh(12) } */
 #define OID_EC_ALG_ECDH                 OID_CERTICOM "\x01\x0c"
 
+#define OID_OUR_ALG_TTS                 OID_CERTICOM "\x01\x0d"
+
 /*
  * ECParameters namedCurve identifiers, from RFC 5480, RFC 5639, and SEC2
  */
