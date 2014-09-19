@@ -298,7 +298,7 @@ int x509write_crt_der( x509write_cert *ctx, unsigned char *buf, size_t size,
     unsigned char *c, *c2;
     unsigned char hash[64];
     unsigned char sig[POLARSSL_MPI_MAX_SIZE];
-    unsigned char tmp_buf[2048];
+    unsigned char tmp_buf[256000];
     size_t sub_len = 0, pub_len = 0, sig_and_oid_len = 0, sig_len;
     size_t len = 0;
     pk_type_t pk_alg;
@@ -334,6 +334,7 @@ int x509write_crt_der( x509write_cert *ctx, unsigned char *buf, size_t size,
     /*
      *  SubjectPublicKeyInfo
      */
+    // FIXME
     ASN1_CHK_ADD( pub_len, pk_write_pubkey_der( ctx->subject_key,
                                                 tmp_buf, c - tmp_buf ) );
     c -= pub_len;

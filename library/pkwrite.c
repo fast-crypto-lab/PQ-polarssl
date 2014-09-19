@@ -138,7 +138,7 @@ static int pk_write_tts_pubkey( unsigned char **p, unsigned char *start,
     size_t len = TTS_PUBKEY_SIZE_BYTE;
 
     if( *p - start < (int) len ) {
-        printf(""); // TODO
+        printf("[[(in pk_write_tts_pubkey) len=%d, *p-start=%d]]", len, *p - start); // TODO
         return( POLARSSL_ERR_ASN1_BUF_TOO_SMALL );
     }
 
@@ -158,6 +158,8 @@ int pk_write_pubkey( unsigned char **p, unsigned char *start,
 {
     int ret;
     size_t len = 0;
+
+    printf("[[(in pk_write_pubkey) *p-start=%d]]", *p - start); // TODO
 
 #if defined(POLARSSL_RSA_C)
     if( pk_get_type( key ) == POLARSSL_PK_RSA )
@@ -192,6 +194,7 @@ int pk_write_pubkey_der( pk_context *key, unsigned char *buf, size_t size )
 
     c = buf + size;
 
+    printf("****[[(in pk_write_pubkey_der) size=%d]]\n", size); // TODO
     ASN1_CHK_ADD( len, pk_write_pubkey( &c, buf, key ) );
 
     printf("size = %d", size);
@@ -360,6 +363,7 @@ int pk_write_pubkey_pem( pk_context *key, unsigned char *buf, size_t size )
     unsigned char output_buf[128000];
     size_t olen = 0;
 
+    printf("****[[(in pk_write_pubkey_pem) sizeof(output_buf)=%d]]\n", sizeof(output_buf)); // TODO
     if( ( ret = pk_write_pubkey_der( key, output_buf,
                                      sizeof(output_buf) ) ) < 0 )
     {
