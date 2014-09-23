@@ -1,16 +1,18 @@
 #ifndef POLY_H_INCLUDED
-#define POLY_H_INCLUDED 
-#include"bignum.h"
-#include <math.h>  
+#define POLY_H_INCLUDED
+
+#include "polarssl/bignum.h"
+#include <math.h>
+
 typedef  struct{
-	int n;
-	mpi **a;
-	mpi *q;
+    int n;
+    mpi **a;
+    mpi *q;
 }Poly_q;
 
 typedef  struct{
-	int n;
-	int *a;
+    int n;
+    int *a;
 }Poly_2;
 
 void polyAssign(Poly_q * to, Poly_q * from);
@@ -35,7 +37,5 @@ int PolySize(Poly_q * f);
 #define FFT_FORWARD -1
 #define FFT_INVERSE 1
 #define PROOT 3
-
-
 
 #endif

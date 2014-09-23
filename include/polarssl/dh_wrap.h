@@ -23,6 +23,8 @@ extern const dh_info_t m_ecdh_info;
 extern const dh_info2_t ecdh_info2;
 #endif
 
+extern const dh_info2_t lwe_info;
+
 #ifdef __cplusplus
 }
 #endif

@@ -2,6 +2,8 @@
 DESTDIR=/usr/local
 PREFIX=polarssl_
 
+LDFLAGS += -lm
+
 .SILENT:
 
 all:

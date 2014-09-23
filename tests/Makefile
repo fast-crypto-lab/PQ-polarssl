@@ -7,7 +7,7 @@ CFLAGS	+= -I../include -D_FILE_OFFSET_BITS=64 -Wall -W -Wdeclaration-after-state
 			-Wno-unused-function -Wno-unused-value
 
 OFLAGS	= -O2
-LDFLAGS	+= -L../library -lpolarssl $(SYS_LDFLAGS)
+LDFLAGS	+= -L../library -lpolarssl $(SYS_LDFLAGS) -lm
 
 ifndef SHARED
 DEP=../library/libpolarssl.a

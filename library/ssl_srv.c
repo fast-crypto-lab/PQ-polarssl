@@ -44,6 +44,8 @@
 #define polarssl_free       free
 #endif
 
+#include "lattice/LWE.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -2191,7 +2193,7 @@ static int ssl_write_server_key_exchange( ssl_context *ssl )
         ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_RSA     ||
         ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_ECDSA )
     {
-        ssl->handshake->dhif_info = &lattice_info2;
+        ssl->handshake->dhif_info = &lwe_info;
     }
 
     if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_DHE_RSA ||

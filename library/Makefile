@@ -63,7 +63,8 @@ OBJS=	aes.o		aesni.o		arc4.o			\
 		x509write_crt.o			x509write_csr.o	\
 		xtea.o		dh_wrap.o					\
 		nacl_curve25519_ref_smult.o				\
-		linear31.o	rainbow.o
+		linear31.o	rainbow.o					\
+		poly.o LWE.o
 
 .SILENT:
 

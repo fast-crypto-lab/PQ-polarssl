@@ -9,6 +9,7 @@ typedef enum {
     POLARSSL_DH_DHM,
     POLARSSL_DH_EC, /* Need to specify which curve to use */
     NACL_DH_CURVE25519,
+    POLARSSL_DH_LWE,
 } dh_type_t;
 
 typedef struct {

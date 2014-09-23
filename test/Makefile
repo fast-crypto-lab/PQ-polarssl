@@ -14,7 +14,7 @@ INCPATH=	-I/opt/local/include -I/usr/local/include -I./Polarssl_bignum
 
 LDFLAGS=
 LIBPATH=	-L/opt/local/lib -L/usr/local/lib 
-LIBS=	  -lgmp
+LIBS=	  -lgmp -lm
 
 EXE=		a.out
 OBJS=		main.o LWE.o poly.o bignum.o sha256.o
