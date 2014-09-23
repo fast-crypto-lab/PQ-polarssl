@@ -4884,6 +4884,11 @@ int ssl_check_cert_usage( const x509_crt *cert,
             case POLARSSL_KEY_EXCHANGE_DHE_RSA:
             case POLARSSL_KEY_EXCHANGE_ECDHE_RSA:
             case POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA:
+            case OUR_KEY_EXCHANGE_ECDHE_TTS:
+            case OUR_KEY_EXCHANGE_LATTICEE_TTS:
+            case OUR_KEY_EXCHANGE_LATTICEE_RAINBOW:
+            case OUR_KEY_EXCHANGE_LATTICEE_RSA:
+            case OUR_KEY_EXCHANGE_LATTICEE_ECDSA:
                 usage = KU_DIGITAL_SIGNATURE;
                 break;
 
