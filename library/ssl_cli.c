@@ -197,6 +197,8 @@ static void ssl_write_signature_algorithms_ext( ssl_context *ssl,
     sig_alg_list[sig_alg_len++] = SSL_SIG_ECDSA;
     sig_alg_list[sig_alg_len++] = SSL_HASH_SHA224;
     sig_alg_list[sig_alg_len++] = SSL_SIG_ECDSA;
+    sig_alg_list[sig_alg_len++] = SSL_HASH_SHA256;
+    sig_alg_list[sig_alg_len++] = SSL_SIG_TTS;
 #endif
 #if defined(POLARSSL_SHA1_C)
     sig_alg_list[sig_alg_len++] = SSL_HASH_SHA1;
@@ -1647,7 +1649,8 @@ static int ssl_parse_server_key_exchange( ssl_context *ssl )
         }
     }
     else
-    if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_RSA ||
+    if( ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_ECDHE_TTS      ||
+        ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_RSA ||
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_PSK ||
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA )
     {
@@ -1657,8 +1660,7 @@ static int ssl_parse_server_key_exchange( ssl_context *ssl )
         }
     }
     else
-    if ( ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_ECDHE_TTS        ||
-         ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_TTS     ||
+    if ( ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_TTS     ||
          ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_RAINBOW ||
          ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_RSA     ||
          ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_ECDSA )

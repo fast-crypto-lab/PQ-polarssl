@@ -2187,8 +2187,7 @@ static int ssl_write_server_key_exchange( ssl_context *ssl )
         n += 2;
     }
 
-    if( ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_ECDHE_TTS        ||
-        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_TTS     ||
+    if( ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_TTS     ||
         ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_RAINBOW ||
         ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_RSA     ||
         ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_ECDSA )
@@ -2233,7 +2232,8 @@ static int ssl_write_server_key_exchange( ssl_context *ssl )
         }
     }
 
-    if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_RSA ||
+    if( ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_ECDHE_TTS        ||
+        ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_RSA ||
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA ||
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_PSK )
     {
@@ -2349,6 +2349,7 @@ curve_matching_done:
         if( ssl->minor_ver == SSL_MINOR_VERSION_3 )
         {
             md_alg = ssl_md_alg_from_hash( ssl->handshake->sig_alg );
+            printf("the selected md_alg = %d\n", md_alg);
 
             if( md_alg == POLARSSL_MD_NONE )
             {

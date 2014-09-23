@@ -469,11 +469,17 @@ static int __tts_verify( void *ctx, md_type_t md_alg,
                        const unsigned char *sig, size_t sig_len )
 {
     int ret;
-
-    if (hash_len < TTS_DIGEST_SIZE_BYTE) {
-        /* In fact we need another error code here */
-        return POLARSSL_ERR_PK_SIG_LEN_MISMATCH;
+    unsigned char QQ_buffer[TTS_DIGEST_SIZE_BYTE] = { 0 };
+    unsigned int n_bytes = ( hash_len < TTS_DIGEST_SIZE_BYTE ) ? hash_len : TTS_DIGEST_SIZE_BYTE;
+    unsigned int _i = 0;
+    for (_i = 0; _i < n_bytes; ++_i) {
+        QQ_buffer[_i] = hash[_i];
     }
+
+    // if (hash_len < TTS_DIGEST_SIZE_BYTE) {
+    //     /* In fact we need another error code here */
+    //     return POLARSSL_ERR_PK_SIG_LEN_MISMATCH;
+    // }
 
     if (sig_len != TTS_SIGNATURE_SIZE_BYTE) {
         return POLARSSL_ERR_PK_SIG_LEN_MISMATCH;
@@ -484,7 +490,7 @@ static int __tts_verify( void *ctx, md_type_t md_alg,
     //          const uint8_t * key ,
     //          const uint8_t * s320b );
 
-    ret = tts_verify( hash, &((tts_context *) ctx)->pk, sig );
+    ret = tts_verify( QQ_buffer, &((tts_context *) ctx)->pk, sig );
     if (ret != 0) {
         /* In fact we need a proper error code here */
         return -1;
@@ -497,14 +503,16 @@ static int __tts_sign( void *ctx, md_type_t md_alg,
                    unsigned char *sig, size_t *sig_len,
                    int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
 {
-    if (hash_len < TTS_DIGEST_SIZE_BYTE) {
-        /* In fact we need another error code here */
-        return POLARSSL_ERR_PK_SIG_LEN_MISMATCH;
+    unsigned char QQ_buffer[TTS_DIGEST_SIZE_BYTE] = { 0 };
+    unsigned int n_bytes = ( hash_len < TTS_DIGEST_SIZE_BYTE ) ? hash_len : TTS_DIGEST_SIZE_BYTE;
+    unsigned int _i = 0;
+    for (_i = 0; _i < n_bytes; ++_i) {
+        QQ_buffer[_i] = hash[_i];
     }
 
     *sig_len = TTS_SIGNATURE_SIZE_BYTE;
 
-    return tts_sign(sig, &((tts_context *) ctx)->sk, hash);
+    return tts_sign(sig, &((tts_context *) ctx)->sk, QQ_buffer);
 }
 
 static void *tts_alloc( void )

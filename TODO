@@ -263,3 +263,22 @@ Paper Draft:         9/08 (一)
 Next meeting time:   9/09 (二)
 Manuscript deadline: 9/10 (三)
 
+
+
+
+2014/09/23 Tue 11:32:42 TODO:
+
+    >>> 0. Merge lattice code in
+                comments:
+                    Why MD5?  NEED TO BE FIXED LATER
+                    We have patched the ssl code to support the new sig alg
+
+        1. Modify ssl_srv.c ssl_cli.c ssl_tls.c => so that we can use new cert
+                Make sure our ciphersuite works in current PolarSSL's program flow
+
+        2. Update all the data targeting the same workstation machine (colossus2)
+                Not the Intel CPU we used previously
+
+        3. Explain about why PolarSSL is so slow
+                bignum in PolarSSL sucks, too terrible
+

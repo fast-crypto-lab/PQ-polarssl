@@ -4781,11 +4781,15 @@ unsigned char ssl_sig_from_pk( pk_context *pk )
     if( pk_can_do( pk, POLARSSL_PK_ECDSA ) )
         return( SSL_SIG_ECDSA );
 #endif
+    if( pk_can_do( pk, OUR_PK_TTS ) )
+        return( SSL_SIG_TTS );
     return( SSL_SIG_ANON );
 }
 
 pk_type_t ssl_pk_alg_from_sig( unsigned char sig )
 {
+    printf("\n\nssl_pk_alg_from_sig() is called with argument sig = %x\n\n", sig);
+
     switch( sig )
     {
 #if defined(POLARSSL_RSA_C)
@@ -4796,6 +4800,8 @@ pk_type_t ssl_pk_alg_from_sig( unsigned char sig )
         case SSL_SIG_ECDSA:
             return( POLARSSL_PK_ECDSA );
 #endif
+        case SSL_SIG_TTS:
+            return ( OUR_PK_TTS );
         default:
             return( POLARSSL_PK_NONE );
     }

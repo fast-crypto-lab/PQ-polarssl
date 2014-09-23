@@ -326,6 +326,7 @@
 #define SSL_SIG_ANON                 0
 #define SSL_SIG_RSA                  1
 #define SSL_SIG_ECDSA                3
+#define SSL_SIG_TTS                  4
 
 /*
  * Client Certificate Types
