@@ -2194,6 +2194,9 @@ static int ssl_write_server_key_exchange( ssl_context *ssl )
         ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_ECDSA )
     {
         ssl->handshake->dhif_info = &lwe_info;
+        if (ssl->handshake->dhif_ctx == NULL) {
+            ssl->handshake->dhif_ctx = ssl->handshake->dhif_info->ctx_alloc();
+        }
     }
 
     if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_DHE_RSA ||
@@ -2289,6 +2292,11 @@ curve_matching_done:
 
     if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_DHE_RSA ||
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_DHE_PSK ||
+        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_ECDHE_TTS        ||
+        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_TTS     ||
+        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_RAINBOW ||
+        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_RSA     ||
+        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_ECDSA   ||
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_RSA ||
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA ||
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_PSK )
@@ -2321,6 +2329,11 @@ curve_matching_done:
 
 
     if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_DHE_RSA ||
+        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_ECDHE_TTS        ||
+        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_TTS     ||
+        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_RAINBOW ||
+        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_RSA     ||
+        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_ECDSA   ||
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_RSA ||
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA )
     {
@@ -2727,10 +2740,15 @@ static int ssl_parse_client_key_exchange( ssl_context *ssl )
     }
 
     if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_DHE_RSA ||
-	ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_RSA ||
-	ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA ||
-	ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDH_RSA ||
-	ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDH_ECDSA )
+        ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_RSA ||
+        ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA ||
+        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_ECDHE_TTS        ||
+        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_TTS     ||
+        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_RAINBOW ||
+        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_RSA     ||
+        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_ECDSA   ||
+        ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDH_RSA ||
+        ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDH_ECDSA )
     {
         unsigned char *p = ssl->in_msg + 4;
         unsigned char *end = ssl->in_msg + ssl->in_hslen;
@@ -2815,7 +2833,7 @@ static int ssl_parse_client_key_exchange( ssl_context *ssl )
     else
 #endif /* POLARSSL_KEY_EXCHANGE_RSA_PSK_ENABLED */
     if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_DHE_PSK ||
-	ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_PSK )
+        ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_PSK )
     {
         unsigned char *p = ssl->in_msg + 4;
         unsigned char *end = ssl->in_msg + ssl->in_hslen;
