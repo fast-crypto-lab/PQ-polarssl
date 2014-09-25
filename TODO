@@ -298,3 +298,27 @@ On the codebase snapshot of d9742c8b27537698e59678c5b5057546426b02d4
 
 run debug_level=3 ca_file=cert.crt crt_file=cert.crt key_file=tts_priv.pem force_ciphersuite=TLS-LATTICEE-TTS-WITH-AES-128-GCM-SHA256
 run debug_level=3 force_ciphersuite=TLS-LATTICEE-TTS-WITH-AES-128-GCM-SHA256 auth_mode=optional
+
+$ gdb programs/ssl/ssl_server2
+$ run debug_level=3 ca_file=cert.crt crt_file=cert.crt key_file=tts_priv.pem force_ciphersuite=TLS-LATTICEE-TTS-WITH-AES-128-GCM-SHA256
+
+$ gdb programs/ssl/ssl_client2
+$ run debug_level=3 force_ciphersuite=TLS-LATTICEE-TTS-WITH-AES-128-GCM-SHA256 auth_mode=optional
+
+
+
+
+
+2014/09/25 Thu 14:50:15
+
+        1.  今天終於把 LATTICE 和 TTS 一起使用的 ciphersuite 的
+            TLS server <---> client 通訊跑過了
+
+        2.  我們之前的 MD5 問題還沒處理（目前直接在 128 個 bits 後面狂補零）
+
+        3.  TODO: 把所有的數據測試跑在 ranger.iis.sinica.edu.tw 機器上
+
+        4.  TODO: 更新論文，然後放假。
+
+
+
