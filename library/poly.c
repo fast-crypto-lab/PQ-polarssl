@@ -466,6 +466,9 @@ void Mod_2(Poly_2 * c , const Poly_q * a ,Poly_2 * b){
 
 		if(b->a[i]==1)
 			mpi_add_mpi(&t,&t,&halve_q );
+		
+		if(mpi_cmp_mpi( &t, &halve_q)>0)
+			mpi_sub_mpi(&t, &t, a->q);
 
 		mpi_div_int( NULL, &t, &t, 2 );
 		if(mpi_cmp_int(&t,0)==0)
