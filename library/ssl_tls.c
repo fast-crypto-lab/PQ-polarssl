@@ -54,6 +54,8 @@
 #define polarssl_free       free
 #endif
 
+#include "lattice/LWE.h"
+
 #include <stdlib.h>
 
 #if defined(_MSC_VER) && !defined strcasecmp && !defined(EFIX64) && \
@@ -3114,7 +3116,11 @@ void ssl_handshake_wrapup( ssl_context *ssl )
     /*
      * Free our handshake params
      */
-    ssl_handshake_free( ssl->handshake );
+    //ssl_handshake_free( ssl->handshake );
+    printf("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ\n");
+    printf("ssl->handshake = %p\n", ssl->handshake);
+    printf("n = %d\n", ((lwe_context *) ssl->handshake->dhif_ctx)->n);
+    printf("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ\n");
     polarssl_free( ssl->handshake );
     ssl->handshake = NULL;
 
@@ -3413,7 +3419,10 @@ static int ssl_handshake_init( ssl_context *ssl )
     {
         SSL_DEBUG_MSG( 1, ( "malloc() of ssl sub-contexts failed" ) );
 
+        printf("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS\n");
+        printf("ssl->handshake = %p\n", ssl->handshake);
         polarssl_free( ssl->handshake );
+        printf("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS\n");
         polarssl_free( ssl->transform_negotiate );
         polarssl_free( ssl->session_negotiate );
 
@@ -4709,7 +4718,10 @@ void ssl_free( ssl_context *ssl )
         ssl_transform_free( ssl->transform_negotiate );
         ssl_session_free( ssl->session_negotiate );
 
+        printf("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR\n");
+        printf("ssl->handshake = %p\n", ssl->handshake);
         polarssl_free( ssl->handshake );
+        printf("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR\n");
         polarssl_free( ssl->transform_negotiate );
         polarssl_free( ssl->session_negotiate );
     }

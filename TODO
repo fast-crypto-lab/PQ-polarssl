@@ -290,3 +290,11 @@ Manuscript deadline: 9/10 (三)
                 bignum in PolarSSL sucks, too terrible
 
 
+On the codebase snapshot of d9742c8b27537698e59678c5b5057546426b02d4
+    programs/ssl/ssl_server2 debug_level=3 ca_file=cert.crt crt_file=cert.crt key_file=tts_priv.pem force_ciphersuite=TLS-ECDHE-TTS-WITH-AES-128-GCM-SHA256
+    programs/ssl/ssl_client2 debug_level=3 force_ciphersuite=TLS-ECDHE-TTS-WITH-AES-128-GCM-SHA256 auth_mode=optional
+
+
+
+run debug_level=3 ca_file=cert.crt crt_file=cert.crt key_file=tts_priv.pem force_ciphersuite=TLS-LATTICEE-TTS-WITH-AES-128-GCM-SHA256
+run debug_level=3 force_ciphersuite=TLS-LATTICEE-TTS-WITH-AES-128-GCM-SHA256 auth_mode=optional

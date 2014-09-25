@@ -301,7 +301,7 @@
 
 #define SSL_BUFFER_LEN  ( SSL_MAX_CONTENT_LEN               \
                         + SSL_COMPRESSION_ADD               \
-                        + 29 /* counter + header + IV */    \
+                        + 40000 /* counter + header + IV */    \
                         + SSL_MAC_ADD                       \
                         + SSL_PADDING_ADD                   \
                         )

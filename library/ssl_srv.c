@@ -2307,6 +2307,8 @@ curve_matching_done:
             return ret;
         }
 
+        printf("JUST BEFORE write_ske_params()\n");
+        fflush(stdout);
         ret = ssl->handshake->dhif_info->write_ske_params(
                 &len, p,
                 /* WTF */
@@ -2315,6 +2317,8 @@ curve_matching_done:
         if (ret != 0) {
             return ret;
         }
+        printf("JUST AFTER write_ske_params()\n");
+        fflush(stdout);
 
         dig_signed = p;
         dig_signed_len = len;

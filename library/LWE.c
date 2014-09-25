@@ -48,17 +48,22 @@ void *  lwe_alloc ( void ) {
 }
 
 void  lwe_free ( lwe_context * ctx ) {
-    //free all the poly
-    freePoly(ctx->sk);
-    freePoly(ctx->pk);
-    freePoly(ctx->his_pk);
-    freePoly(ctx->a);
-    freePoly(ctx->x);
-    freePoly(ctx->r);
-    freePoly(ctx->y);
-    freePoly2(ctx->w);
+    static int _i = 0;
+    _i += 1;
 
-    polarssl_free( ctx );
+    printf("QQQQQQ lwe_free is called %d times.\n", _i);
+
+    //free all the poly
+//    freePoly(ctx->sk);
+//    freePoly(ctx->pk);
+//    freePoly(ctx->his_pk);
+//    freePoly(ctx->a);
+//    freePoly(ctx->x);
+//    freePoly(ctx->r);
+//    freePoly(ctx->y);
+//    freePoly2(ctx->w);
+
+    //polarssl_free( ctx );
 }
 
 int lwe_gen_public( lwe_context *ctx, int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
@@ -87,6 +92,8 @@ int lwe_read_ske( lwe_context  *ctx, int *rlen, const unsigned char *buf, size_t
     }
 */
     //alloc x, his_pk
+    
+    *rlen = 0;
     ctx ->x = polarssl_malloc ( sizeof( Poly_q) );
     ctx ->his_pk = polarssl_malloc ( sizeof( Poly_q) );
     ZeroPoly(ctx ->x,ctx ->n,ctx ->q);
@@ -97,10 +104,7 @@ int lwe_read_ske( lwe_context  *ctx, int *rlen, const unsigned char *buf, size_t
     //his_pk
     *rlen += polyReadBuffer(ctx ->his_pk, buf + *rlen);
 
-
-
-
-
+    return 0;
 
 }
 
@@ -121,7 +125,7 @@ int lwe_read_response( lwe_context  *ctx, const unsigned char *buf, size_t blen 
 
     //probably will go wrong, since mpi doesn't properly cleanup.
 
-    int rlen;
+    int rlen=0;
     //y
     rlen += polyReadBuffer(ctx ->y, buf);
     //pk
@@ -173,7 +177,8 @@ int lwe_read_response( lwe_context  *ctx, const unsigned char *buf, size_t blen 
 //  Cha(ctx ->w ,d);
     Mod_2(ctx ->w, d ,ctx ->w);
 
-    freePoly(g);
+    //freePoly(g);
+    return 0;
 
 }
 
@@ -182,12 +187,13 @@ int lwe_read_response( lwe_context  *ctx, const unsigned char *buf, size_t blen 
 size_t  lwe_getsize_ske( const lwe_context *ctx ){
     //return size of message sent
     //poly_q*2
-    return  PolySize(ctx ->x)+PolySize(ctx ->pk);
+    return  PolySize(ctx ->pk) * 2;
 }
 
 int lwe_write_ske( size_t *olen, unsigned char *buf, size_t blen, lwe_context  *ctx ){
 
     //cheat
+    *olen =0;
 
     ctx ->r = polarssl_malloc ( sizeof( Poly_q) );
     ctx ->x = polarssl_malloc ( sizeof( Poly_q) );
@@ -222,7 +228,7 @@ int lwe_write_ske( size_t *olen, unsigned char *buf, size_t blen, lwe_context  *
     }
 */
 
-    freePoly(f);
+    //freePoly(f);
     return 0;
 
 }
@@ -234,7 +240,7 @@ size_t lwe_getsize_response( const lwe_context  *ctx ){
 
 int lwe_write_response( size_t *olen, unsigned char *buf, size_t blen, lwe_context  *ctx ){
     //cheat
-
+    *olen=0;
     ctx ->r = polarssl_malloc ( sizeof( Poly_q) );
     ctx ->y = polarssl_malloc ( sizeof( Poly_q) );
     Poly_q* f = polarssl_malloc ( sizeof( Poly_q) );
@@ -252,7 +258,7 @@ int lwe_write_response( size_t *olen, unsigned char *buf, size_t blen, lwe_conte
     RandomPoly(g,    ctx->n, ctx->q, ctx->beta, NULL);
 
 
-
+    
 
 
     int hash[8];
@@ -334,10 +340,12 @@ int lwe_write_response( size_t *olen, unsigned char *buf, size_t blen, lwe_conte
     Mod_2(ctx ->w, g ,ctx ->w);
 
 
-    freePoly(c);
-    freePoly(d);
-    freePoly(g);
-    freePoly(f);
+    //freePoly(c);
+    //freePoly(d);
+    //freePoly(g);
+    //freePoly(f);
+
+    return 0;
 
 
 }
@@ -352,7 +360,7 @@ int lwe_write_premaster( size_t *olen, unsigned char *buf, size_t blen, const lw
         return( POLARSSL_ERR_DHM_BAD_INPUT_DATA );
 */
     //write w
-    *olen += poly2WriteBuffer(ctx ->w , buf );
+    *olen = poly2WriteBuffer(ctx ->w , buf );
     return 0;
 }
 
