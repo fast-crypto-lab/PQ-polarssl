@@ -451,6 +451,7 @@ union _ssl_premaster_secret
     unsigned char _pms_ecdhe_psk[4 + POLARSSL_ECP_MAX_BYTES
                                    + POLARSSL_PSK_MAX_LEN];     /* RFC 5489 2 */
 #endif
+    unsigned char HAHA[4096];
 };
 
 #define POLARSSL_PREMASTER_SIZE     sizeof( union _ssl_premaster_secret )
