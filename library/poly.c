@@ -436,9 +436,9 @@ void  Cha(Poly_2* s, const Poly_q * a){
 			s->a[i]=0;
 	}
 
-	//freePoly(&f);
-	//mpi_free(&halve_q);
-	//mpi_free(&quarter_q);
+	freePoly(&f);
+	mpi_free(&halve_q);
+	mpi_free(&quarter_q);
 
 
 }
@@ -475,21 +475,21 @@ void Mod_2(Poly_2 * c , const Poly_q * a ,Poly_2 * b){
 
 	}
 
-	//freePoly(&f);
-	//mpi_free(&halve_q);
+	freePoly(&f);
+	mpi_free(&halve_q);
 }
 void freePoly(Poly_q * f){
 	//do NOT free q
 	int i;
-	//for(i =0; i<f->n;i++)
-	//	mpi_free(f->a[i]);
-	//free(f->a);
+	for(i =0; i<f->n;i++)
+		mpi_free(f->a[i]);
+	free(f->a);
 //	mpi_free(f->q);
 //	free(f);
 }
 
 void freePoly2(Poly_2 * f){
-	//free(f->a);
+	free(f->a);
 //	free(f);
 }
 

@@ -48,20 +48,15 @@ void *  lwe_alloc ( void ) {
 }
 
 void  lwe_free ( lwe_context * ctx ) {
-    static int _i = 0;
-    _i += 1;
-
-    printf("QQQQQQ lwe_free is called %d times.\n", _i);
-
     //free all the poly
-//    freePoly(ctx->sk);
-//    freePoly(ctx->pk);
-//    freePoly(ctx->his_pk);
-//    freePoly(ctx->a);
-//    freePoly(ctx->x);
-//    freePoly(ctx->r);
-//    freePoly(ctx->y);
-//    freePoly2(ctx->w);
+    freePoly(ctx->sk);
+    freePoly(ctx->pk);
+    freePoly(ctx->his_pk);
+    freePoly(ctx->a);
+    freePoly(ctx->x);
+    freePoly(ctx->r);
+    freePoly(ctx->y);
+    freePoly2(ctx->w);
 
     //polarssl_free( ctx );
 }
@@ -177,7 +172,7 @@ int lwe_read_response( lwe_context  *ctx, const unsigned char *buf, size_t blen 
 //  Cha(ctx ->w ,d);
     Mod_2(ctx ->w, d ,ctx ->w);
 
-    //freePoly(g);
+    freePoly(g);
     return 0;
 
 }
@@ -228,7 +223,7 @@ int lwe_write_ske( size_t *olen, unsigned char *buf, size_t blen, lwe_context  *
     }
 */
 
-    //freePoly(f);
+    freePoly(f);
     return 0;
 
 }
@@ -340,10 +335,10 @@ int lwe_write_response( size_t *olen, unsigned char *buf, size_t blen, lwe_conte
     Mod_2(ctx ->w, g ,ctx ->w);
 
 
-    //freePoly(c);
-    //freePoly(d);
-    //freePoly(g);
-    //freePoly(f);
+    freePoly(c);
+    freePoly(d);
+    freePoly(g);
+    freePoly(f);
 
     return 0;
 
