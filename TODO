@@ -322,3 +322,39 @@ $ run debug_level=3 force_ciphersuite=TLS-LATTICEE-TTS-WITH-AES-128-GCM-SHA256 a
 
 
 
+
+
+
+
+
+
+2014/10/01 Wed 14:22:41
+
+    What we have changed since July 11:
+        - new DH
+        - new PK and X.509
+
+    What we've wished:
+
+        * X.509 層，好像只有 buffer size 要調大而已 (library/x509write_crt.c)
+
+        * DH 層, 根據 TLS/SSL 的 identifier 應該可以自動判斷要如何 initialize 相對應需要的 context
+          => eg. 抽象層的設計要加一個 initialize function
+
+        * PK 層, 實作兩種選擇:
+          (1) 就只筆記下所有需要加新的 PK 層時，應該要改哪些檔案的哪些點，以後就照著做...
+          (2) 幫 PolarSSL 的 pkparse.c 等檔案修改成可以呼叫我們新加入的函數組 (獨立的 .c 與 .h 檔)
+
+        - 筆記下所有需要加新的 PK 層、新的 DH 層時，應該要改哪些檔案的哪些點（例如 buffer size/constants/functions 增加）
+          $ git diff 1910aa78a3677f1bc2a6c6af61d08dc4cccd917a --stat
+
+        - 加一個新的東西不需要到處都要修改
+
+        - 抽象層的 implementation 預設應該要全部都是 dummy procedures
+
+        - 目前未解決： buffer size 的大小
+
+        - 程式碼 clean up:
+          > 把 debug message 關掉
+          > MD5 問題
+
