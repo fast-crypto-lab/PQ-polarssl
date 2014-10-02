@@ -1,0 +1,62 @@
+I'm not so familiar with pk part, so should double check
+directory test, our_tests_programs ignored
+
+in dh_wrap.h:
+	add extern const dh_info2_t XXX_info (KE)
+in ssl.h:
+	modify  SSL_MAX_CONTENT_LEN ? 
+		I'm not sure what actually this is for. Isn't buffer length defined as SSL_BUFFER_LEN?
+	modify SSL_BUFFER_LEN (KE)
+	modify or add element(s) in union _ssl_premaster_secret (KE)
+	#define SSL_SIG_XXX for PK 
+	moldify  _ssl_handshake_params ?
+		+#if defined(POLARSSL_DHM_C) || defined(POLARSSL_ECDH_C) || defined(NACL_CURVE25519_C)
+		+    const dh_info2_t *dhif_info;
+		+    void *dhif_ctx;
+		+#endif
+		+    int point_format;                   /*!< XXX Our additional params for EC */
+		not sure what these are
+in ssl_ciphersuite.h:
+	define ciphersuite(PK&KE)
+	add new ciphersuite in key_exchange_type_t(PK&KE)
+Makefile                            
+in ssl_ciphersuites.c:
+	define ssl_ciphersuite_t in ciphersuite_definitions(line 1676)(PK & KE)
+	add case in ssl_get_ciphersuite_sig_pk_alg(PK)
+in ssl_tls.c:
+	include new KE header(KE)
+	in ssl_sig_from_pk(PK), add:
+		if( pk_can_do( pk, OUR_PK_XXX ) )
+			return( SSL_SIG_XXX );
+	in ssl_pk_alg_from_sig(PK), add:
+		case SSL_SIG_XXX:
+			return ( OUR_PK_TTS );
+	in ssl_check_cert_usage(PK)
+		add cases
+		
+
+
+		+#if defined(POLARSSL_DHM_C) || defined(POLARSSL_ECDH_C) || defined(NACL_CURVE25519_C)
+		+    handshake->dhif_info = NULL;
+		+    handshake->dhif_ctx = NULL;
+		+#endif
+		+#if defined(POLARSSL_DHM_C) || defined(POLARSSL_ECDH_C) || defined(NACL_CURVE25519_C)
+		+    if (handshake->dhif_info != NULL) {
+		+        handshake->dhif_info->ctx_free(handshake->dhif_ctx);
+		+    }
+		+#endif
+		what are these?
+
+in ssl_srv.c:
+	include new KE header(KE)
+	in ssl_write_server_key_exchange(KE), add:
+		if( ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_XXX_YYY)
+			{
+				ssl->handshake->dhif_info = &XXX_info;
+				if (ssl->handshake->dhif_ctx == NULL) {
+					ssl->handshake->dhif_ctx = ssl->handshake->dhif_info->ctx_alloc();
+				}
+			}
+	in line 2293 ,2335, 2747 add new ciphersuit to the long if-list(KE).
+	
+	
