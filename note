@@ -57,6 +57,16 @@ in ssl_srv.c:
 					ssl->handshake->dhif_ctx = ssl->handshake->dhif_info->ctx_alloc();
 				}
 			}
-	in line 2293 ,2335, 2747 add new ciphersuit to the long if-list(KE).
+	at line 2293 ,2335, 2747 add new ciphersuit to the long if-list(KE).
 	
-	
+in ssl_cli.c:
+	at line 197, something about hash shuld be added, I'm not sure what it is.
+	in ssl_parse_server_key_exchange(KE), add:
+		if( ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_XXX_YYY)
+			{
+				ssl->handshake->dhif_info = &XXX_info;
+				if (ssl->handshake->dhif_ctx == NULL) {
+					ssl->handshake->dhif_ctx = ssl->handshake->dhif_info->ctx_alloc();
+				}
+			}
+	at line 1679, 1700, 2092 add new ciphersuit to the long if-list(KE).
