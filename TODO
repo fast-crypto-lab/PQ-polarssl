@@ -358,3 +358,32 @@ $ run debug_level=3 force_ciphersuite=TLS-LATTICEE-TTS-WITH-AES-128-GCM-SHA256 a
           > 把 debug message 關掉
           > MD5 問題
 
+        - 拔掉 dirty hacks
+
+        - 拔掉 macro
+
+
+
+2014/10/06 Mon 16:08:48
+
+        1. 加速 polarssl 的 mpi
+           - 張
+
+        2. 把所有 dirty hacks 都寫在 dirty.c 裏面 (參考 note)
+           用新的方案加入我們的 crypto 看看效果如何
+           從這一個 commit 開新的 branch 出來
+
+           * commit 1910aa78a3677f1bc2a6c6af61d08dc4cccd917a (origin/development)
+           | Author: Paul Bakker <p.j.bakker@polarssl.org>
+           | Date:   Fri Jul 11 11:28:56 2014 +0200
+           | 
+           |     Fix release date for 1.3.8
+           |  
+
+           三個方向:
+           - PK 吳
+           - DH 陳
+           - CIPHERSUITE 吳
+
+           Next meeting 10/10 (五)
+
