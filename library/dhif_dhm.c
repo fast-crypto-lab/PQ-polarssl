@@ -33,8 +33,9 @@
  * BEGIN Our wrapper interfaces for DH key exchange
  */
 
-int wdhm_gen_public( dhm_context *ctx, int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
+int wdhm_gen_public( void *_ctx, int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
 {
+    dhm_context *ctx = (dhm_context *)_ctx;
     static unsigned char tmp_buffer[1536]; /* XXX: We assume that 1536 is always greater than 3*mpi_size(P) */
     int ret = 0;
 
@@ -45,8 +46,9 @@ int wdhm_gen_public( dhm_context *ctx, int (*f_rng)(void *, unsigned char *, siz
     return ret;
 }
 
-int wdhm_compute_shared( dhm_context *ctx , int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
+int wdhm_compute_shared( void *_ctx , int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
 {
+    dhm_context *ctx = (dhm_context *)_ctx;
     static unsigned char tmp_buffer[1536];
     size_t buffer_len = 1536;
     int ret = 0;
@@ -58,8 +60,9 @@ int wdhm_compute_shared( dhm_context *ctx , int (*f_rng)(void *, unsigned char *
 
 typedef struct { mpi P; mpi G; } wdh_params;
 
-int wdhm_set_params( dhm_context *ctx , const void *_params )
+int wdhm_set_params( void *_ctx , const void *_params )
 {
+    dhm_context *ctx = (dhm_context *)_ctx;
     int ret = 0;
     const wdh_params *params = (const wdh_params *) _params;
 
@@ -73,8 +76,9 @@ cleanup:
     return ret;
 }
 
-static int _check_p_range(const dhm_context *ctx )
+static int _check_p_range(const void *_ctx )
 {
+    const dhm_context *ctx = (const dhm_context *)_ctx;
     if (ctx->len < 64 || ctx->len > 512) {
         return -1;
     }
@@ -82,8 +86,9 @@ static int _check_p_range(const dhm_context *ctx )
 }
 
 /* and public */
-int wdhm_read_params( dhm_context *ctx , int *rlen, const unsigned char *buf , size_t blen )
+int wdhm_read_params( void *_ctx , int *rlen, const unsigned char *buf , size_t blen )
 {
+    dhm_context *ctx = (dhm_context *)_ctx;
     const unsigned char *p = buf;
     int ret = 0;
     const unsigned char *end = p + blen;
@@ -103,8 +108,9 @@ int wdhm_read_params( dhm_context *ctx , int *rlen, const unsigned char *buf , s
     return ret;
 }
 
-int wdhm_read_public( dhm_context *ctx, const unsigned char *buf, size_t blen )
+int wdhm_read_public( void *_ctx, const unsigned char *buf, size_t blen )
 {
+    dhm_context *ctx = (dhm_context *)_ctx;
     int ret = 0;
     size_t n;
 
@@ -146,13 +152,15 @@ int wdhm_read_from_peer_pk_ctx( dhm_context *ctx, const void *_pk_ctx ) {
 
  */
 
-size_t wdhm_getsize_params( const dhm_context *ctx )
+size_t wdhm_getsize_params( const void *_ctx )
 {
+    dhm_context *ctx = (dhm_context *)_ctx;
     return 3 * 2 + mpi_size(&ctx->P) + mpi_size(&ctx->G) + mpi_size(&ctx->GX);
 }
 
-int wdhm_write_params( size_t *olen, unsigned char *buf, size_t blen, const dhm_context *ctx )
+int wdhm_write_params( size_t *olen, unsigned char *buf, size_t blen, const void *_ctx )
 {
+    const dhm_context *ctx = (const dhm_context *)_ctx;
     int ret = 0;
     unsigned char *p = buf;
     size_t n1,n2,n3;
@@ -183,13 +191,15 @@ cleanup:
     return 0;
 }
 
-size_t wdhm_getsize_public( const dhm_context *ctx )
+size_t wdhm_getsize_public( const void *_ctx )
 {
+    const dhm_context *ctx = (const dhm_context *)_ctx;
     return ctx->len + 2;
 }
 
-int wdhm_write_public( size_t *olen, unsigned char *buf, size_t blen, const dhm_context *ctx )
+int wdhm_write_public( size_t *olen, unsigned char *buf, size_t blen, const void *_ctx )
 {
+    const dhm_context *ctx = (const dhm_context *)_ctx;
     int ret = 0;
 
     if( ctx == NULL || blen < ctx->len )
@@ -207,13 +217,15 @@ cleanup:
     return 0;
 }
 
-size_t wdhm_getsize_premaster( const dhm_context *ctx )
+size_t wdhm_getsize_premaster( const void *_ctx )
 {
+    const dhm_context *ctx = (const dhm_context *)_ctx;
     return ctx->len;
 }
 
-int wdhm_write_premaster( size_t *olen, unsigned char *buf, size_t blen, const dhm_context *ctx )
+int wdhm_write_premaster( size_t *olen, unsigned char *buf, size_t blen, const void *_ctx )
 {
+    const dhm_context *ctx = (const dhm_context *)_ctx;
     int ret = 0;
 
     if( ctx == NULL || blen < ctx->len )

@@ -7,6 +7,8 @@
 
 #if defined(POLARSSL_ECDH_C)
 
+#include "polarssl/platform.h"
+
 #include "polarssl/ecdh.h"
 
 #include "polarssl/dh.h"
@@ -16,8 +18,9 @@
  * BEGIN Our wrapper interfaces for ECDH key exchange
  */
 
-int wecdh_gen_public( ecdh_context *ctx, int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
+int wecdh_gen_public( void *_ctx , int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
 {
+    ecdh_context *ctx = (ecdh_context *)_ctx;
     int ret = 0;
 
     if ( ctx == NULL || ctx->grp.pbits == 0 ) return ( POLARSSL_ERR_ECP_BAD_INPUT_DATA );
@@ -27,8 +30,9 @@ int wecdh_gen_public( ecdh_context *ctx, int (*f_rng)(void *, unsigned char *, s
     return ret;
 }
 
-int wecdh_compute_shared( ecdh_context *ctx, int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
+int wecdh_compute_shared( void *_ctx, int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
 {
+    ecdh_context *ctx = (ecdh_context *)_ctx;
     int ret = 0;
 
     if( ctx == NULL ) return ( POLARSSL_ERR_ECP_BAD_INPUT_DATA );
@@ -69,8 +73,9 @@ static int _check_server_ecdh_params( const ecdh_context *ctx )
 
 typedef struct { int point_format; ecp_group_id group_id; } wecdh_params;
 
-int wecdh_set_params( ecdh_context *ctx, const void *_params )
+int wecdh_set_params( void *_ctx , const void *_params )
 {
+    ecdh_context *ctx = (ecdh_context *)_ctx;
     int ret = 0;
     const wecdh_params *params = (const wecdh_params *) _params;
 
@@ -89,8 +94,9 @@ int wecdh_set_params( ecdh_context *ctx, const void *_params )
     return ret;
 }
 
-int wecdh_read_params( ecdh_context *ctx, int *rlen, const unsigned char *buf, size_t blen )
+int wecdh_read_params( void *_ctx, int *rlen, const unsigned char *buf, size_t blen )
 {
+    ecdh_context *ctx = (ecdh_context *)_ctx;
     const unsigned char *p = buf;
     int ret = 0;
     const unsigned char *end = p + blen;
@@ -102,8 +108,9 @@ int wecdh_read_params( ecdh_context *ctx, int *rlen, const unsigned char *buf, s
     return ret;
 }
 
-int wecdh_read_public( ecdh_context *ctx, const unsigned char *buf, size_t blen )
+int wecdh_read_public( void *_ctx , const unsigned char *buf, size_t blen )
 {
+    ecdh_context *ctx = (ecdh_context *)_ctx;
     int ret = 0;
 
     ret = ecdh_read_public(ctx, buf, blen);
@@ -111,8 +118,9 @@ int wecdh_read_public( ecdh_context *ctx, const unsigned char *buf, size_t blen 
     return ret;
 }
 
-int wecdh_read_from_self_pk_ctx( ecdh_context *ctx, const void *_pk_ctx )
+int wecdh_read_from_self_pk_ctx( void *_ctx , const void *_pk_ctx )
 {
+    ecdh_context *ctx = (ecdh_context *)_ctx;
     const ecp_keypair *key = (const ecp_keypair *) _pk_ctx;
     int ret = -1;
 
@@ -134,8 +142,9 @@ int wecdh_read_from_self_pk_ctx( ecdh_context *ctx, const void *_pk_ctx )
     return ret;
 }
 
-int wecdh_read_from_peer_pk_ctx( ecdh_context *ctx, const void *_pk_ctx )
+int wecdh_read_from_peer_pk_ctx( void *_ctx , const void *_pk_ctx )
 {
+    ecdh_context *ctx = (ecdh_context *)_ctx;
     const ecp_keypair *key = (const ecp_keypair *) _pk_ctx;
     int ret = -1;
 
@@ -154,8 +163,9 @@ int wecdh_read_from_peer_pk_ctx( ecdh_context *ctx, const void *_pk_ctx )
     return ret;
 }
 
-size_t wecdh_getsize_public( const ecdh_context *ctx )
+size_t wecdh_getsize_public( const void *_ctx )
 {
+    const ecdh_context *ctx = (const ecdh_context *)_ctx;
     const ecp_group grp = ctx->grp;
     const ecp_point Q = ctx->Q;
     int point_format = ctx->point_format;
@@ -180,15 +190,18 @@ size_t wecdh_getsize_public( const ecdh_context *ctx )
 }
 
 
-size_t wecdh_getsize_params( const ecdh_context *ctx )
+size_t wecdh_getsize_params( const void *_ctx )
 {
+    const ecdh_context *ctx = (const ecdh_context *)_ctx;
+
     /* In addition to the public parameter (an EC point),
      * ecp_tls_write_group uses 3 bytes */
     return 3 + wecdh_getsize_public(ctx);
 }
 
-int wecdh_write_params( size_t *olen, unsigned char *buf, size_t blen, const ecdh_context *ctx )
+int wecdh_write_params( size_t *olen, unsigned char *buf, size_t blen, const void *_ctx )
 {
+    const ecdh_context *ctx = (const ecdh_context *)_ctx;
     int ret = 0;
     size_t grp_len, pt_len;
 
@@ -209,8 +222,9 @@ int wecdh_write_params( size_t *olen, unsigned char *buf, size_t blen, const ecd
 }
 
 
-int wecdh_write_public( size_t *olen, unsigned char *buf, size_t blen, const ecdh_context *ctx )
+int wecdh_write_public( size_t *olen, unsigned char *buf, size_t blen, const void *_ctx )
 {
+    const ecdh_context *ctx = (const ecdh_context *)_ctx;
     int ret = 0;
 
     if( ctx == NULL || blen < wecdh_getsize_public(ctx) )
@@ -221,13 +235,15 @@ int wecdh_write_public( size_t *olen, unsigned char *buf, size_t blen, const ecd
     return ret;
 }
 
-size_t wecdh_getsize_premaster( const ecdh_context *ctx )
+size_t wecdh_getsize_premaster( const void *_ctx )
 {
+    const ecdh_context *ctx = (const ecdh_context *)_ctx;
     return mpi_size(&ctx->z);
 }
 
-int wecdh_write_premaster( size_t *olen, unsigned char *buf, size_t blen, const ecdh_context *ctx )
+int wecdh_write_premaster( size_t *olen, unsigned char *buf, size_t blen, const void *_ctx )
 {
+    const ecdh_context *ctx = (const ecdh_context *)_ctx;
     int ret = 0;
 
     if( ctx == NULL || blen < mpi_size(&ctx->z) )
@@ -243,7 +259,7 @@ int wecdh_write_premaster( size_t *olen, unsigned char *buf, size_t blen, const 
 
 /* TODO: Use ecp_use_known_dp() to select a particular curve for each ECDH wrapper */
 static void *m_ecdh_alloc( void ) {
-    ecdh_context *ctx = polarssl_malloc( sizeof( ecdh_context ) );
+    ecdh_context *ctx = (ecdh_context *)polarssl_malloc( sizeof( ecdh_context ) );
     if ( ctx == NULL ) {
         return NULL;  
     } else {
