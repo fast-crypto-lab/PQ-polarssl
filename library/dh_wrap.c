@@ -32,6 +32,25 @@ dh_type_t ssl_get_dh_type( key_exchange_type_t ssl_type )
 	return POLARSSL_DH_NONE;
 }
 
+int ssl_is_dh_ephemeral( key_exchange_type_t ssl_type )
+{
+	if( ssl_type == POLARSSL_KEY_EXCHANGE_DHE_RSA ||
+            ssl_type == POLARSSL_KEY_EXCHANGE_DHE_PSK ||
+            ssl_type == POLARSSL_KEY_EXCHANGE_ECDHE_RSA ||
+            ssl_type == POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA ||
+            ssl_type == POLARSSL_KEY_EXCHANGE_ECDHE_PSK ||
+            ssl_type == OUR_KEY_EXCHANGE_ECDHE_TTS ||
+            ssl_type == OUR_KEY_EXCHANGE_LATTICEE_TTS ||
+            ssl_type == OUR_KEY_EXCHANGE_LATTICEE_RAINBOW ||
+            ssl_type == OUR_KEY_EXCHANGE_LATTICEE_RSA ||
+            ssl_type == OUR_KEY_EXCHANGE_LATTICEE_ECDSA
+	) return 1;
+
+	return 0;
+}
+
+
+
 const dh_info2_t * dh_get_info( dh_type_t type )
 {
 	if( type == POLARSSL_DH_DHM ) return &dhm_info2;
