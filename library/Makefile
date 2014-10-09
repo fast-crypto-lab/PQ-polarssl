@@ -64,7 +64,7 @@ OBJS=	aes.o		aesni.o		arc4.o			\
 		xtea.o		dh_wrap.o					\
 		nacl_curve25519_ref_smult.o				\
 		linear31.o	rainbow.o					\
-		poly.o LWE.o
+		poly.o LWE.o	dhif_dhm.o	dhif_ecdh.o
 
 .SILENT:
 

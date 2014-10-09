@@ -218,22 +218,6 @@ int ecdh_calc_secret( ecdh_context *ctx, size_t *olen,
  */
 int ecdh_self_test( int verbose );
 
-
-int wecdh_gen_public( ecdh_context *ctx, int (*f_rng)(void *, unsigned char *, size_t), void *p_rng );
-int wecdh_compute_shared( ecdh_context *ctx, int (*f_rng)(void *, unsigned char *, size_t), void *p_rng );
-int wecdh_set_params( ecdh_context *ctx, const void *params );
-int wecdh_read_params( ecdh_context *ctx, int *rlen, const unsigned char *buf, size_t blen );
-int wecdh_read_public( ecdh_context *ctx, const unsigned char *buf, size_t blen );
-int wecdh_read_from_self_pk_ctx( ecdh_context *ctx, const void *pk_ctx );
-int wecdh_read_from_peer_pk_ctx( ecdh_context *ctx, const void *pk_ctx );
-size_t wecdh_getsize_params( const ecdh_context *ctx );
-int wecdh_write_params( size_t *olen, unsigned char *buf, size_t blen, const ecdh_context *ctx );
-size_t wecdh_getsize_public( const ecdh_context *ctx );
-int wecdh_write_public( size_t *olen, unsigned char *buf, size_t blen, const ecdh_context *ctx );
-size_t wecdh_getsize_premaster( const ecdh_context *ctx );
-int wecdh_write_premaster( size_t *olen, unsigned char *buf, size_t blen, const ecdh_context *ctx );
-
-
 #ifdef __cplusplus
 }
 #endif

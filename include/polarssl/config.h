@@ -1400,6 +1400,26 @@
 #define POLARSSL_DES_C
 
 /**
+ * \def POLARSSL_DHIF_C
+ *
+ * Enable Diffie-Hellman interfaces.
+ *
+ * Module:  library/dhif_wraper.c
+ * Caller:  library/ssl_tls.c
+            library/ssl_cli.c
+            library/ssl_srv.c
+ * Requires:
+ *
+ * This module is the abstract layer of DH algorithms.
+ */
+#define POLARSSL_DHIF_C
+
+#define LATTICE_LWEDH_C
+
+#define NACL_CV25519_C
+
+
+/**
  * \def POLARSSL_DHM_C
  *
  * Enable the Diffie-Hellman-Merkle module.

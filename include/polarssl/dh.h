@@ -8,35 +8,9 @@ typedef enum {
     POLARSSL_DH_NONE=0,
     POLARSSL_DH_DHM,
     POLARSSL_DH_EC, /* Need to specify which curve to use */
-    NACL_DH_CURVE25519,
+    NACL_DH_CV25519,
     POLARSSL_DH_LWE,
 } dh_type_t;
-
-typedef struct {
-    dh_type_t type;
-    const char *name;
-
-    void * (*ctx_alloc)( void );
-    void (*ctx_free)( void *ctx );
-
-    int (*make_params)( void *ctx, size_t *olen, unsigned char *buf, size_t blen,
-                      int (*f_rng)(void *, unsigned char *, size_t), void *p_rng );
-
-    int (*read_params)( void *ctx, unsigned char **buf, const unsigned char *end );
-
-    int (*make_public)( void *ctx, size_t *olen, unsigned char *buf, size_t blen,
-                      int (*f_rng)(void *, unsigned char *, size_t), void *p_rng );
-
-    int (*read_public)( void *ctx, const unsigned char *inputbuf, size_t blen );
-
-    int (*calc_secret)( void *ctx, size_t *olen, unsigned char *buf, size_t blen,
-                      int (*f_rng)(void *, unsigned char *, size_t), void *p_rng );
-} dh_info_t;
-
-typedef struct {
-    const dh_info_t *dh_info;
-    void *dh_ctx;
-} dh_context_t;
 
 
 typedef struct {
@@ -70,5 +44,13 @@ typedef struct {
     const dh_info2_t *dh_info;
     void *dh_ctx;
 } dh_context2_t;
+
+
+const dh_info2_t * dh_get_info( dh_type_t type );
+
+/* have to move to ssl layer later */
+#include "polarssl/ssl_ciphersuites.h"
+
+dh_type_t ssl_get_dh_type( key_exchange_type_t ssl_type );
 
 #endif
