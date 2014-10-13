@@ -2351,6 +2351,10 @@ curve_matching_done:
 
 
 
+    /* TODO */
+    /* if ( ssl_need_pk_signed(ciphersuite_info->key_exchange) ) { */
+    /* } */
+
     if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_DHE_RSA ||
         ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_ECDHE_TTS        ||
         ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_TTS     ||

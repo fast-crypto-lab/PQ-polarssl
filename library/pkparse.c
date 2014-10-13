@@ -655,6 +655,7 @@ int pk_parse_subpubkey( unsigned char **p, const unsigned char *end,
             ret = pk_get_ecpubkey( p, end, pk_ec( *pk ) );
     } else
 #endif /* POLARSSL_ECP_C */
+/* TODO: #if defined( ... ) */
     if( pk_alg == OUR_PK_TTS)
     {
         ret = pk_get_ttspubkey( p, end, pk_tts( *pk ) );
