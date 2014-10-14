@@ -1,11 +1,16 @@
+#define __POLARSSL__
+
+#if defined(__POLARSSL__)
 #include "rainbow_tts/run_config.h"
-
 #include "rainbow_tts/rainbow.h"
-
 #include "rainbow_tts/linear31.h"
-
 #include "rainbow_tts/_hash_sha256.h"
-
+#else
+#include "run_config.h"
+#include "rainbow.h"
+#include "linear31.h"
+#include "_hash_sha256.h"
+#endif
 
 
 
@@ -369,7 +374,7 @@ static int do_tts_sign( uint8_t * s , const tts_seckey_t * key , const uint8_t *
 
 #if defined(__RAINBOW__)
 
-static void gen_ov_rowmat( uint32_t r_rowmat[20][20] , const uint8_t ol_rowmat[20][20] , const uint8_t * ov_rowmat
+static void gen_ov_rowmat( uint32_t r_rowmat[20][20] , const uint8_t ol_rowmat[20][20] , const uint8_t * ov_rowmat 
 	, const uint8_t * v_vec , unsigned v_len )
 {
 	unsigned i,j;
@@ -680,7 +685,7 @@ int rb2_verify( const uint8_t * md , const uint8_t * packed_pk , const uint8_t *
 
 #if defined(__RAINBOW_2__)
 
-static void rb2_gen_ov_rowmat( uint32_t * r_rowmat , const uint8_t ol_rowmat[24][24] , const uint8_t * ov_rowmat
+static void rb2_gen_ov_rowmat( uint32_t * r_rowmat , const uint8_t ol_rowmat[24][24] , const uint8_t * ov_rowmat 
 	, const uint8_t * v_vec , unsigned v_len )
 {
 	const unsigned w=24;
@@ -694,7 +699,7 @@ static void rb2_gen_ov_rowmat( uint32_t * r_rowmat , const uint8_t ol_rowmat[24]
 	}
 }
 
-static void rb2_gen_ov_rowmat_4( uint32_t * r_rowmat , const uint8_t ol_rowmat[4][4] , const uint8_t * ov_rowmat
+static void rb2_gen_ov_rowmat_4( uint32_t * r_rowmat , const uint8_t ol_rowmat[4][4] , const uint8_t * ov_rowmat 
 	, const uint8_t * v_vec , unsigned v_len )
 {
 	const unsigned w=4;
@@ -750,6 +755,8 @@ static int rb2_invcmap( uint8_t * r , const rb2_seckey_t * key , const uint8_t *
 	uint32_t rowmat[24*24];
 
 	for(i=0;i<5;i++) {
+		if(0 != i ) _hash_sha256((uint8_t *)hash,(uint8_t *)hash,32);
+
 		cvt_31x6p5_bin32(r,hash[0]);
 		cvt_31x6p5_bin32(r+6,hash[1]);
 		cvt_31x6p5_bin32(r+12,hash[2]);
@@ -777,8 +784,6 @@ static int rb2_invcmap( uint8_t * r , const rb2_seckey_t * key , const uint8_t *
 
 		badluck = solve_linear24( r+56 , rowmat , tmp3 );
 		if( 0 == badluck ) return 0;
-
-		_hash_sha256((uint8_t *)hash,(uint8_t *)hash,32);
 	}
 	return -1;
 }
@@ -847,7 +852,7 @@ static int do_rb2_sign( uint8_t * s , const rb2_seckey_t * key , const uint8_t *
 	uint32_t r32[80] = {0};
 	uint8_t tmp[80];
 	uint8_t tmp2[52];
-	uint8_t tmp3[24];
+	//uint8_t tmp3[24];
 	int i;
 	uint8_t hash[64];
 
@@ -861,7 +866,6 @@ static int do_rb2_sign( uint8_t * s , const rb2_seckey_t * key , const uint8_t *
 	_hash_sha256(hash,hash,64);
 
 	i = rb2_invcmap( tmp , key , tmp2 , (uint32_t *)hash );
-	if( 0 != i ) return -1;
 
 	vec_add(tmp, key->sc , 80 );
 	vec_setzero((uint8_t *)r32,80*4);
@@ -1097,6 +1101,8 @@ static int tts2_invcmap( uint8_t * r , const tts2_seckey_t * key , const uint8_t
 	}
 
 	for(i=0;i<5;i++) {
+		if( 0 != i ) _hash_sha256((uint8_t *)hash,(uint8_t *)hash,32);
+
 		cvt_31x6p5_bin32(r,hash[0]);
 		cvt_31x6p5_bin32(r+6,hash[1]);
 		cvt_31x6p5_bin32(r+12,hash[2]);
@@ -1124,8 +1130,6 @@ static int tts2_invcmap( uint8_t * r , const tts2_seckey_t * key , const uint8_t
 
 		badluck = solve_linear24( r+56 , rowmat , tmp3 );
 		if( 0 == badluck ) return 0;
-
-		_hash_sha256((uint8_t *)hash,(uint8_t *)hash,32);
 	}
 	return -1;
 }

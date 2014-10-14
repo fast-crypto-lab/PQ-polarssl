@@ -22,11 +22,12 @@ extern "C" {
 #if !defined(_STDINT_H)
 
 #include <stdint.h>
-/* typedef unsigned char uint8_t; */
-/* typedef unsigned short uint16_t; */
-/* typedef unsigned uint32_t; */
-/* typedef unsigned long long uint64_t; */
-
+/*
+typedef unsigned char uint8_t;
+typedef unsigned short uint16_t;
+typedef unsigned uint32_t;
+typedef unsigned long long uint64_t;
+*/
 #endif /* _STDINT_H */
 
 /* GF(31) library */
@@ -253,6 +254,7 @@ static inline int vec_cmp40( const uint8_t * v1 , const uint8_t * v2 )
 }
 
 
+
 void vec_assign32( uint32_t * r , const uint8_t * inp , unsigned len );
 
 void vec_assign( uint8_t * r , const uint8_t * inp , unsigned len );
@@ -281,6 +283,9 @@ void rowmat_mul32( uint8_t * r , const uint32_t * mat , const uint8_t * vec , un
 
 int solve_linear20( uint8_t * r , uint32_t * rowmat , const uint8_t * inp );
 
+int solve_linear24( uint8_t * r , uint32_t * rowmat , const uint8_t * inp );
+
+int solve_linear4( uint8_t * r , uint32_t * rowmat , const uint8_t * inp );
 
 
 /* mq polynomial library */
@@ -307,7 +312,6 @@ uint8_t q[NUM_QUAD_TERMS(44)][20];
 } qpoly_44x20_t;
 
 
-
 void eval_q64x40( uint8_t *r , const qpoly_64x40_t *poly , const uint8_t * inp );
 
 void eval_q44x20( uint8_t *r , const qpoly_44x20_t *poly , const uint8_t * inp );
@@ -316,6 +320,42 @@ void eval_q24x20( uint8_t *r , const qpoly_24x20_t *poly , const uint8_t * inp )
 
 
 void interpolate_64x40( qpoly_64x40_t * poly , void (*q_poly)(uint8_t *r,const void*,const uint8_t*), const void *key );
+
+
+
+
+
+typedef struct {
+uint8_t l[80][52];
+uint8_t q[NUM_QUAD_TERMS(80)][52];
+} qpoly_80x52_t;
+
+typedef struct {
+uint8_t l[26][24];
+uint8_t q[NUM_QUAD_TERMS(26)][24];
+} qpoly_26x24_t;
+
+typedef struct {
+uint8_t l[52][4];
+uint8_t q[NUM_QUAD_TERMS(52)][4];
+} qpoly_52x4_t;
+
+typedef struct {
+uint8_t l[56][24];
+uint8_t q[NUM_QUAD_TERMS(56)][24];
+} qpoly_56x24_t;
+
+
+void eval_q80x52( uint8_t *r , const qpoly_80x52_t *poly , const uint8_t * inp );
+
+void eval_q26x24( uint8_t *r , const qpoly_26x24_t *poly , const uint8_t * inp );
+
+void eval_q52x4( uint8_t *r , const qpoly_52x4_t *poly , const uint8_t * inp );
+
+void eval_q56x24( uint8_t *r , const qpoly_56x24_t *poly , const uint8_t * inp );
+
+
+void interpolate_80x52( qpoly_80x52_t * poly , void (*q_poly)(uint8_t *r,const void*,const uint8_t*), const void *key );
 
 
 

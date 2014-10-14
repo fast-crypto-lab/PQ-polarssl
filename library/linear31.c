@@ -1,6 +1,12 @@
-#include "rainbow_tts/run_config.h"
+#define __POLARSSL__
 
+#if defined(__POLARSSL__)
+#include "rainbow_tts/run_config.h"
 #include "rainbow_tts/linear31.h"
+#else
+#include "run_config.h"
+#include "linear31.h"
+#endif
 
 
 /* ==================== */
@@ -302,6 +308,102 @@ int solve_linear20( uint8_t * r , uint32_t * rowmat , const uint8_t * inp )
 	return 0;
 }
 
+int solve_linear24( uint8_t * r , uint32_t * rowmat , const uint8_t * inp )
+{
+	/* a copy of solve_linear24() */
+	static const unsigned w = 24;
+	uint32_t cons[w];
+	uint32_t swap[w];
+	unsigned i,j;
+	uint32_t pivot,tmp;
+	vec_assign32( cons , inp , w );
+
+	for(i=0;i<w;i++){
+		pivot = rowmat[i*w+i] = remove_31( full_mod31_32(rowmat[i*w+i]) );
+		if( 0 == pivot ) {
+			for(j=i+1;j<w;j++){
+				pivot = rowmat[j*w+i] = remove_31( full_mod31_32(rowmat[j*w+i]) );
+				if( 0 == pivot ) continue;
+				tmp = cons[i]; cons[i]=cons[j]; cons[j]=tmp;
+				vec_assign((uint8_t*)swap,(uint8_t*)(&rowmat[i*w+i]),(w-i)*4);
+				vec_assign((uint8_t*)(&rowmat[i*w+i]),(uint8_t*)(&rowmat[j*w+i]),(w-i)*4);
+				vec_assign((uint8_t*)(&rowmat[j*w+i]),(uint8_t*)swap,(w-i)*4);
+				break;
+			}
+		}
+		pivot = inv_31( pivot );
+		if( 0 == pivot ) return -1;
+		if(w>(i+1)) {
+			vec_mul32_inp(&rowmat[i*w+i+1],pivot,w-(i+1));
+			vec_fullreduce32_inp(&rowmat[i*w+i+1],w-(i+1));
+		}
+		cons[i] = full_mod31_32( cons[i]*pivot );
+
+		for(j=i+1;j<w;j++){
+			tmp = remove_31( full_mod31_32(rowmat[j*w+i]) );
+			if(0==tmp) continue;
+			tmp=negative_31(tmp);
+			vec_mad3232( &rowmat[j*w+i+1] , &rowmat[i*w+i+1] , tmp , w-(i+1) );
+			cons[j] += cons[i]*tmp;
+		}
+	}
+
+	r[w-1] = cons[w-1];
+	for(i=w-1;i>0;i--){
+		unsigned t = i-1;
+		r[t] = cons[t] + negative_31( vec_dot32( &rowmat[t*w+i] , &r[i] , w-i ) );
+	}
+	return 0;
+}
+
+int solve_linear4( uint8_t * r , uint32_t * rowmat , const uint8_t * inp )
+{
+	/* a copy of solve_linear24() */
+	static const unsigned w = 4;
+	uint32_t cons[w];
+	uint32_t swap[w];
+	unsigned i,j;
+	uint32_t pivot,tmp;
+	vec_assign32( cons , inp , w );
+
+	for(i=0;i<w;i++){
+		pivot = rowmat[i*w+i] = remove_31( full_mod31_32(rowmat[i*w+i]) );
+		if( 0 == pivot ) {
+			for(j=i+1;j<w;j++){
+				pivot = rowmat[j*w+i] = remove_31( full_mod31_32(rowmat[j*w+i]) );
+				if( 0 == pivot ) continue;
+				tmp = cons[i]; cons[i]=cons[j]; cons[j]=tmp;
+				vec_assign((uint8_t*)swap,(uint8_t*)(&rowmat[i*w+i]),(w-i)*4);
+				vec_assign((uint8_t*)(&rowmat[i*w+i]),(uint8_t*)(&rowmat[j*w+i]),(w-i)*4);
+				vec_assign((uint8_t*)(&rowmat[j*w+i]),(uint8_t*)swap,(w-i)*4);
+				break;
+			}
+		}
+		pivot = inv_31( pivot );
+		if( 0 == pivot ) return -1;
+		if(w>(i+1)) {
+			vec_mul32_inp(&rowmat[i*w+i+1],pivot,w-(i+1));
+			vec_fullreduce32_inp(&rowmat[i*w+i+1],w-(i+1));
+		}
+		cons[i] = full_mod31_32( cons[i]*pivot );
+
+		for(j=i+1;j<w;j++){
+			tmp = remove_31( full_mod31_32(rowmat[j*w+i]) );
+			if(0==tmp) continue;
+			tmp=negative_31(tmp);
+			vec_mad3232( &rowmat[j*w+i+1] , &rowmat[i*w+i+1] , tmp , w-(i+1) );
+			cons[j] += cons[i]*tmp;
+		}
+	}
+
+	r[w-1] = cons[w-1];
+	for(i=w-1;i>0;i--){
+		unsigned t = i-1;
+		r[t] = cons[t] + negative_31( vec_dot32( &rowmat[t*w+i] , &r[i] , w-i ) );
+	}
+	return 0;
+}
+
 
 /* ======================== */
 
@@ -337,6 +439,31 @@ void eval_q44x20( uint8_t *r , const qpoly_44x20_t *poly , const uint8_t * inp )
 {
 	EVAL( 44 , 20 );
 }
+
+void eval_q80x52( uint8_t *r , const qpoly_80x52_t *poly , const uint8_t * inp )
+{
+	EVAL( 80 , 52 );
+}
+
+void eval_q26x24( uint8_t *r , const qpoly_26x24_t *poly , const uint8_t * inp )
+{
+	EVAL( 26 , 24 );
+}
+
+void eval_q52x4( uint8_t *r , const qpoly_52x4_t *poly , const uint8_t * inp )
+{
+	EVAL( 52 , 4 );
+}
+
+
+void eval_q56x24( uint8_t *r , const qpoly_56x24_t *poly , const uint8_t * inp )
+{
+	EVAL( 56 , 24 );
+}
+
+
+
+
 
 
 static inline void vec_mul8(uint8_t * r, const uint8_t * vec , unsigned c , unsigned len )
@@ -375,11 +502,6 @@ void interpolate_64x40( qpoly_64x40_t * poly , void (*q_poly)(uint8_t *r,const v
 		vec_add(poly->l[i],rn1,m);
 		vec_fullreduce(poly->l[i],m);
 		vec_fullreduce(poly->q[IDX(i,n)],m);
-#if defined(X__DEBUG__)
-printf("IDX(%d,64)=%d\n",i,IDX(i,64));
-vec_dump("q: ",poly->q[IDX(i,64)],40);
-vec_dump("l: ",poly->l[i],40);
-#endif
 	}
 
 	for(i=0;i<n;i++){
@@ -406,14 +528,62 @@ vec_dump("l: ",poly->l[i],40);
 			vec_negative(rn1,poly->q[IDX(j,n)],m);
 			vec_add(poly->q[base+j-i],rn1,m);
 			vec_fullreduce(poly->q[base+j-i],m);
-#if defined(X__DEBUG__)
-printf("(%d,%d)->%d\n",i,j,base+j-i);
-vec_dump("q: ",poly->q[base+j-i],40);
-#endif
 		}
 	}
 }
 
 
+void interpolate_80x52( qpoly_80x52_t * poly , void (*q_poly)(uint8_t *r,const void*,const uint8_t*), const void *key )
+{
+	/* a copy of interpolate_64x40 */
+	static const unsigned n = 80;
+	static const unsigned m = 52;
+	uint8_t t[n];
+	uint8_t rn1[m];
+	unsigned i,j;
 
+	vec_setzero(t,n);
+	for(i=0;i<n;i++){
+		t[i]=1;
+		q_poly(poly->l[i],key,t);
+		t[i]=negative_31(1);
+		q_poly(rn1,key,t);
+		t[i]=0;
+
+		vec_add(rn1,poly->l[i],m);
+		vec_mul8(poly->q[IDX(i,n)],rn1,16,m); /* 16 = 1/2 */
+
+		vec_negative(rn1,poly->q[IDX(i,n)],m);
+		vec_add(poly->l[i],rn1,m);
+		vec_fullreduce(poly->l[i],m);
+		vec_fullreduce(poly->q[IDX(i,n)],m);
+	}
+
+	for(i=0;i<n;i++){
+		unsigned base = IDX(i,n);
+		for(j=i+1;j<n;j++) {
+			t[i]=1;
+			t[j]=1;
+			q_poly(poly->q[base+j-i],key,t);
+			t[i]=0;
+			t[j]=0;
+
+			vec_negative(rn1,poly->l[i],m);
+			vec_add(poly->q[base+j-i],rn1,m);
+			vec_fullreduce(poly->q[base+j-i],m);
+
+			vec_negative(rn1,poly->l[j],m);
+			vec_add(poly->q[base+j-i],rn1,m);
+			vec_fullreduce(poly->q[base+j-i],m);
+
+			vec_negative(rn1,poly->q[base],m);
+			vec_add(poly->q[base+j-i],rn1,m);
+			vec_fullreduce(poly->q[base+j-i],m);
+
+			vec_negative(rn1,poly->q[IDX(j,n)],m);
+			vec_add(poly->q[base+j-i],rn1,m);
+			vec_fullreduce(poly->q[base+j-i],m);
+		}
+	}
+}
 
