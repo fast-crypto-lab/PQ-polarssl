@@ -917,8 +917,6 @@ static int ghfjdksl_mpi_add_abs( mpi *X, const mpi *A, const mpi *B )
     size_t i, j;
     t_uint *op1, *op2, *rop, c, t;
 
-    X->s = 1;
-
 	mpi_grow(X, A->n);
 	for( j = B->n; j > 0; j-- )
 		if( B->p[j - 1] != 0 )
@@ -926,8 +924,8 @@ static int ghfjdksl_mpi_add_abs( mpi *X, const mpi *A, const mpi *B )
 	
 	if(X->n < j)
 		MPI_CHK( mpi_grow( X, j ) );
-	//cannot do this since it could be one of the operands
-	//memset( X->p, 0, X->n * ciL );
+	if(A->n < j)
+		MPI_CHK( mpi_grow( A, j ) );
 
 	op1 = A->p; 
 	op2 = B->p;
@@ -940,13 +938,23 @@ static int ghfjdksl_mpi_add_abs( mpi *X, const mpi *A, const mpi *B )
         *rop = t + *op2; c += ( *rop < t );
     }
 
-    if( c != 0 ){
+    while( c != 0 ){
         if( i >= X->n ){
             MPI_CHK( mpi_grow( X, i + 1 ) );
             rop = X->p + i;
-        }
+            op1 = A->p + i;
+       }
+        if(i >= A->n ){
+            MPI_CHK( mpi_grow( A, i + 1 ) );
+            rop = X->p + i;
+            op1 = A->p + i;
+       }
+
+
         *rop =*op1 + c; 
-	  i++;		rop++;
+	    c = ( *rop < c );
+	  i++;		rop++; 	op1++;
+	
     }
 
 	if(X!=A && i < A->n ){//this is stupid
@@ -954,6 +962,7 @@ static int ghfjdksl_mpi_add_abs( mpi *X, const mpi *A, const mpi *B )
 			X->p[i]=A->p[i];
 		memset(X->p+i, 0, ciL*(X->n-i));
 	}
+
 
 
 
@@ -1939,6 +1948,7 @@ int mpi_inv_mod( mpi *X, const mpi *A, const mpi *N )
 {
     int ret;
     mpi G, TA, TU, U1, U2, TB, TV, V1, V2;
+//printf("problems here \n");
 
     if( mpi_cmp_int( N, 0 ) <= 0 )
         return( POLARSSL_ERR_MPI_BAD_INPUT_DATA );
@@ -1948,6 +1958,7 @@ int mpi_inv_mod( mpi *X, const mpi *A, const mpi *N )
     mpi_init( &V1 ); mpi_init( &V2 );
 
     MPI_CHK( mpi_gcd( &G, A, N ) );
+
 
     if( mpi_cmp_int( &G, 1 ) != 0 )
     {
@@ -1994,7 +2005,7 @@ int mpi_inv_mod( mpi *X, const mpi *A, const mpi *N )
             MPI_CHK( mpi_shift_r( &V1, 1 ) );
             MPI_CHK( mpi_shift_r( &V2, 1 ) );
         }
-
+//mpi_write_file( NULL, &V1, 2, NULL);
         if( mpi_cmp_mpi( &TU, &TV ) >= 0 )
         {
             MPI_CHK( mpi_sub_mpi( &TU, &TU, &TV ) );
@@ -2017,6 +2028,7 @@ int mpi_inv_mod( mpi *X, const mpi *A, const mpi *N )
         MPI_CHK( mpi_sub_mpi( &V1, &V1, N ) );
 
     MPI_CHK( mpi_copy( X, &V1 ) );
+
 
 cleanup:
 

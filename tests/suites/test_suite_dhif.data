@@ -1,3 +1,14 @@
 Diffie-Hellman full exchange with interface2 #0: default P,G
 dhif_do_dhm2:0:"0":0:"0"
 
+ECDH exchange with interface2 #1
+depends_on:POLARSSL_ECP_DP_SECP192R1_ENABLED
+dhif_do_ecdh_exchange2:POLARSSL_ECP_DP_SECP192R1
+
+ECDH exchange with interface2 #2
+depends_on:POLARSSL_ECP_DP_SECP521R1_ENABLED
+dhif_do_ecdh_exchange2:POLARSSL_ECP_DP_SECP521R1
+
+ECDH exchange with interface2 #3
+depends_on:POLARSSL_ECP_DP_SECP256R1_ENABLED
+dhif_do_ecdh_exchange2:POLARSSL_ECP_DP_SECP256R1

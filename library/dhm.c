@@ -261,11 +261,7 @@ int dhm_make_public( dhm_context *ctx, int x_size,
 
     MPI_CHK( mpi_exp_mod( &ctx->GX, &ctx->G, &ctx->X,
                           &ctx->P , &ctx->RP ) );
-mpi_write_file( NULL, &ctx->GX, 2, NULL);
-mpi_write_file( NULL, &ctx->G, 2, NULL);
-mpi_write_file( NULL, &ctx->X, 2, NULL);
-mpi_write_file( NULL, &ctx->P, 2, NULL);
-mpi_write_file( NULL, &ctx->RP, 2, NULL);
+
 
 
     if( ( ret = dhm_check_range( &ctx->GX, &ctx->P ) ) != 0 )
@@ -284,13 +280,14 @@ cleanup:
 /*
  * Use the blinding method and optimisation suggested in section 10 of:
  *  KOCHER, Paul C. Timing attacks on implementations of Diffie-Hellman, RSA,
- *  DSS, and other systems. In : Advances in Cryptologyâ€”CRYPTOâ€E6. Springer
+ *  DSS, and other systems. In : Advances in Cryptology?”CRYPTO?E6. Springer
  *  Berlin Heidelberg, 1996. p. 104-113.
  */
 static int dhm_update_blinding( dhm_context *ctx,
                     int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
 {
     int ret, count;
+
 
     /*
      * Don't use any blinding the first time a particular X is used,
@@ -301,9 +298,10 @@ static int dhm_update_blinding( dhm_context *ctx,
         MPI_CHK( mpi_copy( &ctx->pX, &ctx->X ) );
         MPI_CHK( mpi_lset( &ctx->Vi, 1 ) );
         MPI_CHK( mpi_lset( &ctx->Vf, 1 ) );
-
         return( 0 );
     }
+
+
 
     /*
      * Ok, we need blinding. Can we re-use existing values?
@@ -385,6 +383,10 @@ int dhm_calc_secret( dhm_context *ctx,
         MPI_CHK( mpi_mul_mpi( &ctx->K, &ctx->K, &ctx->Vf ) );
         MPI_CHK( mpi_mod_mpi( &ctx->K, &ctx->K, &ctx->P ) );
     }
+
+
+
+
 
     *olen = mpi_size( &ctx->K );
 
