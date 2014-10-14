@@ -14,142 +14,6 @@
  * depends_on:POLARSSL_DHM_C:POLARSSL_BIGNUM_C:POLARSSL_ECDH_C
  * END_DEPENDENCIES
  */
-
-/* BEGIN_CASE */
-void dhif_do_dhm( int radix_P, char *input_P,
-                 int radix_G, char *input_G )
-{
-    dh_context_t ctx_srv = { &ddhm_info , NULL };
-    dh_context_t ctx_cli = { &ddhm_info , NULL };
-
-    unsigned char ske[1000];
-    unsigned char *p = ske;
-    unsigned char pub_cli[1000];
-    unsigned char sec_srv[1000];
-    unsigned char sec_cli[1000];
-    size_t ske_len = 0;
-    size_t pub_cli_len = 0;
-    size_t sec_srv_len = 1000;
-    size_t sec_cli_len = 1000;
-    int x_size, i;
-    rnd_pseudo_info rnd_info;
-
-    memset( ske, 0x00, 1000 );
-    memset( pub_cli, 0x00, 1000 );
-    memset( sec_srv, 0x00, 1000 );
-    memset( sec_cli, 0x00, 1000 );
-    memset( &rnd_info, 0x00, sizeof( rnd_pseudo_info ) );
-
-    /*
-     * alloc
-     */
-    TEST_ASSERT( NULL != ( ctx_srv.dh_ctx = ddhm_info.ctx_alloc() ) );
-    TEST_ASSERT( NULL != ( ctx_cli.dh_ctx = ddhm_info.ctx_alloc() ) );
-
-    /*
-     * Set params
-     */
-    if( 0 != radix_P ) { /* should not set here */
-    TEST_ASSERT( mpi_read_string( & ((dhm_context *)ctx_srv.dh_ctx)->P, radix_P, input_P ) == 0 );
-    TEST_ASSERT( mpi_read_string( & ((dhm_context *)ctx_srv.dh_ctx)->G, radix_G, input_G ) == 0 );
-    }
-    x_size = mpi_size( & ((dhm_context *)ctx_srv.dh_ctx)->P ); /* XXX: here: to be disscussed */
-    pub_cli_len = 0;
-
-    /*
-     * First key exchange
-     */
-    TEST_ASSERT( ddhm_info.make_params( ctx_srv.dh_ctx, &ske_len , ske, x_size, &rnd_pseudo_rand, &rnd_info ) == 0 );
-    ske[ske_len++] = 0;
-    ske[ske_len++] = 0;
-    TEST_ASSERT( ddhm_info.read_params( ctx_cli.dh_ctx, &p, ske + ske_len ) == 0 );
-
-    TEST_ASSERT( ddhm_info.make_public( ctx_cli.dh_ctx, &pub_cli_len , pub_cli, x_size, &rnd_pseudo_rand, &rnd_info ) == 0 );
-    TEST_ASSERT( ddhm_info.read_public( ctx_srv.dh_ctx, pub_cli, pub_cli_len ) == 0 );
-
-    TEST_ASSERT( ddhm_info.calc_secret( ctx_srv.dh_ctx, &sec_srv_len, sec_srv, sec_srv_len, &rnd_pseudo_rand, &rnd_info ) == 0 );
-    TEST_ASSERT( ddhm_info.calc_secret( ctx_cli.dh_ctx, &sec_cli_len, sec_cli, sec_cli_len, NULL, NULL ) == 0 );
-
-    TEST_ASSERT( sec_srv_len == sec_cli_len );
-    TEST_ASSERT( sec_srv_len != 0 );
-    TEST_ASSERT( memcmp( sec_srv, sec_cli, sec_srv_len ) == 0 );
-
-    /* Re-do calc_secret on server a few times to test update of blinding values */
-    for( i = 0; i < 3; i++ )
-    {
-        sec_srv_len = 1000;
-        TEST_ASSERT( ddhm_info.calc_secret( ctx_srv.dh_ctx, &sec_srv_len, sec_srv, sec_srv_len, &rnd_pseudo_rand, &rnd_info ) == 0 );
-
-        TEST_ASSERT( sec_srv_len == sec_cli_len );
-        TEST_ASSERT( sec_srv_len != 0 );
-        TEST_ASSERT( memcmp( sec_srv, sec_cli, sec_srv_len ) == 0 );
-    }
-
-    /*
-     * Second key exchange to test change of blinding values on server
-     */
-    sec_cli_len = 1000;
-    sec_srv_len = 1000;
-    p = ske;
-
-    TEST_ASSERT( ddhm_info.make_params( ctx_srv.dh_ctx, &ske_len , ske, x_size, &rnd_pseudo_rand, &rnd_info ) == 0 );
-    ske[ske_len++] = 0;
-    ske[ske_len++] = 0;
-    TEST_ASSERT( ddhm_info.read_params( ctx_cli.dh_ctx, &p, ske + ske_len ) == 0 );
-
-    TEST_ASSERT( ddhm_info.make_public( ctx_cli.dh_ctx, &pub_cli_len , pub_cli, x_size, &rnd_pseudo_rand, &rnd_info ) == 0 );
-    TEST_ASSERT( ddhm_info.read_public( ctx_srv.dh_ctx, pub_cli, pub_cli_len ) == 0 );
-
-    TEST_ASSERT( ddhm_info.calc_secret( ctx_srv.dh_ctx, &sec_srv_len, sec_srv, sec_srv_len, &rnd_pseudo_rand, &rnd_info ) == 0 );
-    TEST_ASSERT( ddhm_info.calc_secret( ctx_cli.dh_ctx, &sec_cli_len, sec_cli, sec_cli_len, NULL, NULL ) == 0 );
-
-    TEST_ASSERT( sec_srv_len == sec_cli_len );
-    TEST_ASSERT( sec_srv_len != 0 );
-    TEST_ASSERT( memcmp( sec_srv, sec_cli, sec_srv_len ) == 0 );
-
-exit:
-    ddhm_info.ctx_free( ctx_srv.dh_ctx );
-    ddhm_info.ctx_free( ctx_cli.dh_ctx );
-}
-/* END_CASE */
-
-
-/* BEGIN_CASE */
-void dhif_do_ecdh_exchange( int id )
-{
-    dh_context_t srv = { &m_ecdh_info , NULL };
-    dh_context_t cli = { &m_ecdh_info , NULL };
-
-    unsigned char buf[1000];
-    unsigned char *vbuf; /* To supress the compiler warning... Originally: const unsigned char *vbuf; */
-    size_t len;
-    rnd_pseudo_info rnd_info;
-
-    TEST_ASSERT( NULL != ( srv.dh_ctx = m_ecdh_info.ctx_alloc() ) );
-    TEST_ASSERT( NULL != ( cli.dh_ctx = m_ecdh_info.ctx_alloc() ) );
-
-    memset( &rnd_info, 0x00, sizeof( rnd_pseudo_info ) );
-
-    TEST_ASSERT( ecp_use_known_dp( &((ecdh_context *)srv.dh_ctx)->grp, id ) == 0 );
-
-    memset( buf, 0x00, sizeof( buf ) ); vbuf = buf;
-    TEST_ASSERT( m_ecdh_info.make_params( srv.dh_ctx, &len, buf, 1000, &rnd_pseudo_rand, &rnd_info ) == 0 );
-    TEST_ASSERT( m_ecdh_info.read_params( cli.dh_ctx, &vbuf, buf + len ) == 0 );
-
-    memset( buf, 0x00, sizeof( buf ) );
-    TEST_ASSERT( m_ecdh_info.make_public( cli.dh_ctx, &len, buf, 1000, &rnd_pseudo_rand, &rnd_info ) == 0 );
-    TEST_ASSERT( m_ecdh_info.read_public( srv.dh_ctx, buf, len ) == 0 );
-
-    TEST_ASSERT( m_ecdh_info.calc_secret( srv.dh_ctx, &len, buf, 1000, &rnd_pseudo_rand, &rnd_info ) == 0 );
-    TEST_ASSERT( m_ecdh_info.calc_secret( cli.dh_ctx, &len, buf, 1000, NULL, NULL ) == 0 );
-    TEST_ASSERT( mpi_cmp_mpi( &((ecdh_context *)srv.dh_ctx)->z, &((ecdh_context *)cli.dh_ctx)->z ) == 0 );
-
-exit:
-    m_ecdh_info.ctx_free( srv.dh_ctx );
-    m_ecdh_info.ctx_free( cli.dh_ctx );
-}
-/* END_CASE */
-
 /* BEGIN_CASE */
 void dhif_do_dhm2( int radix_P, char *input_P,
                  int radix_G, char *input_G )
@@ -267,8 +131,8 @@ void dhif_do_dhm2( int radix_P, char *input_P,
     TEST_ASSERT( memcmp( sec_srv, sec_cli, sec_srv_len ) == 0 );
 
 exit:
-    ddhm_info.ctx_free( ctx_srv.dh_ctx );
-    ddhm_info.ctx_free( ctx_cli.dh_ctx );
+     dhm_info2.ctx_free( ctx_srv.dh_ctx );
+     dhm_info2.ctx_free( ctx_cli.dh_ctx );
 }
 /* END_CASE */
 

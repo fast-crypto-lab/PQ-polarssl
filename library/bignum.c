@@ -52,8 +52,13 @@
 #include <stdlib.h>
 
 /* Implementation that should never be optimized out by the compiler */
+/* why?*/
 static void polarssl_zeroize( void *v, size_t n ) {
     volatile unsigned char *p = v; while( n-- ) *p++ = 0;
+}
+
+static inline void ghfjdksl_polarssl_zeroize( void *v, size_t n ) {
+    memset(v, 0, n);
 }
 
 #define ciL    (sizeof(t_uint))         /* chars in limb  */
@@ -89,7 +94,7 @@ void mpi_free( mpi *X )
 
     if( X->p != NULL )
     {
-        polarssl_zeroize( X->p, X->n * ciL );
+        ghfjdksl_polarssl_zeroize( X->p, X->n * ciL );
         polarssl_free( X->p );
     }
 
@@ -101,9 +106,12 @@ void mpi_free( mpi *X )
 /*
  * Enlarge to the specified number of limbs
  */
-int mpi_grow( mpi *X, size_t nblimbs )
+inline int mpi_grow( mpi *X, size_t nblimbs )
 {
     t_uint *p;
+
+	if( X->n >= nblimbs )
+		return 0;
 
     if( nblimbs > POLARSSL_MPI_MAX_LIMBS )
         return( POLARSSL_ERR_MPI_MALLOC_FAILED );
@@ -118,7 +126,7 @@ int mpi_grow( mpi *X, size_t nblimbs )
         if( X->p != NULL )
         {
             memcpy( p, X->p, X->n * ciL );
-            polarssl_zeroize( X->p, X->n * ciL );
+            ghfjdksl_polarssl_zeroize( X->p, X->n * ciL );
             polarssl_free( X->p );
         }
 
@@ -171,7 +179,7 @@ int mpi_shrink( mpi *X, size_t nblimbs )
 /*
  * Copy the contents of Y into X
  */
-int mpi_copy( mpi *X, const mpi *Y )
+inline int mpi_copy( mpi *X, const mpi *Y )
 {
     int ret;
     size_t i;
@@ -741,6 +749,7 @@ int mpi_shift_r( mpi *X, size_t count )
     if( v0 > X->n || ( v0 == X->n && v1 > 0 ) )
         return mpi_lset( X, 0 );
 
+
     /*
      * shift by count / limb_size
      */
@@ -901,6 +910,62 @@ cleanup:
     return( ret );
 }
 
+
+static int ghfjdksl_mpi_add_abs( mpi *X, const mpi *A, const mpi *B )
+{
+    int ret;
+    size_t i, j;
+    t_uint *op1, *op2, *rop, c, t;
+
+    X->s = 1;
+
+	mpi_grow(X, A->n);
+	for( j = B->n; j > 0; j-- )
+		if( B->p[j - 1] != 0 )
+			break;
+	
+	if(X->n < j)
+		MPI_CHK( mpi_grow( X, j ) );
+	//cannot do this since it could be one of the operands
+	//memset( X->p, 0, X->n * ciL );
+
+	op1 = A->p; 
+	op2 = B->p;
+	rop = X->p;
+	c = 0;
+
+    for( i = 0; i < j; i++, op1++, op2++, rop++ )
+    {
+        t =  *op1 + c; c  = ( t <  c );
+        *rop = t + *op2; c += ( *rop < t );
+    }
+
+    if( c != 0 ){
+        if( i >= X->n ){
+            MPI_CHK( mpi_grow( X, i + 1 ) );
+            rop = X->p + i;
+        }
+        *rop =*op1 + c; 
+	  i++;		rop++;
+    }
+
+	if(X!=A && i < A->n ){//this is stupid
+		for(i; i<A->n; i++)
+			X->p[i]=A->p[i];
+		memset(X->p+i, 0, ciL*(X->n-i));
+	}
+
+
+
+
+
+cleanup:
+
+    return( ret );
+}
+
+
+
 /*
  * Helper for mpi subtraction
  */
@@ -921,6 +986,60 @@ static void mpi_sub_hlp( size_t n, t_uint *s, t_uint *d )
         c = z; i++; d++;
     }
 }
+
+static size_t ghfjdksl_mpi_sub_hlp( size_t n,const  t_uint *sub, const   t_uint *src, t_uint *des )
+{
+    size_t i;
+    t_uint c, z, t;
+
+    for( i = c = 0; i < n; i++, sub++, des ++, src++ )
+    {
+        z = ( *src <  c );     t =  -c;
+        c = ( (*src - c)  < *sub ) + z; *des = t + *src - *sub;
+    }
+
+    while( c!=0 )
+    {
+		z = ( *src< c ); *des = *src- c;
+		c = z; i++; des ++; src ++;
+    }
+	return i;
+}
+
+
+/*remove redundant checking, actually I'd like to ban mpi_sub_abs from user call. Who the hell will need such a function?*/
+static int ghfjdksl_mpi_sub_abs( mpi *X, const mpi *A, const mpi *B ) 
+{
+    int ret;
+    size_t n, n2;
+
+	mpi_grow(X, A->n);
+
+    X->s = 1;
+    ret = 0;
+
+    for( n = B->n; n > 0; n-- )
+        if( B->p[n - 1] != 0 )
+            break;
+
+
+ //   mpi_sub_hlp( n, B->p, X->p );
+    n = ghfjdksl_mpi_sub_hlp( n, B->p, A->p, X->p );
+	
+//	polarssl_zeroize( X->p, X->n * ciL );
+
+	if(X!=A){//this is stupid
+		for(n; n<A->n; n++)
+			X->p[n]=A->p[n];
+		memset(X->p+n, 0, ciL*(X->n-n));
+	}
+
+
+cleanup:
+    return( ret );
+}
+
+
 
 /*
  * Unsigned subtraction: X = |A| - |B|  (HAC 14.9)
@@ -976,18 +1095,18 @@ int mpi_add_mpi( mpi *X, const mpi *A, const mpi *B )
     {
         if( mpi_cmp_abs( A, B ) >= 0 )
         {
-            MPI_CHK( mpi_sub_abs( X, A, B ) );
+            MPI_CHK( ghfjdksl_mpi_sub_abs( X, A, B ) );
             X->s =  s;
         }
         else
         {
-            MPI_CHK( mpi_sub_abs( X, B, A ) );
+            MPI_CHK( ghfjdksl_mpi_sub_abs( X, B, A ) );
             X->s = -s;
         }
     }
     else
     {
-        MPI_CHK( mpi_add_abs( X, A, B ) );
+        MPI_CHK( ghfjdksl_mpi_add_abs( X, A, B ) );
         X->s = s;
     }
 
@@ -1007,18 +1126,18 @@ int mpi_sub_mpi( mpi *X, const mpi *A, const mpi *B )
     {
         if( mpi_cmp_abs( A, B ) >= 0 )
         {
-            MPI_CHK( mpi_sub_abs( X, A, B ) );
+            MPI_CHK( ghfjdksl_mpi_sub_abs( X, A, B ) );
             X->s =  s;
         }
         else
         {
-            MPI_CHK( mpi_sub_abs( X, B, A ) );
+            MPI_CHK( ghfjdksl_mpi_sub_abs( X, B, A ) );
             X->s = -s;
         }
     }
     else
     {
-        MPI_CHK( mpi_add_abs( X, A, B ) );
+        MPI_CHK( ghfjdksl_mpi_add_abs( X, A, B ) );
         X->s = s;
     }
 
@@ -1138,12 +1257,18 @@ int mpi_mul_mpi( mpi *X, const mpi *A, const mpi *B )
 {
     int ret;
     size_t i, j;
-    mpi TA, TB;
+    static mpi * TA = NULL;
+    static mpi * TB = NULL;
 
-    mpi_init( &TA ); mpi_init( &TB );
+	if(TA ==NULL ){
+		TA =polarssl_malloc(sizeof(mpi));
+		TB =polarssl_malloc(sizeof(mpi));
+		mpi_init( TA ); 
+		mpi_init( TB );
+	}
 
-    if( X == A ) { MPI_CHK( mpi_copy( &TA, A ) ); A = &TA; }
-    if( X == B ) { MPI_CHK( mpi_copy( &TB, B ) ); B = &TB; }
+    if( X == A ) { MPI_CHK( mpi_copy( TA, A ) ); A = TA; }
+    if( X == B ) { MPI_CHK( mpi_copy( TB, B ) ); B = TB; }
 
     for( i = A->n; i > 0; i-- )
         if( A->p[i - 1] != 0 )
@@ -1163,7 +1288,7 @@ int mpi_mul_mpi( mpi *X, const mpi *A, const mpi *B )
 
 cleanup:
 
-    mpi_free( &TB ); mpi_free( &TA );
+//    mpi_free( &TB ); mpi_free( &TA );
 
     return( ret );
 }

@@ -261,6 +261,12 @@ int dhm_make_public( dhm_context *ctx, int x_size,
 
     MPI_CHK( mpi_exp_mod( &ctx->GX, &ctx->G, &ctx->X,
                           &ctx->P , &ctx->RP ) );
+mpi_write_file( NULL, &ctx->GX, 2, NULL);
+mpi_write_file( NULL, &ctx->G, 2, NULL);
+mpi_write_file( NULL, &ctx->X, 2, NULL);
+mpi_write_file( NULL, &ctx->P, 2, NULL);
+mpi_write_file( NULL, &ctx->RP, 2, NULL);
+
 
     if( ( ret = dhm_check_range( &ctx->GX, &ctx->P ) ) != 0 )
         return( ret );
@@ -278,7 +284,7 @@ cleanup:
 /*
  * Use the blinding method and optimisation suggested in section 10 of:
  *  KOCHER, Paul C. Timing attacks on implementations of Diffie-Hellman, RSA,
- *  DSS, and other systems. In : Advances in Cryptology—CRYPTO’96. Springer
+ *  DSS, and other systems. In : Advances in Cryptology—CRYPTO E6. Springer
  *  Berlin Heidelberg, 1996. p. 104-113.
  */
 static int dhm_update_blinding( dhm_context *ctx,
