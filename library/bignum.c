@@ -52,13 +52,8 @@
 #include <stdlib.h>
 
 /* Implementation that should never be optimized out by the compiler */
-/* why?*/
-static void polarssl_zeroize( void *v, size_t n ) {
+static inline void polarssl_zeroize( void *v, size_t n ) {
     volatile unsigned char *p = v; while( n-- ) *p++ = 0;
-}
-
-static inline void ghfjdksl_polarssl_zeroize( void *v, size_t n ) {
-    memset(v, 0, n);
 }
 
 #define ciL    (sizeof(t_uint))         /* chars in limb  */
@@ -94,7 +89,7 @@ void mpi_free( mpi *X )
 
     if( X->p != NULL )
     {
-        ghfjdksl_polarssl_zeroize( X->p, X->n * ciL );
+        polarssl_zeroize( X->p, X->n * ciL );
         polarssl_free( X->p );
     }
 
@@ -126,7 +121,7 @@ inline int mpi_grow( mpi *X, size_t nblimbs )
         if( X->p != NULL )
         {
             memcpy( p, X->p, X->n * ciL );
-            ghfjdksl_polarssl_zeroize( X->p, X->n * ciL );
+            polarssl_zeroize( X->p, X->n * ciL );
             polarssl_free( X->p );
         }
 
@@ -1035,8 +1030,6 @@ static int ghfjdksl_mpi_sub_abs( mpi *X, const mpi *A, const mpi *B )
  //   mpi_sub_hlp( n, B->p, X->p );
     n = ghfjdksl_mpi_sub_hlp( n, B->p, A->p, X->p );
 	
-//	polarssl_zeroize( X->p, X->n * ciL );
-
 	if(X!=A){//this is stupid
 		for(n; n<A->n; n++)
 			X->p[n]=A->p[n];
