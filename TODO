@@ -418,3 +418,18 @@ $ run debug_level=3 force_ciphersuite=TLS-LATTICEE-TTS-WITH-AES-128-GCM-SHA256 a
 
 Next meeting date 2014/10/16 (Thu) 10:30 AM at MD631
 
+
+
+2014/10/16 Thu 12:43:00 TODO
+
+    陳
+        - DH
+
+    張
+        - 清理 Lattice 的抽象層實作
+
+    吳
+        - Fix the runtime segfault bug of the server
+        - Complete test for TTS, TTS2, RAINBOW, RAINBOW2
+        - Macro definitions and wrapper still needs to be cleaned up
+
