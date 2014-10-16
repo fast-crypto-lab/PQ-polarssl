@@ -199,8 +199,11 @@ static void ssl_write_signature_algorithms_ext( ssl_context *ssl,
     sig_alg_list[sig_alg_len++] = SSL_SIG_ECDSA;
     sig_alg_list[sig_alg_len++] = SSL_HASH_SHA256;
     sig_alg_list[sig_alg_len++] = SSL_SIG_TTS;
+    sig_alg_list[sig_alg_len++] = SSL_HASH_SHA256;
     sig_alg_list[sig_alg_len++] = SSL_SIG_RAINBOW;
+    sig_alg_list[sig_alg_len++] = SSL_HASH_SHA256;
     sig_alg_list[sig_alg_len++] = SSL_SIG_TTS2;
+    sig_alg_list[sig_alg_len++] = SSL_HASH_SHA256;
     sig_alg_list[sig_alg_len++] = SSL_SIG_RAINBOW2;
 #endif
 #if defined(POLARSSL_SHA1_C)
