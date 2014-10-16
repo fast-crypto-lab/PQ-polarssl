@@ -2182,8 +2182,11 @@ static int ssl_write_server_key_exchange( ssl_context *ssl )
         return( 0 );
     }
 
+/*
     if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_DHE_PSK ||
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_PSK )
+*/
+    if( ssl_is_dh_psk( ciphersuite_info->key_exchange ) )
     {
         /* TODO: Support identity hints */
         *(p++) = 0x00;
@@ -2354,7 +2357,7 @@ curve_matching_done:
     /* TODO */
     /* if ( ssl_need_pk_signed(ciphersuite_info->key_exchange) ) { */
     /* } */
-
+/*
     if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_DHE_RSA ||
         ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_ECDHE_TTS        ||
         ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_TTS     ||
@@ -2365,6 +2368,8 @@ curve_matching_done:
         ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_RAINBOW2||
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_RSA ||
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA )
+*/
+    if( ssl_is_dh_pkcsign( ciphersuite_info->key_exchange ) )
     {
         size_t signature_len = 0;
         unsigned int hashlen = 0;

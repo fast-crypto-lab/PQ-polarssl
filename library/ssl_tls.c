@@ -906,6 +906,36 @@ int ssl_psk_derive_premaster( ssl_context *ssl, key_exchange_type_t key_ex )
     }
     else
 #endif /* POLARSSL_KEY_EXCHANGE_PSK_ENABLED */
+#if defined(POLARSSL_KEY_EXCHANGE_RSA_PSK_ENABLED)||defined(POLARSSL_KEY_EXCHANGE_ECDHE_PSK_ENABLED)
+    if( ssl_is_dh_psk( key_ex ) )
+    {
+        int ret;
+        size_t len = end - ( p + 2 );
+        /* Write length only when we know the actual value */
+        ret = ssl->handshake->dhif_info->compute_shared(
+                ssl->handshake->dhif_ctx,
+                ssl->f_rng,
+                ssl->p_rng);
+        if (ret) {
+            return ret;
+        }
+
+        ret = ssl->handshake->dhif_info->write_premaster(
+                &len,
+                p + 2,
+                end - (p + 2),
+                ssl->handshake->dhif_ctx);
+        if (ret) {
+            return ret;
+        }
+
+        *(p++) = (unsigned char)( len >> 8 );
+        *(p++) = (unsigned char)( len );
+        p += len;
+    }
+    else
+#endif /* defined(POLARSSL_KEY_EXCHANGE_RSA_PSK_ENABLED)||defined(POLARSSL_KEY_EXCHANGE_ECDHE_PSK_ENABLED) */
+#if 0
 #if defined(POLARSSL_KEY_EXCHANGE_RSA_PSK_ENABLED)
     if( key_ex == POLARSSL_KEY_EXCHANGE_RSA_PSK )
     {
@@ -1014,6 +1044,7 @@ int ssl_psk_derive_premaster( ssl_context *ssl, key_exchange_type_t key_ex )
     }
     else
 #endif /* POLARSSL_KEY_EXCHANGE_ECDHE_PSK_ENABLED */
+#endif /* if 0 */
     {
         SSL_DEBUG_MSG( 1, ( "should never happen" ) );
         return( POLARSSL_ERR_SSL_INTERNAL_ERROR );
