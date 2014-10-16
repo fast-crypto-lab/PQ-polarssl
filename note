@@ -137,7 +137,7 @@ PK 要加新的數位簽章演算法
         case OUR_PK_TTS:
             return( &tts_info );
 
-* library/pk_wrap.c
+* library/pk_wrap.c ===> library/polarssl_wraper_ttsrb.c
     新增這兩個結構以及他們需要的函數:
         const pk_info_t tts_info = { ... };
         const pk_info_t rainbow_info = { ... };
@@ -203,4 +203,8 @@ After new DH and PK done, 有了新的 key exchange method 以及新的 ciphersu
 
 
 TODO: 保留原本的 pk 層，加入 rainbow 看看能否直接使用。
+
+Question:
+    在 include/rainbow_tts/rainbow.h
+    if macro defined body 的範圍？
 

@@ -60,6 +60,20 @@ extern const pk_info_t ecdsa_info;
 
 extern const pk_info_t rsa_alt_info;
 
+#if defined(__TTS__)
 extern const pk_info_t tts_info;
+#endif
+
+#if defined(__RAINBOW__)
+extern const pk_info_t rainbow_info;
+#endif
+
+#if defined(__TTS_2__)
+extern const pk_info_t tts2_info;
+#endif
+
+#if defined(__RAINBOW_2__)
+extern const pk_info_t rainbow2_info;
+#endif
 
 #endif /* POLARSSL_PK_WRAP_H */

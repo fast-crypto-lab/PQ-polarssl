@@ -54,7 +54,9 @@
 #include "polarssl/pkcs12.h"
 #endif
 
+#if defined(__TTS__) || defined(__RAINBOW__) || defined(__TTS_2__) || defined(__RAINBOW_2__)
 #include "rainbow_tts/rainbow.h"
+#endif
 
 #if defined(POLARSSL_PLATFORM_C)
 #include "polarssl/platform.h"
@@ -539,6 +541,7 @@ static int pk_get_rsapubkey( unsigned char **p,
 
 
 
+#if defined(__TTS__)
 static int pk_get_ttspubkey( unsigned char **p,
                              const unsigned char *end,
                              tts_context *tts )
@@ -567,6 +570,100 @@ static int pk_get_ttspubkey( unsigned char **p,
     return 0;
 
 }
+#endif /* __TTS__ */
+
+#if defined(__TTS_2__)
+static int pk_get_tts2pubkey( unsigned char **p,
+                              const unsigned char *end,
+                              tts2_context *tts2 )
+{
+    int ret;
+    size_t len;
+
+    if ( ( ret = asn1_get_tag( p, end, &len,
+                    ASN1_BIT_STRING) ) != 0 ) {
+        return POLARSSL_ERR_PK_INVALID_PUBKEY;
+    }
+
+    if( *p + len != end ) {
+        return( POLARSSL_ERR_PK_INVALID_PUBKEY +
+                POLARSSL_ERR_ASN1_LENGTH_MISMATCH );
+    }
+
+    if ( len != TTS2_PUBKEY_SIZE_BYTE ) {
+        return( POLARSSL_ERR_PK_INVALID_PUBKEY +
+                POLARSSL_ERR_ASN1_LENGTH_MISMATCH );
+    }
+
+    memcpy( &tts2->pk, *p, len );
+
+    *p += len;
+    return 0;
+
+}
+#endif /* __TTS_2__ */
+
+#if defined(__RAINBOW__)
+static int pk_get_rbpubkey( unsigned char **p,
+                            const unsigned char *end,
+                            rainbow_context *rb )
+{
+    int ret;
+    size_t len;
+
+    if ( ( ret = asn1_get_tag( p, end, &len,
+                    ASN1_BIT_STRING) ) != 0 ) {
+        return POLARSSL_ERR_PK_INVALID_PUBKEY;
+    }
+
+    if( *p + len != end ) {
+        return( POLARSSL_ERR_PK_INVALID_PUBKEY +
+                POLARSSL_ERR_ASN1_LENGTH_MISMATCH );
+    }
+
+    if ( len != RB_PUBKEY_SIZE_BYTE ) {
+        return( POLARSSL_ERR_PK_INVALID_PUBKEY +
+                POLARSSL_ERR_ASN1_LENGTH_MISMATCH );
+    }
+
+    memcpy( &rb->pk, *p, len );
+
+    *p += len;
+    return 0;
+
+}
+#endif /* __RAINBOW__ */
+
+#if defined(__RAINBOW_2__)
+static int pk_get_rb2pubkey( unsigned char **p,
+                             const unsigned char *end,
+                             rainbow2_context *rb2 )
+{
+    int ret;
+    size_t len;
+
+    if ( ( ret = asn1_get_tag( p, end, &len,
+                    ASN1_BIT_STRING) ) != 0 ) {
+        return POLARSSL_ERR_PK_INVALID_PUBKEY;
+    }
+
+    if( *p + len != end ) {
+        return( POLARSSL_ERR_PK_INVALID_PUBKEY +
+                POLARSSL_ERR_ASN1_LENGTH_MISMATCH );
+    }
+
+    if ( len != RB2_PUBKEY_SIZE_BYTE ) {
+        return( POLARSSL_ERR_PK_INVALID_PUBKEY +
+                POLARSSL_ERR_ASN1_LENGTH_MISMATCH );
+    }
+
+    memcpy( &rb2->pk, *p, len );
+
+    *p += len;
+    return 0;
+
+}
+#endif /* __RAINBOW_2__ */
 
 
 /* Get a PK algorithm identifier
@@ -655,12 +752,34 @@ int pk_parse_subpubkey( unsigned char **p, const unsigned char *end,
             ret = pk_get_ecpubkey( p, end, pk_ec( *pk ) );
     } else
 #endif /* POLARSSL_ECP_C */
-/* TODO: #if defined( ... ) */
+#if defined(__TTS__)
     if( pk_alg == OUR_PK_TTS)
     {
         ret = pk_get_ttspubkey( p, end, pk_tts( *pk ) );
     }
     else
+#endif
+#if defined(__TTS_2__)
+    if( pk_alg == OUR_PK_TTS2)
+    {
+        ret = pk_get_tts2pubkey( p, end, pk_tts2( *pk ) );
+    }
+    else
+#endif
+#if defined(__RAINBOW__)
+    if( pk_alg == OUR_PK_RAINBOW)
+    {
+        ret = pk_get_rbpubkey( p, end, pk_rainbow( *pk ) );
+    }
+    else
+#endif
+#if defined(__RAINBOW_2__)
+    if( pk_alg == OUR_PK_RAINBOW2)
+    {
+        ret = pk_get_rb2pubkey( p, end, pk_rainbow2( *pk ) );
+    }
+    else
+#endif
         ret = POLARSSL_ERR_PK_UNKNOWN_PK_ALG;
 
     if( ret == 0 && *p != end )
@@ -877,6 +996,7 @@ static int pk_parse_key_sec1_der( ecp_keypair *eck,
 }
 #endif /* POLARSSL_ECP_C */
 
+#if defined(__TTS__)
 static int pk_parse_key_tts_der( tts_context *tts,
                                  const unsigned char *key,
                                  size_t keylen )
@@ -905,6 +1025,100 @@ static int pk_parse_key_tts_der( tts_context *tts,
 
     return 0;
 }
+#endif /* __TTS__ */
+
+#if defined(__TTS_2__)
+static int pk_parse_key_tts2_der( tts2_context *tts2,
+                                  const unsigned char *key,
+                                  size_t keylen )
+{
+    int ret;
+    size_t len;
+    unsigned char *p, *end;
+
+    p = (unsigned char *) key;
+    end = p + keylen;
+
+    if( ( ret = asn1_get_tag( &p, end, &len, ASN1_BIT_STRING ) ) != 0 )
+    {
+        return( POLARSSL_ERR_PK_KEY_INVALID_FORMAT + ret );
+    }
+
+    end = p + len;
+
+    if (len != TTS2_SECKEY_SIZE_BYTE + TTS2_PUBKEY_SIZE_BYTE) {
+        /* need a proper error code here */
+        return POLARSSL_ERR_PK_KEY_INVALID_FORMAT;
+    }
+
+    memcpy( &tts2->sk, p,                         TTS2_SECKEY_SIZE_BYTE );
+    memcpy( &tts2->pk, p + TTS2_SECKEY_SIZE_BYTE, TTS2_PUBKEY_SIZE_BYTE );
+
+    return 0;
+}
+#endif /* __TTS_2__ */
+
+#if defined(__RAINBOW__)
+static int pk_parse_key_rainbow_der( rainbow_context *rb,
+                                     const unsigned char *key,
+                                     size_t keylen )
+{
+    int ret;
+    size_t len;
+    unsigned char *p, *end;
+
+    p = (unsigned char *) key;
+    end = p + keylen;
+
+    if( ( ret = asn1_get_tag( &p, end, &len, ASN1_BIT_STRING ) ) != 0 )
+    {
+        return( POLARSSL_ERR_PK_KEY_INVALID_FORMAT + ret );
+    }
+
+    end = p + len;
+
+    if (len != RAINBOW_SECKEY_SIZE_BYTE + RAINBOW_PUBKEY_SIZE_BYTE) {
+        /* need a proper error code here */
+        return POLARSSL_ERR_PK_KEY_INVALID_FORMAT;
+    }
+
+    memcpy( &rb->sk, p,                            RAINBOW_SECKEY_SIZE_BYTE );
+    memcpy( &rb->pk, p + RAINBOW_SECKEY_SIZE_BYTE, RAINBOW_PUBKEY_SIZE_BYTE );
+
+    return 0;
+}
+#endif /* __RAINBOW__ */
+
+#if defined(__RAINBOW_2__)
+static int pk_parse_key_rainbow2_der( rainbow2_context *rb2,
+                                      const unsigned char *key,
+                                      size_t keylen )
+{
+    int ret;
+    size_t len;
+    unsigned char *p, *end;
+
+    p = (unsigned char *) key;
+    end = p + keylen;
+
+    if( ( ret = asn1_get_tag( &p, end, &len, ASN1_BIT_STRING ) ) != 0 )
+    {
+        return( POLARSSL_ERR_PK_KEY_INVALID_FORMAT + ret );
+    }
+
+    end = p + len;
+
+    if (len != RAINBOW2_SECKEY_SIZE_BYTE + RAINBOW2_PUBKEY_SIZE_BYTE) {
+        /* need a proper error code here */
+        return POLARSSL_ERR_PK_KEY_INVALID_FORMAT;
+    }
+
+    memcpy( &rb2->sk, p,                             RAINBOW2_SECKEY_SIZE_BYTE );
+    memcpy( &rb2->pk, p + RAINBOW2_SECKEY_SIZE_BYTE, RAINBOW2_PUBKEY_SIZE_BYTE );
+
+    return 0;
+}
+#endif /* __RAINBOW_2__ */
 
 /*
  * Parse an unencrypted PKCS#8 encoded private key
@@ -1187,9 +1401,7 @@ int pk_parse_key( pk_context *pk,
         return( ret );
 #endif /* POLARSSL_ECP_C */
 
-
-/*----- BEGIN TTS PRIVATE KEY -----*/
-
+#if defined(__TTS__)
     ret = pem_read_buffer( &pem,
                            "-----BEGIN TTS PRIVATE KEY-----",
                            "-----END TTS PRIVATE KEY-----",
@@ -1217,13 +1429,97 @@ int pk_parse_key( pk_context *pk,
         return( POLARSSL_ERR_PK_PASSWORD_REQUIRED );
     else if( ret != POLARSSL_ERR_PEM_NO_HEADER_FOOTER_PRESENT )
         return( ret );
+#endif /* __TTS__ */
 
-/*----- END TTS PRIVATE KEY -----*/
+#if defined(__TTS_2__)
+    ret = pem_read_buffer( &pem,
+                           "-----BEGIN TTS2 PRIVATE KEY-----",
+                           "-----END TTS2 PRIVATE KEY-----",
+                           key, pwd, pwdlen, &len );
+    if( ret == 0 )
+    {
+        if( ( pk_info = pk_info_from_type( OUR_PK_TTS2 ) ) == NULL ) {
+            printf("\n PROGRAM DIE HERE ... \n");
+            return( POLARSSL_ERR_PK_UNKNOWN_PK_ALG );
+        }
 
+        if( ( ret = pk_init_ctx( pk, pk_info                   ) ) != 0 ||
+            ( ret = pk_parse_key_tts2_der( pk_tts2( *pk ),
+                                           pem.buf, pem.buflen ) ) != 0 )
+        {
+            pk_free( pk );
+        }
 
+        pem_free( &pem );
+        return( ret );
+    }
+    else if( ret == POLARSSL_ERR_PEM_PASSWORD_MISMATCH )
+        return( POLARSSL_ERR_PK_PASSWORD_MISMATCH );
+    else if( ret == POLARSSL_ERR_PEM_PASSWORD_REQUIRED )
+        return( POLARSSL_ERR_PK_PASSWORD_REQUIRED );
+    else if( ret != POLARSSL_ERR_PEM_NO_HEADER_FOOTER_PRESENT )
+        return( ret );
+#endif /* __TTS_2__ */
 
+#if defined(__RAINBOW__)
+    ret = pem_read_buffer( &pem,
+                           "-----BEGIN RAINBOW PRIVATE KEY-----",
+                           "-----END RAINBOW PRIVATE KEY-----",
+                           key, pwd, pwdlen, &len );
+    if( ret == 0 )
+    {
+        if( ( pk_info = pk_info_from_type( OUR_PK_RAINBOW ) ) == NULL ) {
+            printf("\n PROGRAM DIE HERE ... \n");
+            return( POLARSSL_ERR_PK_UNKNOWN_PK_ALG );
+        }
 
+        if( ( ret = pk_init_ctx( pk, pk_info                   ) ) != 0 ||
+            ( ret = pk_parse_key_rainbow_der( pk_rainbow( *pk ),
+                                              pem.buf, pem.buflen ) ) != 0 )
+        {
+            pk_free( pk );
+        }
 
+        pem_free( &pem );
+        return( ret );
+    }
+    else if( ret == POLARSSL_ERR_PEM_PASSWORD_MISMATCH )
+        return( POLARSSL_ERR_PK_PASSWORD_MISMATCH );
+    else if( ret == POLARSSL_ERR_PEM_PASSWORD_REQUIRED )
+        return( POLARSSL_ERR_PK_PASSWORD_REQUIRED );
+    else if( ret != POLARSSL_ERR_PEM_NO_HEADER_FOOTER_PRESENT )
+        return( ret );
+#endif /* __RAINBOW__ */
+
+#if defined(__RAINBOW_2__)
+    ret = pem_read_buffer( &pem,
+                           "-----BEGIN RAINBOW2 PRIVATE KEY-----",
+                           "-----END RAINBOW2 PRIVATE KEY-----",
+                           key, pwd, pwdlen, &len );
+    if( ret == 0 )
+    {
+        if( ( pk_info = pk_info_from_type( OUR_PK_RAINBOW2 ) ) == NULL ) {
+            printf("\n PROGRAM DIE HERE ... \n");
+            return( POLARSSL_ERR_PK_UNKNOWN_PK_ALG );
+        }
+
+        if( ( ret = pk_init_ctx( pk, pk_info                   ) ) != 0 ||
+            ( ret = pk_parse_key_rainbow2_der( pk_rainbow2( *pk ),
+                                               pem.buf, pem.buflen ) ) != 0 )
+        {
+            pk_free( pk );
+        }
+
+        pem_free( &pem );
+        return( ret );
+    }
+    else if( ret == POLARSSL_ERR_PEM_PASSWORD_MISMATCH )
+        return( POLARSSL_ERR_PK_PASSWORD_MISMATCH );
+    else if( ret == POLARSSL_ERR_PEM_PASSWORD_REQUIRED )
+        return( POLARSSL_ERR_PK_PASSWORD_REQUIRED );
+    else if( ret != POLARSSL_ERR_PEM_NO_HEADER_FOOTER_PRESENT )
+        return( ret );
+#endif /* __RAINBOW_2__ */
 
     ret = pem_read_buffer( &pem,
                            "-----BEGIN PRIVATE KEY-----",

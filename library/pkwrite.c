@@ -131,6 +131,7 @@ static int pk_write_ec_param( unsigned char **p, unsigned char *start,
 }
 #endif /* POLARSSL_ECP_C */
 
+#if defined(__TTS__)
 static int pk_write_tts_pubkey( unsigned char **p, unsigned char *start,
                                 tts_context *tts )
 {
@@ -138,28 +139,87 @@ static int pk_write_tts_pubkey( unsigned char **p, unsigned char *start,
     size_t len = TTS_PUBKEY_SIZE_BYTE;
 
     if( *p - start < (int) len ) {
-        printf("[[(in pk_write_tts_pubkey) len=%d, *p-start=%d]]", len, *p - start); // TODO
         return( POLARSSL_ERR_ASN1_BUF_TOO_SMALL );
     }
 
     *p -= len;
     memcpy( *p, &tts->pk, len );
 
-    printf("The first byte of tts->pk = %d", ((int *) &tts->pk)[0] );
+    ASN1_CHK_ADD( len, asn1_write_len( p, start, len ) );
+    ASN1_CHK_ADD( len, asn1_write_tag( p, start, ASN1_BIT_STRING ) );
+
+    return (int) len;
+}
+#endif /* __TTS__ */
+
+#if defined(__TTS_2__)
+static int pk_write_tts2_pubkey( unsigned char **p, unsigned char *start,
+                                tts2_context *tts2 )
+{
+    int ret = 0;
+    size_t len = TTS2_PUBKEY_SIZE_BYTE;
+
+    if( *p - start < (int) len ) {
+        return( POLARSSL_ERR_ASN1_BUF_TOO_SMALL );
+    }
+
+    *p -= len;
+    memcpy( *p, &tts2->pk, len );
 
     ASN1_CHK_ADD( len, asn1_write_len( p, start, len ) );
     ASN1_CHK_ADD( len, asn1_write_tag( p, start, ASN1_BIT_STRING ) );
 
     return (int) len;
 }
+#endif /* __TTS_2__ */
+
+#if defined(__RAINBOW__)
+static int pk_write_rb_pubkey( unsigned char **p, unsigned char *start,
+                               rainbow_context *rb )
+{
+    int ret = 0;
+    size_t len = RB_PUBKEY_SIZE_BYTE;
+
+    if( *p - start < (int) len ) {
+        return( POLARSSL_ERR_ASN1_BUF_TOO_SMALL );
+    }
+
+    *p -= len;
+    memcpy( *p, &rb->pk, len );
+
+    ASN1_CHK_ADD( len, asn1_write_len( p, start, len ) );
+    ASN1_CHK_ADD( len, asn1_write_tag( p, start, ASN1_BIT_STRING ) );
+
+    return (int) len;
+}
+#endif /* __RAINBOW__ */
+
+#if defined(__RAINBOW_2__)
+static int pk_write_rb2_pubkey( unsigned char **p, unsigned char *start,
+                                rainbow2_context *rb2 )
+{
+    int ret = 0;
+    size_t len = RB2_PUBKEY_SIZE_BYTE;
+
+    if( *p - start < (int) len ) {
+        return( POLARSSL_ERR_ASN1_BUF_TOO_SMALL );
+    }
+
+    *p -= len;
+    memcpy( *p, &rb2->pk, len );
+
+    ASN1_CHK_ADD( len, asn1_write_len( p, start, len ) );
+    ASN1_CHK_ADD( len, asn1_write_tag( p, start, ASN1_BIT_STRING ) );
+
+    return (int) len;
+}
+#endif /* __RAINBOW_2__ */
 
 int pk_write_pubkey( unsigned char **p, unsigned char *start,
                      const pk_context *key )
 {
     int ret;
     size_t len = 0;
-
-    printf("[[(in pk_write_pubkey) *p-start=%d]]", *p - start); // TODO
 
 #if defined(POLARSSL_RSA_C)
     if( pk_get_type( key ) == POLARSSL_PK_RSA )
@@ -171,15 +231,30 @@ int pk_write_pubkey( unsigned char **p, unsigned char *start,
         ASN1_CHK_ADD( len, pk_write_ec_pubkey( p, start, pk_ec( *key ) ) );
     else
 #endif
-    if( pk_get_type( key) == OUR_PK_TTS ) {
-        unsigned char **hack = p;
-        printf("\nbefore pk_write_tts_pubkey, p = %d\n", hack[0][0] );
-        printf("\n p = %p\n", *p);
+#if defined(__TTS__)
+    if( pk_get_type( key ) == OUR_PK_TTS ) {
         ASN1_CHK_ADD( len, pk_write_tts_pubkey( p, start, pk_tts( *key ) ) );
-        printf("\nafter pk_write_tts_pubkey, hack = %d\n", hack[0][0] );
-        printf("\n p = %p\n", *p);
     }
     else
+#endif
+#if defined(__TTS_2__)
+    if( pk_get_type( key ) == OUR_PK_TTS2 ) {
+        ASN1_CHK_ADD( len, pk_write_tts2_pubkey( p, start, pk_tts2( *key ) ) );
+    }
+    else
+#endif
+#if defined(__RAINBOW__)
+    if( pk_get_type( key ) == OUR_PK_RAINBOW ) {
+        ASN1_CHK_ADD( len, pk_write_rb_pubkey( p, start, pk_rainbow( *key ) ) );
+    }
+    else
+#endif
+#if defined(__RAINBOW_2__)
+    if( pk_get_type( key ) == OUR_PK_RAINBOW2 ) {
+        ASN1_CHK_ADD( len, pk_write_rb2_pubkey( p, start, pk_rainbow2( *key ) ) );
+    }
+    else
+#endif
         return( POLARSSL_ERR_PK_FEATURE_UNAVAILABLE );
 
     return( (int) len );
@@ -323,9 +398,9 @@ int pk_write_key_der( pk_context *key, unsigned char *buf, size_t size )
     }
     else
 #endif /* POLARSSL_ECP_C */
+#if defined(__TTS__)
     if( pk_get_type( key ) == OUR_PK_TTS )
     {
-
         len += TTS_SECKEY_SIZE_BYTE + TTS_PUBKEY_SIZE_BYTE;
 
         if( c - buf < (int) len )
@@ -342,6 +417,67 @@ int pk_write_key_der( pk_context *key, unsigned char *buf, size_t size )
 
     }
     else
+#endif /* __TTS__ */
+#if defined(__TTS_2__)
+    if( pk_get_type( key ) == OUR_PK_TTS2 )
+    {
+        len += TTS2_SECKEY_SIZE_BYTE + TTS2_PUBKEY_SIZE_BYTE;
+
+        if( c - buf < (int) len )
+            return( POLARSSL_ERR_ASN1_BUF_TOO_SMALL );
+
+        c -= len;
+        memcpy( c,                         &pk_tts2( *key )->sk, TTS2_SECKEY_SIZE_BYTE );
+        memcpy( c + TTS2_SECKEY_SIZE_BYTE, &pk_tts2( *key )->pk, TTS2_PUBKEY_SIZE_BYTE );
+
+        ASN1_CHK_ADD( len, asn1_write_len( &c, buf, len ) );
+        ASN1_CHK_ADD( len, asn1_write_tag( &c, buf, ASN1_BIT_STRING ) );
+
+        return (int) len;
+
+    }
+    else
+#endif /* __TTS_2__ */
+#if defined(__RAINBOW__)
+    if( pk_get_type( key ) == OUR_PK_RAINBOW )
+    {
+        len += RB_SECKEY_SIZE_BYTE + RB_PUBKEY_SIZE_BYTE;
+
+        if( c - buf < (int) len )
+            return( POLARSSL_ERR_ASN1_BUF_TOO_SMALL );
+
+        c -= len;
+        memcpy( c,                       &pk_rainbow( *key )->sk, RB_SECKEY_SIZE_BYTE );
+        memcpy( c + RB_SECKEY_SIZE_BYTE, &pk_rainbow( *key )->pk, RB_PUBKEY_SIZE_BYTE );
+
+        ASN1_CHK_ADD( len, asn1_write_len( &c, buf, len ) );
+        ASN1_CHK_ADD( len, asn1_write_tag( &c, buf, ASN1_BIT_STRING ) );
+
+        return (int) len;
+
+    }
+    else
+#endif /* __RAINBOW__ */
+#if defined(__RAINBOW_2__)
+    if( pk_get_type( key ) == OUR_PK_RAINBOW2 )
+    {
+        len += RB2_SECKEY_SIZE_BYTE + RB2_PUBKEY_SIZE_BYTE;
+
+        if( c - buf < (int) len )
+            return( POLARSSL_ERR_ASN1_BUF_TOO_SMALL );
+
+        c -= len;
+        memcpy( c,                        &pk_rainbow2( *key )->sk, RB2_SECKEY_SIZE_BYTE );
+        memcpy( c + RB2_SECKEY_SIZE_BYTE, &pk_rainbow2( *key )->pk, RB2_PUBKEY_SIZE_BYTE );
+
+        ASN1_CHK_ADD( len, asn1_write_len( &c, buf, len ) );
+        ASN1_CHK_ADD( len, asn1_write_tag( &c, buf, ASN1_BIT_STRING ) );
+
+        return (int) len;
+
+    }
+    else
+#endif /* __RAINBOW_2__ */
         return( POLARSSL_ERR_PK_FEATURE_UNAVAILABLE );
 
     return( (int) len );
@@ -408,12 +544,38 @@ int pk_write_key_pem( pk_context *key, unsigned char *buf, size_t size )
     }
     else
 #endif
+#if defined(__TTS__)
     if ( pk_get_type( key ) == OUR_PK_TTS )
     {
         begin = "-----BEGIN TTS PRIVATE KEY-----\n";
         end = "-----END TTS PRIVATE KEY-----\n";
     }
     else
+#endif
+#if defined(__TTS_2__)
+    if ( pk_get_type( key ) == OUR_PK_TTS2 )
+    {
+        begin = "-----BEGIN TTS2 PRIVATE KEY-----\n";
+        end = "-----END TTS2 PRIVATE KEY-----\n";
+    }
+    else
+#endif
+#if defined(__RAINBOW__)
+    if ( pk_get_type( key ) == OUR_PK_RAINBOW )
+    {
+        begin = "-----BEGIN RAINBOW PRIVATE KEY-----\n";
+        end = "-----END RAINBOW PRIVATE KEY-----\n";
+    }
+    else
+#endif
+#if defined(__RAINBOW_2__)
+    if ( pk_get_type( key ) == OUR_PK_RAINBOW2 )
+    {
+        begin = "-----BEGIN RAINBOW2 PRIVATE KEY-----\n";
+        end = "-----END RAINBOW2 PRIVATE KEY-----\n";
+    }
+    else
+#endif
         return( POLARSSL_ERR_PK_FEATURE_UNAVAILABLE );
 
     if( ( ret = pem_write_buffer( begin, end,

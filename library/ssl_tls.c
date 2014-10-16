@@ -4783,8 +4783,22 @@ unsigned char ssl_sig_from_pk( pk_context *pk )
     if( pk_can_do( pk, POLARSSL_PK_ECDSA ) )
         return( SSL_SIG_ECDSA );
 #endif
+#if defined(__TTS__)
     if( pk_can_do( pk, OUR_PK_TTS ) )
         return( SSL_SIG_TTS );
+#endif
+#if defined(__TTS_2__)
+    if( pk_can_do( pk, OUR_PK_TTS2 ) )
+        return( SSL_SIG_TTS2 );
+#endif
+#if defined(__RAINBOW__)
+    if( pk_can_do( pk, OUR_PK_RAINBOW ) )
+        return( SSL_SIG_RAINBOW );
+#endif
+#if defined(__RAINBOW_2__)
+    if( pk_can_do( pk, OUR_PK_RAINBOW2 ) )
+        return( SSL_SIG_RAINBOW2 );
+#endif
     return( SSL_SIG_ANON );
 }
 
@@ -4802,8 +4816,22 @@ pk_type_t ssl_pk_alg_from_sig( unsigned char sig )
         case SSL_SIG_ECDSA:
             return( POLARSSL_PK_ECDSA );
 #endif
+#if defined(__TTS__)
         case SSL_SIG_TTS:
             return ( OUR_PK_TTS );
+#endif
+#if defined(__TTS_2__)
+        case SSL_SIG_TTS2:
+            return ( OUR_PK_TTS2 );
+#endif
+#if defined(__RAINBOW__)
+        case SSL_SIG_RAINBOW:
+            return ( OUR_PK_RAINBOW );
+#endif
+#if defined(__RAINBOW_2__)
+        case SSL_SIG_RAINBOW2:
+            return ( OUR_PK_RAINBOW2 );
+#endif
         default:
             return( POLARSSL_PK_NONE );
     }
@@ -4897,6 +4925,8 @@ int ssl_check_cert_usage( const x509_crt *cert,
             case OUR_KEY_EXCHANGE_LATTICEE_RAINBOW:
             case OUR_KEY_EXCHANGE_LATTICEE_RSA:
             case OUR_KEY_EXCHANGE_LATTICEE_ECDSA:
+            case OUR_KEY_EXCHANGE_LATTICEE_TTS2:
+            case OUR_KEY_EXCHANGE_LATTICEE_RAINBOW2:
                 usage = KU_DIGITAL_SIGNATURE;
                 break;
 

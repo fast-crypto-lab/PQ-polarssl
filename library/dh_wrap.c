@@ -26,7 +26,9 @@ dh_type_t ssl_get_dh_type( key_exchange_type_t ssl_type )
 	if( ssl_type == OUR_KEY_EXCHANGE_LATTICEE_TTS ||
             ssl_type == OUR_KEY_EXCHANGE_LATTICEE_RAINBOW ||
             ssl_type == OUR_KEY_EXCHANGE_LATTICEE_RSA ||
-            ssl_type == OUR_KEY_EXCHANGE_LATTICEE_ECDSA
+            ssl_type == OUR_KEY_EXCHANGE_LATTICEE_ECDSA ||
+            ssl_type == OUR_KEY_EXCHANGE_LATTICEE_TTS2 ||
+            ssl_type == OUR_KEY_EXCHANGE_LATTICEE_RAINBOW2
         ) return POLARSSL_DH_LWE;
 
 	return POLARSSL_DH_NONE;
@@ -43,7 +45,9 @@ int ssl_is_dh_ephemeral( key_exchange_type_t ssl_type )
             ssl_type == OUR_KEY_EXCHANGE_LATTICEE_TTS ||
             ssl_type == OUR_KEY_EXCHANGE_LATTICEE_RAINBOW ||
             ssl_type == OUR_KEY_EXCHANGE_LATTICEE_RSA ||
-            ssl_type == OUR_KEY_EXCHANGE_LATTICEE_ECDSA
+            ssl_type == OUR_KEY_EXCHANGE_LATTICEE_ECDSA ||
+            ssl_type == OUR_KEY_EXCHANGE_LATTICEE_TTS2 ||
+            ssl_type == OUR_KEY_EXCHANGE_LATTICEE_RAINBOW2
 	) return 1;
 
 	return 0;
