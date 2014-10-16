@@ -1418,6 +1418,7 @@
 
 #define NACL_CV25519_C
 
+#include "../rainbow_tts/run_config.h"
 
 /**
  * \def POLARSSL_DHM_C

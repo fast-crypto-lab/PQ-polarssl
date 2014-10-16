@@ -1077,13 +1077,13 @@ static int pk_parse_key_rainbow_der( rainbow_context *rb,
 
     end = p + len;
 
-    if (len != RAINBOW_SECKEY_SIZE_BYTE + RAINBOW_PUBKEY_SIZE_BYTE) {
+    if (len != RB_SECKEY_SIZE_BYTE + RB_PUBKEY_SIZE_BYTE) {
         /* need a proper error code here */
         return POLARSSL_ERR_PK_KEY_INVALID_FORMAT;
     }
 
-    memcpy( &rb->sk, p,                            RAINBOW_SECKEY_SIZE_BYTE );
-    memcpy( &rb->pk, p + RAINBOW_SECKEY_SIZE_BYTE, RAINBOW_PUBKEY_SIZE_BYTE );
+    memcpy( &rb->sk, p,                            RB_SECKEY_SIZE_BYTE );
+    memcpy( &rb->pk, p + RB_SECKEY_SIZE_BYTE, RB_PUBKEY_SIZE_BYTE );
 
     return 0;
 }
@@ -1108,13 +1108,13 @@ static int pk_parse_key_rainbow2_der( rainbow2_context *rb2,
 
     end = p + len;
 
-    if (len != RAINBOW2_SECKEY_SIZE_BYTE + RAINBOW2_PUBKEY_SIZE_BYTE) {
+    if (len != RB2_SECKEY_SIZE_BYTE + RB2_PUBKEY_SIZE_BYTE) {
         /* need a proper error code here */
         return POLARSSL_ERR_PK_KEY_INVALID_FORMAT;
     }
 
-    memcpy( &rb2->sk, p,                             RAINBOW2_SECKEY_SIZE_BYTE );
-    memcpy( &rb2->pk, p + RAINBOW2_SECKEY_SIZE_BYTE, RAINBOW2_PUBKEY_SIZE_BYTE );
+    memcpy( &rb2->sk, p,                             RB2_SECKEY_SIZE_BYTE );
+    memcpy( &rb2->pk, p + RB2_SECKEY_SIZE_BYTE, RB2_PUBKEY_SIZE_BYTE );
 
     return 0;
 }
