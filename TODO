@@ -420,6 +420,9 @@ Next meeting date 2014/10/16 (Thu) 10:30 AM at MD631
 
 
 
+
+
+
 2014/10/16 Thu 12:43:00 TODO
 
     陳
@@ -432,4 +435,6 @@ Next meeting date 2014/10/16 (Thu) 10:30 AM at MD631
         - Fix the runtime segfault bug of the server
         - Complete test for TTS, TTS2, RAINBOW, RAINBOW2
         - Macro definitions and wrapper still needs to be cleaned up
+
+    Next meeting date: 10/20 (Monday) 10:30 at MD631
 
