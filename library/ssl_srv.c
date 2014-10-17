@@ -44,6 +44,7 @@
 #define polarssl_free       free
 #endif
 
+#include "polarssl/dh.h"
 #include "lattice/LWE.h"
 
 #include <stdlib.h>

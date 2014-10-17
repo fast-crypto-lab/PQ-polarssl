@@ -62,7 +62,7 @@ int ssl_is_dh_psk( key_exchange_type_t ssl_type )
         return 0;
 }
 
-int ssl_is_dh_pcksign( key_exchange_type_t ssl_type )
+int ssl_is_dh_pkcsign( key_exchange_type_t ssl_type )
 {
 	if( ssl_type == POLARSSL_KEY_EXCHANGE_DHE_RSA ||
             ssl_type == POLARSSL_KEY_EXCHANGE_ECDHE_RSA ||
@@ -136,11 +136,7 @@ static void polarssl_zeroize( void *v, size_t n ) {
 
 static void * dh_cv25519_alloc( void )
 {
-    dh_curve25519_context *ctx = polarssl_malloc( sizeof( dh_curve25519_context ) );
-    if( NULL ==  ctx ) {
-        return NULL;
-    }
-    return ctx;
+    return polarssl_malloc( sizeof( dh_curve25519_context ) );
 }
 
 static void dh_cv25519_free( void *_ctx ) {

@@ -62,6 +62,8 @@ static void polarssl_zeroize( void *v, size_t n ) {
 }
 #endif
 
+#include "polarssl/dh.h"
+
 #if defined(POLARSSL_SSL_SERVER_NAME_INDICATION)
 static void ssl_write_hostname_ext( ssl_context *ssl,
                                     unsigned char *buf,

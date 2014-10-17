@@ -73,7 +73,7 @@ static int _check_server_ecdh_params( const ecdh_context *ctx )
 
 typedef struct { int point_format; ecp_group_id group_id; } wecdh_params;
 
-int wecdh_set_params( void *_ctx , const void *_params )
+int __wecdh_set_params( void *_ctx , const void *_params )
 {
     ecdh_context *ctx = (ecdh_context *)_ctx;
     int ret = 0;
@@ -92,6 +92,13 @@ int wecdh_set_params( void *_ctx , const void *_params )
         return POLARSSL_ERR_ECP_BAD_INPUT_DATA;
     }
     return ret;
+}
+
+int wecdh_set_params( void *_ctx , const void *_params )
+{
+    wecdh_params pp = { POLARSSL_ECP_PF_UNCOMPRESSED , POLARSSL_ECP_DP_SECP256R1 };
+    if( NULL == _params ) _params = (const void *)&pp;
+    return __wecdh_set_params( _ctx , _params );
 }
 
 int wecdh_read_params( void *_ctx, int *rlen, const unsigned char *buf, size_t blen )
