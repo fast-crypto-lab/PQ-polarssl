@@ -249,6 +249,8 @@ int lwe_read_ske( lwe_context  *ctx, int *rlen, const unsigned char *buf, size_t
 	//his_pk
 	*rlen += polyReadBuffer(ctx ->his_pk, buf + *rlen);
 
+    return 0;
+
 }
 
 
@@ -268,6 +270,8 @@ int lwe_read_response( lwe_context  *ctx, const unsigned char *buf, size_t blen 
 	rlen += polyReadBuffer(ctx ->his_pk, buf + rlen);
 	//w(poly_2)
 	rlen += poly2ReadBuffer(ctx ->w, buf + rlen);
+
+    return 0;
 
 
 	
@@ -317,6 +321,8 @@ int lwe_write_response( size_t *olen, unsigned char *buf, size_t blen, lwe_conte
 	*olen += polyWriteBuffer(ctx ->pk , buf+*olen );
 	//w
 	*olen += poly2WriteBuffer(ctx ->w , buf+*olen );
+
+    return 0;
 
 }
 
