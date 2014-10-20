@@ -1,0 +1,69 @@
+簡單筆記一下，
+
+我們可以重現今天中午 PolarSSL hacking 時看到的 client 認證 cert chain 失敗導致 server crashes 的 bug (未解決) 如下:
+
+
+
+On the commit 23c98ddeee3bfef1501e3967cf1165aca539fca1 (branch "dev" on the bitbucket repo now)
+
+在 Shell 1 執行 SSL server2 使用 self signed certificate
+
+    $ ./programs/ssl/ssl_server2 debug_level=3 crt_file=./self_signed_stuff/cert.crt key_file=./self_signed_stuff/tts_priv.pem force_ciphersuite=TLS-LATTICEE-TTS-WITH-AES-128-GCM-SHA256
+    或用 GDB 執行一樣的指令，要注意編譯的選項...
+    $ gdb ./programs/ssl/ssl_server2
+    (gdb) run debug_level=3 crt_file=./self_signed_stuff/cert.crt key_file=./self_signed_stuff/tts_priv.pem force_ciphersuite=TLS-LATTICEE-TTS-WITH-AES-128-GCM-SHA256
+
+在 Shell 2 執行 SSL client2
+
+    $ ./programs/ssl/ssl_client2 debug_level=3 force_ciphersuite=TLS-LATTICEE-TTS-WITH-AES-128-GCM-SHA256
+    因為沒有指定 CA certificates 路徑或 auth_mode=optional 所以一收到 server 給的 certificate chain 以後，認證會失敗，程式自己中止。
+
+在 Shell 1 可看到 server2 由於不明的原因 crashes 掛掉
+
+    Program received signal SIGPIPE, Broken pipe.
+    0x00007ffff77fa3b0 in __write_nocancel () at ../sysdeps/unix/syscall-template.S:81
+    81      ../sysdeps/unix/syscall-template.S: No such file or directory.
+
+    (gdb) where
+    #0  0x00007ffff77fa3b0 in __write_nocancel () at ../sysdeps/unix/syscall-template.S:81
+    #1  0x000000000040a25f in net_send (ctx=0x7fffffffcf64, buf=0x74d308 "\026\003\003", len=149) at net.c:546
+    #2  0x000000000041c987 in ssl_flush_output (ssl=0x7fffffffda80) at ssl_tls.c:1928
+    #3  0x000000000041cd37 in ssl_write_record (ssl=0x7fffffffda80) at ssl_tls.c:2025
+    #4  0x000000000045e76d in ssl_write_certificate_request (ssl=0x7fffffffda80) at ssl_srv.c:2094
+    #5  0x000000000046107c in ssl_handshake_server_step (ssl=0x7fffffffda80) at ssl_srv.c:3208
+    #6  0x0000000000421a20 in ssl_handshake_step (ssl=0x7fffffffda80) at ssl_tls.c:4186
+    #7  0x0000000000421a79 in ssl_handshake (ssl=0x7fffffffda80) at ssl_tls.c:4203
+    #8  0x000000000040299c in main (argc=<optimized out>, argv=<optimized out>) at ssl/ssl_server2.c:1407
+
+    (gdb) up
+    #1  0x000000000040a25f in net_send (ctx=0x7fffffffcf64, buf=0x74d308 "\026\003\003", len=149) at net.c:546
+    546         ret = write( fd, buf, len );
+
+    (gdb) print len
+    $1 = 149
+
+    (gdb) print fd
+    $2 = 4
+
+
+
+快速觀察後，猜測這個 bug 的原因：
+
+應該不是記憶體存取的錯誤。
+
+http://linux.die.net/man/3/send
+作業系統在 sys/socket.h 給了 ssize_t send(int socket, const void *buffer, size_t length, int flags);
+PolarSSL在 library/net.c 定義了 #define write(fd,buf,len) send(fd,(char*)buf,(int) len,0) 並且在 net_send() 使用了這個 write() macro 來把一個 buffer 的某長度的資料傳送出去
+
+目前 PolarSSL 在 net_send() 裡面是有檢查了 system call 回傳的錯誤代碼 errno，
+看它現在是否為 EPIPE 或 ECONNRESET ，如果是的話就表示發生了一個
+NET_CONN_RESET 事件，需要回報給上層 ssl 模組...
+
+但是這個 system call 是有可能產生 SIGPIPE 信號的，
+而看起來 PolarSSL 並沒有為 SIGPIPE 設定 signal handler (吧?)
+所以只要這個信號一噴出來，程式立刻就會炸了 orz
+
+我還沒搞很懂這個 system call 噴 SIGPIPE 的原因
+（好像一個 socket file 爛掉的情況也是有有很多種 cases...）
+ 所以還不知道這問題要怎樣解。
+
