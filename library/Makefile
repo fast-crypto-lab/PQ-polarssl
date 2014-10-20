@@ -5,7 +5,9 @@
 # environment
 #
 CFLAGS	+= -I../include -D_FILE_OFFSET_BITS=64 -Wall -W -Wdeclaration-after-statement
+ifndef DEBUG
 OFLAGS	= -O2
+endif
 
 ifdef DEBUG
 CFLAGS += -g3

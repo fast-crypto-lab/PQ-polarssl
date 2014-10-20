@@ -1845,6 +1845,7 @@ pk_type_t ssl_get_ciphersuite_sig_pk_alg( const ssl_ciphersuite_t *info )
             return( POLARSSL_PK_RSA );
 
         case POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA:
+        case OUR_KEY_EXCHANGE_LATTICEE_ECDSA:
             return( POLARSSL_PK_ECDSA );
 
         case POLARSSL_KEY_EXCHANGE_ECDH_RSA:
