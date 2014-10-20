@@ -202,12 +202,14 @@ static inline double ranf( int (*f_rng)(void *, unsigned char *, size_t), void *
 //canNOT do this since it may not support 64 bit 
 //	long RandomMax  = 0xffffffffffffffffULL;
 //	long rnd;
-
+/*
 	t_uint rnd;
 	t_uint RandomMax = 0;
 	RandomMax -=1; //0xffffffff
 	f_rng(p_rng, &rnd, sizeof(t_uint) );
 	return (((double)rnd)/RandomMax );
+*/
+	return (((double)rand())/RAND_MAX);
 }
 
 static inline int myround( double r ) {

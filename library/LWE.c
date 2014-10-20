@@ -23,6 +23,18 @@ static void printPoly(Poly_q * f){
 void lwe_init( lwe_context  *ctx) {
 //not needed?
     memset( ctx, 0, sizeof( lwe_context) );	
+	//should set all pointer to null but nevertheless
+
+	ctx-> a= NULL; 				
+	ctx->pk= NULL;
+	ctx->his_pk= NULL;				
+	ctx-> sk= NULL;	
+	ctx-> x= NULL;
+	ctx-> r= NULL;
+	ctx->y= NULL;
+	ctx-> w= NULL;						
+	ctx-> sigma= NULL;	
+
 	init_mont();
 	init_fft();
 
@@ -43,16 +55,33 @@ void *  lwe_alloc ( void ) {
 
 }
 
+static void check_freePoly(Poly_q * f){
+	if(f !=NULL){
+		freePoly(f);
+		free(f);
+	}
+}
+
+static void check_freePoly2(Poly_2 * f){
+	if(f !=NULL){
+		freePoly2(f);
+		free(f);
+	}
+}
+
+
 void  lwe_free ( lwe_context * ctx ) {
     //free all the poly
-	freePoly(ctx->sk);
-	freePoly(ctx->pk);
-	freePoly(ctx->his_pk);
-	freePoly(ctx->a);
-	freePoly(ctx->x);
-	freePoly(ctx->r);
-	freePoly(ctx->y);
-	freePoly2(ctx->w);
+	check_freePoly(ctx->sk);
+	check_freePoly(ctx->pk);
+	check_freePoly(ctx->his_pk);
+	check_freePoly(ctx->a);
+	check_freePoly(ctx->x);
+	check_freePoly(ctx->r);
+	check_freePoly(ctx->y);
+	check_freePoly2(ctx->w);
+	check_freePoly2(ctx->sigma);
+
 
 }
 
@@ -181,14 +210,21 @@ int lwe_compute_shared ( lwe_context  *ctx, int (*f_rng)(void *, unsigned char *
 		polyAdd(d, d, g );
 
 		invFFT(d);
-		Mod_2(ctx ->w, d ,ctx ->w);
+
+		ctx ->sigma = polarssl_malloc ( sizeof( Poly_2) );
+		ZeroPoly_2(ctx ->sigma ,ctx->n);
+
+		Mod_2(ctx ->sigma, d ,ctx ->w);
 
 		freePoly(g);
 		freePoly(c);
 		freePoly(d);
 
 	}else{
-		Mod_2(ctx ->w, ctx ->r ,ctx ->w);
+		ctx ->sigma = polarssl_malloc ( sizeof( Poly_2) );
+		ZeroPoly_2(ctx ->sigma ,ctx->n);
+
+		Mod_2(ctx ->sigma, ctx ->r ,ctx ->w);
 	}
 	return 0;
 }
@@ -279,7 +315,7 @@ int lwe_read_response( lwe_context  *ctx, const unsigned char *buf, size_t blen 
 
 size_t  lwe_getsize_ske( const lwe_context *ctx ){
 	//poly_q*2
-	return  PolySize(ctx ->pk)*2;
+	return  PolySize(ctx ->pk)*3+20+mpi_size(ctx->q);
 }
 
 int lwe_write_ske( size_t *olen, unsigned char *buf, size_t blen, lwe_context  *ctx ){
@@ -335,8 +371,8 @@ int lwe_write_premaster( size_t *olen, unsigned char *buf, size_t blen, const lw
     if( ctx == NULL || blen < ctx->n )
         return( POLARSSL_ERR_DHM_BAD_INPUT_DATA );
 */
-	//write w
-	*olen = poly2WriteBuffer(ctx ->w , buf );
+	//write sigma
+	*olen = poly2WriteBuffer(ctx ->sigma , buf );
 	return 0;
 }
 

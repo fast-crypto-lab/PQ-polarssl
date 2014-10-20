@@ -33,7 +33,8 @@ typedef struct
 	Poly_q* y;
 	
 	//Poly_q y;						/*communication*/
-	Poly_2* w;						/*or string?*//*length of n*//*communication*//*reused as sigma*/
+	Poly_2* w;						
+	Poly_2* sigma;					/*for recomputation of premaster*/
 	//Poly_2* session_key;			/*length of a chosen number*/
 	
     
