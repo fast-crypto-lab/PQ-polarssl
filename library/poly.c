@@ -1,7 +1,6 @@
 #include "lattice/poly.h"
 #include "stdlib.h"
 #include "polarssl/bignum.h"
-#include <math.h>
 #define polarssl_malloc malloc
 #define polarssl_free free
 
@@ -19,7 +18,7 @@ void init_fft(){
 			mpi_init(&WinvArray[i]);
 		}		
 		#include "lattice/define_fftarrays_param_1.h"
-		//#include "define_fftarrays_param_3.h"
+		//#include "lattice/define_fftarrays_param_3.h"
 	}
 }
 
@@ -198,13 +197,61 @@ int poly2ReadBuffer(Poly_2* f, const void* buf){
 
 
 
-double ranf()
+static inline double ranf( int (*f_rng)(void *, unsigned char *, size_t), void *p_rng) 
 {
-	return (((double)rand())/RAND_MAX);
+//canNOT do this since it may not support 64 bit 
+//	long RandomMax  = 0xffffffffffffffffULL;
+//	long rnd;
+
+	t_uint rnd;
+	t_uint RandomMax = 0;
+	RandomMax -=1; //0xffffffff
+	f_rng(p_rng, &rnd, sizeof(t_uint) );
+	return (((double)rnd)/RandomMax );
+}
+
+static inline int myround( double r ) {
+    return (r > 0.0) ? (r + 0.5) : (r - 0.5); 
+}
+
+//from http://www.codeproject.com/Articles/69941/Best-Square-Root-Method-Algorithm-Function-Precisi
+float mysqrt(const float x){
+  union
+  {
+    int i;
+    float x;
+  } u;
+  u.x = x;
+  u.i = (1<<29) + (u.i >> 1) - (1<<22); 
+  
+  // Two Babylonian Steps (simplified from:)
+  // u.x = 0.5f * (u.x + x/u.x);
+  // u.x = 0.5f * (u.x + x/u.x);
+  u.x =       u.x + x/u.x;
+  u.x = 0.25f*u.x + x/u.x;
+
+  return u.x;
+} 
+
+//from http://stackoverflow.com/questions/3343395/value-of-natural-logarithm
+float mylog(float x){
+	int i=1;   
+	float logx = 0 ;
+	float ty = (x-1)/(x+1) ;
+	float tty;
+	do
+	{
+	    logx = logx + ty / i;
+	    tty = ty ;
+	    ty = (ty * ((x-1)/(x+1)) * ((x-1)/(x+1)));
+	    i = i + 2 ;
+	} while(tty - ty > 0.0000005 );
+
+	return logx;
 }
 
 //init+rand
-void RandomPoly(Poly_q * f, int n , mpi* q, float deviation, int hash){
+void RandomPoly(Poly_q * f, int n , mpi* q, float deviation, int hash, int (*f_rng)(void *, unsigned char *, size_t), void *p_rng ){
 
 	f->n = n;
 	f->a =polarssl_malloc(sizeof(mpi*)*n);
@@ -224,16 +271,15 @@ void RandomPoly(Poly_q * f, int n , mpi* q, float deviation, int hash){
 
 	for(i=0 ; i<n; i ++){
 		do {
-			x1 = 2.0 * ranf() - 1.0;
-			x2 = 2.0 * ranf() - 1.0;
+			x1 = 2.0 * ranf(f_rng, p_rng) - 1.0;
+			x2 = 2.0 * ranf(f_rng, p_rng)  - 1.0;
 			abs = x1 * x1 + x2 * x2;
 		} while ( abs >= 1.0 );
-
 	
-		abs = sqrt( (-2.0 * log( abs ) ) / abs );
+		abs = mysqrt( (-2.0 * mylog( abs ) ) / abs );
 		f->a[i]= polarssl_malloc(sizeof(mpi));
 		mpi_init(f->a[i]);
-		int t=round(x1 * abs * deviation);
+		int t=myround(x1 * abs * deviation);
 		mpi_lset(f->a[i],  t);
 		//all positive
 		if( mpi_cmp_int( f->a[i], 0 ) < 0 ){
@@ -390,6 +436,8 @@ int PolySize(Poly_q * f){
 	//theoretically
 	return f->n*mpi_size(f->q);
 }
+
+
 
 
 

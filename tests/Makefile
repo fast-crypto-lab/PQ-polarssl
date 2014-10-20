@@ -67,7 +67,7 @@ APPS =	test_suite_aes.ecb		test_suite_aes.cbc		\
 		test_suite_rsa			test_suite_shax			\
 		test_suite_x509parse	test_suite_x509write	\
 		test_suite_xtea			test_suite_version	\
-		test_suite_dhif
+		test_suite_dhif			
 
 .SILENT:
 
@@ -400,6 +400,7 @@ test_suite_version: test_suite_version.c $(DEP)
 test_suite_dhif: test_suite_dhif.c $(DEP)
 	echo   "  CC    	$@.c"
 	$(CC) $(CFLAGS) $(OFLAGS) $@.c	$(LDFLAGS) -o $@
+
 
 clean:
 ifndef WINDOWS

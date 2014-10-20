@@ -9,6 +9,7 @@
 
 typedef struct
 {
+	int srv;
     /*constant parameters, to be initialized*/
 	int n;
    	float alpha;
@@ -41,12 +42,11 @@ lwe_context;
 
 
 
-
 void lwe_init ( lwe_context  *ctx);
 void *  lwe_alloc ( void ) ;
 void  lwe_free ( lwe_context * ctx );
 int lwe_gen_public( lwe_context *ctx, int (*f_rng)(void *, unsigned char *, size_t), void *p_rng );
-int lwe_compute_shared ( lwe_context  *ctx, int (*f_rng)(void *, unsigned char *, size_t), void *p_rng );
+int lwe_compute_shared( lwe_context  *ctx, int (*f_rng)(void *, unsigned char *, size_t), void *p_rng );
 int lwe_set_params ( lwe_context  *ctx, const void *params );
 int lwe_read_ske( lwe_context  *ctx, int *rlen, const unsigned char *buf, size_t blen );
 int lwe_read_response( lwe_context  *ctx, const unsigned char *buf, size_t blen );
@@ -60,26 +60,4 @@ int lwe_write_premaster( size_t *olen, unsigned char *buf, size_t blen, const lw
 
 
 
-
-/*
-const dh_info2_t lwe_info = {
-    POLARSSL_DH_LWE, //not yet added to dh_type_t
-    "M_LWE", 
-    lwe_alloc,
-    lwe_free,
-    lwe_gen_public,
-    lwe_compute_shared,
-    lwe_set_params,
-    lwe_read_ske,
-    lwe_read_response,
-    NULL, 
-    NULL,  
-    lwe_getsize_ske,
-    lwe_write_ske,
-    lwe_getsize_response,
-    lwe_write_response,
-    lwe_getsize_premaster,
-    lwe_write_premaster,
-};
-*/
 #endif

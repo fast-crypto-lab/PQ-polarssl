@@ -1,6 +1,15 @@
 Diffie-Hellman full exchange with interface2 #0: default P,G
 dhif_do_dhm2:0:"0":0:"0"
 
+Diffie-Hellman full exchange with interface2 #1
+dhif_do_dhm2:10:"23":10:"5"
+
+Diffie-Hellman full exchange with interface2 #2
+dhif_do_dhm2:10:"93450983094850938450983409623":10:"9345098304850938450983409622"
+
+Diffie-Hellman full exchange with interface2 #3
+dhif_do_dhm2:10:"93450983094850938450983409623982317398171298719873918739182739712938719287391879381271":10:"9345098309485093845098340962223981329819812792137312973297123912791271"
+
 ECDH exchange with interface2 #1
 depends_on:POLARSSL_ECP_DP_SECP192R1_ENABLED
 dhif_do_ecdh_exchange2:POLARSSL_ECP_DP_SECP192R1
@@ -12,3 +21,15 @@ dhif_do_ecdh_exchange2:POLARSSL_ECP_DP_SECP521R1
 ECDH exchange with interface2 #3
 depends_on:POLARSSL_ECP_DP_SECP256R1_ENABLED
 dhif_do_ecdh_exchange2:POLARSSL_ECP_DP_SECP256R1
+
+dhif interface: dhm : default
+dhif_do_dhif:POLARSSL_DH_DHM
+
+dhif interface: ecdh : default
+dhif_do_dhif:POLARSSL_DH_EC
+
+dhif interface: cv25519 : default
+dhif_do_dhif:NACL_DH_CV25519
+
+dhif interface: LWE : default
+dhif_do_dhif:POLARSSL_DH_LWE
