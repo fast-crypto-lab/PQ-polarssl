@@ -9,6 +9,7 @@ LDFLAGS += -lm
 all:
 	cd library  && $(MAKE) all && cd ..
 	cd programs && $(MAKE) all && cd ..
+	cd tests  && $(MAKE) all && cd ..
 
 no_test:
 	cd library  && $(MAKE) all && cd ..
