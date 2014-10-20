@@ -1,0 +1,79 @@
+分工表：請各自檢查以下檔案 (from: git diff origin/development --stat)
+
+陳
+ Makefile                                    |    4 +-
+ programs/Makefile                           |   13 +-
+ tests/Makefile                              |   10 +-
+ library/Makefile                            |    8 +-
+ tests/suites/test_suite_dhif.data           |   35 +
+ tests/suites/test_suite_dhif.function       |  330 ++
+
+陳
+ include/lattice/LWE.h                       |   63 +
+ include/lattice/define_fftarrays_param_1.h  | 4096 ++++++++++++++
+ include/lattice/define_fftarrays_param_3.h  | 8192 +++++++++++++++++++++++++++
+ include/lattice/lweparam.h                  |   30 +
+ include/lattice/mont_mpi.h                  |   15 +
+ include/lattice/poly.h                      |   43 +
+ include/lattice/polynomial_a_param_1.h      | 1024 ++++
+ include/lattice/polynomial_a_param_3.h      | 2048 +++++++
+
+吳
+ include/nacl/crypto_scalarmult_curve25519.h |   20 +
+ include/nacl/dh_curve25519.h                |   28 +
+
+吳
+ include/polarssl/config.h                   |   23 +-
+ include/polarssl/dh.h                       |   60 +
+ include/polarssl/dh_wrap.h                  |   40 +
+ include/polarssl/oid.h                      |   10 +
+ include/polarssl/pk.h                       |   10 +
+ include/polarssl/pk_wrap.h                  |   16 +
+ include/polarssl/ssl.h                      |   21 +-
+ include/polarssl/ssl_ciphersuites.h         |   15 +
+
+張
+ include/rainbow_tts/_hash_sha256.h          |   36 +
+ include/rainbow_tts/linear31.h              |  428 ++
+ include/rainbow_tts/polarssl_wrap.h         |   54 +
+ include/rainbow_tts/rainbow.h               |  191 +
+ include/rainbow_tts/run_config.h            |   18 +
+
+吳
+ library/LWE.c                               |  413 ++
+ library/bignum.c                            |  160 +-
+ library/mont_mpi.c                          |  122 +
+ library/poly.c                              |  445 ++
+
+吳
+ library/dh_wrap.c                           |  272 +
+ library/dhif_dhm.c                          |  307 +
+ library/dhif_ecdh.c                         |  314 +
+ library/dhm.c                               |   13 +-
+
+張
+ library/linear31.c                          |  589 ++
+ library/nacl_curve25519_ref_smult.c         |  273 +
+ library/polarssl_wraper_ttsrb.c             |  375 ++
+ library/rainbow.c                           | 1272 +++++
+
+陳
+ library/ssl_ciphersuites.c                  |   63 +
+ library/ssl_cli.c                           |  353 +-
+ library/ssl_srv.c                           |  415 +-
+ library/ssl_tls.c                           |  136 +
+
+張
+ include/polarssl/asn1write.h                |    2 +-
+ library/oid.c                               |   58 +-
+ library/pk.c                                |   18 +
+ library/pk_wrap.c                           |    3 +
+ library/pkparse.c                           |  406 ++
+ library/pkwrite.c                           |  233 +-
+ library/x509write_crt.c                     |   12 +-
+ programs/pkey/tts_gencrt.c                  |    0
+ programs/pkey/tts_genkey.c                  |  162 +
+ programs/x509/ca.key                        |   27 +
+ programs/x509/cert.crt                      |   19 +
+ programs/x509/cert_write.c                  |    8 +-
+
