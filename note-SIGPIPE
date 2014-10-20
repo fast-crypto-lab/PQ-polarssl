@@ -67,3 +67,28 @@ NET_CONN_RESET 事件，需要回報給上層 ssl 模組...
 （好像一個 socket file 爛掉的情況也是有有很多種 cases...）
  所以還不知道這問題要怎樣解。
 
+
+========================================================================
+
+
+之前提到的 runtime 發現的 client-side connection close 導致 server-side crash
+的 SIGPIPE 問題是我耍笨了，因為 gdb 有自己的 signal handler 遇到 SIGPIPE 無論
+怎樣都會直接把程序停下來。我對它下 handle SIGPIPE nostop 指令以後程式就可以
+「正常地」繼續進行直到噴出 SIGSEGV 導致 Segmentation fault 。
+
+而 server 程式真正掛掉的地方是：
+
+ssl_tls.c(1930): ssl->f_send() returned -80 (-0x0050)
+ssl_tls.c(2027): ssl_flush_output() returned -80 (-0x0050)
+ssl_srv.c(2096): <= write certificate request
+ssl_tls.c(4209): <= handshake
+ failed
+  ! ssl_handshake returned -0x50
+
+Last error was: -80 - NET - Connection was reset by peer
+
+
+Program received signal SIGSEGV, Segmentation fault.
+0x000000000048a710 in freePoly (f=0x0) at poly.c:487
+487             for(i =0; i<f->n;i++)
+
