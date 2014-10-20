@@ -3,7 +3,11 @@
 
 #define __TTS__
 
+#define __TTS_2__
+
 #define __RAINBOW__
+
+#define __RAINBOW_2__
 
 //#define __DEBUG__
 

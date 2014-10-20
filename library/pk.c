@@ -96,8 +96,22 @@ const pk_info_t * pk_info_from_type( pk_type_t pk_type )
         case POLARSSL_PK_ECDSA:
             return( &ecdsa_info );
 #endif
+#if defined(__TTS__)
         case OUR_PK_TTS:
             return( &tts_info );
+#endif
+#if defined(__RAINBOW__)
+        case OUR_PK_RAINBOW:
+            return( &rainbow_info );
+#endif
+#if defined(__TTS_2__)
+        case OUR_PK_TTS2:
+            return( &tts2_info );
+#endif
+#if defined(__RAINBOW_2__)
+        case OUR_PK_RAINBOW2:
+            return( &rainbow2_info );
+#endif
         /* POLARSSL_PK_RSA_ALT omitted on purpose */
         default:
             return( NULL );

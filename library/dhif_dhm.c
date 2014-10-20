@@ -60,7 +60,7 @@ int wdhm_compute_shared( void *_ctx , int (*f_rng)(void *, unsigned char *, size
 
 typedef struct { mpi P; mpi G; } wdh_params;
 
-int wdhm_set_params( void *_ctx , const void *_params )
+static int __wdhm_set_params( void *_ctx , const void *_params )
 {
     dhm_context *ctx = (dhm_context *)_ctx;
     int ret = 0;
@@ -73,6 +73,23 @@ int wdhm_set_params( void *_ctx , const void *_params )
     ctx->len = mpi_size(&ctx->P);
 
 cleanup:
+    return ret;
+}
+
+static int wdhm_set_params( void *_ctx , const void *_params )
+{
+    int ret;
+    struct { mpi P; mpi G; } _pa;
+    mpi_init( &_pa.P );
+    mpi_init( &_pa.G );
+    if( NULL == _params ) {
+       if( 0 != ( ret = mpi_read_string( &_pa.P , 16 , POLARSSL_DHM_RFC5114_MODP_1024_P )) ) return ret;
+       if( 0 != ( ret = mpi_read_string( &_pa.G , 16 , POLARSSL_DHM_RFC5114_MODP_1024_G )) ) return ret;
+       _params = (void *)&_pa;
+    }
+    ret = __wdhm_set_params( _ctx , _params );
+    mpi_free( &_pa.P );
+    mpi_free( &_pa.G );
     return ret;
 }
 

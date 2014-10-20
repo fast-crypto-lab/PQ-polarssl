@@ -238,6 +238,8 @@ extern "C" {
 #define TLS_LATTICEE_RAINBOW_WITH_AES_128_GCM_SHA256    0xCC01 /* Ours */
 #define TLS_LATTICEE_RSA_WITH_AES_128_GCM_SHA256        0xCC02 /* Ours */
 #define TLS_LATTICEE_ECDSA_WITH_AES_128_GCM_SHA256      0xCC03 /* Ours */
+#define TLS_LATTICEE_TTS2_WITH_AES_128_GCM_SHA256       0xCC04 /* Ours */
+#define TLS_LATTICEE_RAINBOW2_WITH_AES_128_GCM_SHA256   0xCC05 /* Ours */
 
 /* Reminder: update _ssl_premaster_secret when adding a new key exchange */
 typedef enum {
@@ -257,6 +259,8 @@ typedef enum {
     OUR_KEY_EXCHANGE_LATTICEE_RAINBOW,
     OUR_KEY_EXCHANGE_LATTICEE_RSA,
     OUR_KEY_EXCHANGE_LATTICEE_ECDSA,
+    OUR_KEY_EXCHANGE_LATTICEE_TTS2,
+    OUR_KEY_EXCHANGE_LATTICEE_RAINBOW2,
 } key_exchange_type_t;
 
 typedef struct _ssl_ciphersuite_t ssl_ciphersuite_t;

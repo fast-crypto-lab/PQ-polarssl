@@ -372,6 +372,18 @@ static const oid_sig_alg_t oid_sig_alg[] =
         POLARSSL_MD_SHA256,   OUR_PK_TTS,
     },
     {
+        { ADD_LEN( OID_OUR_ALG_RAINBOW_SHA256 ), "Rainbow-with-SHA256", "Rainbow with SHA256" },
+        POLARSSL_MD_SHA256,   OUR_PK_RAINBOW,
+    },
+    {
+        { ADD_LEN( OID_OUR_ALG_TTS2_SHA256 ), "TTS2-with-SHA256", "TTS2 with SHA256" },
+        POLARSSL_MD_SHA256,   OUR_PK_TTS2,
+    },
+    {
+        { ADD_LEN( OID_OUR_ALG_RAINBOW2_SHA256 ), "Rainbow2-with-SHA256", "Rainbow2 with SHA256" },
+        POLARSSL_MD_SHA256,   OUR_PK_RAINBOW2,
+    },
+    {
         { NULL, 0, NULL, NULL },
         0, 0,
     },
@@ -432,9 +444,16 @@ static const oid_pk_alg_t oid_pk_alg[] =
         POLARSSL_PK_ECKEY_DH,
     },
     {
-        // TODO: add TTS signature entry here...
-        // Add the OID_OUR_ALG_TTS macro here...
         { ADD_LEN( OID_OUR_ALG_TTS ), "id-ttsKeyExchange", "TTS" }, OUR_PK_TTS
+    },
+    {
+        { ADD_LEN( OID_OUR_ALG_RAINBOW ), "id-rainbowKeyExchange", "Rainbow" }, OUR_PK_RAINBOW
+    },
+    {
+        { ADD_LEN( OID_OUR_ALG_TTS2 ), "id-tts2KeyExchange", "TTS2" }, OUR_PK_TTS2
+    },
+    {
+        { ADD_LEN( OID_OUR_ALG_RAINBOW2 ), "id-rainbow2KeyExchange", "Rainbow2" }, OUR_PK_RAINBOW2
     },
     {
         { NULL, 0, NULL, NULL },

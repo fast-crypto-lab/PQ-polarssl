@@ -68,7 +68,6 @@ static int dhm_read_bignum( mpi *X,
                             const unsigned char *end )
 {
     int ret, n;
-
     if( end - *p < 2 )
         return( POLARSSL_ERR_DHM_BAD_INPUT_DATA );
 

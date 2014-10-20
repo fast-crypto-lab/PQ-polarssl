@@ -44,6 +44,7 @@
 #define polarssl_free       free
 #endif
 
+#include "polarssl/dh.h"
 #include "lattice/LWE.h"
 
 #include <stdlib.h>
@@ -2182,8 +2183,11 @@ static int ssl_write_server_key_exchange( ssl_context *ssl )
         return( 0 );
     }
 
+/*
     if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_DHE_PSK ||
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_PSK )
+*/
+    if( ssl_is_dh_psk( ciphersuite_info->key_exchange ) )
     {
         /* TODO: Support identity hints */
         *(p++) = 0x00;
@@ -2351,14 +2355,22 @@ curve_matching_done:
 
 
 
+    /* TODO */
+    /* if ( ssl_need_pk_signed(ciphersuite_info->key_exchange) ) { */
+    /* } */
+/*
     if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_DHE_RSA ||
         ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_ECDHE_TTS        ||
         ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_TTS     ||
         ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_RAINBOW ||
         ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_RSA     ||
         ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_ECDSA   ||
+        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_TTS2    ||
+        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_RAINBOW2||
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_RSA ||
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA )
+*/
+    if( ssl_is_dh_pkcsign( ciphersuite_info->key_exchange ) )
     {
         size_t signature_len = 0;
         unsigned int hashlen = 0;
@@ -2771,6 +2783,8 @@ static int ssl_parse_client_key_exchange( ssl_context *ssl )
         ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_RAINBOW ||
         ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_RSA     ||
         ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_ECDSA   ||
+        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_TTS2    ||
+        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_RAINBOW2||
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDH_RSA ||
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDH_ECDSA )
     {

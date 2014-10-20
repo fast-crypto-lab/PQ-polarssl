@@ -281,6 +281,9 @@
 #define OID_EC_ALG_ECDH                 OID_CERTICOM "\x01\x0c"
 
 #define OID_OUR_ALG_TTS                 OID_CERTICOM "\x01\x0d"
+#define OID_OUR_ALG_RAINBOW             OID_CERTICOM "\x01\x0e"
+#define OID_OUR_ALG_TTS2                OID_CERTICOM "\x01\x0f"
+#define OID_OUR_ALG_RAINBOW2            OID_CERTICOM "\x01\x10"
 
 /*
  * ECParameters namedCurve identifiers, from RFC 5480, RFC 5639, and SEC2
@@ -375,6 +378,9 @@
 #define OID_ECDSA_SHA512            OID_ANSI_X9_62_SIG_SHA2 "\x04"
 
 #define OID_OUR_ALG_TTS_SHA256      OID_ANSI_X9_62_SIG_SHA2 "\x05"
+#define OID_OUR_ALG_RAINBOW_SHA256  OID_ANSI_X9_62_SIG_SHA2 "\x06"
+#define OID_OUR_ALG_TTS2_SHA256     OID_ANSI_X9_62_SIG_SHA2 "\x07"
+#define OID_OUR_ALG_RAINBOW2_SHA256 OID_ANSI_X9_62_SIG_SHA2 "\x08"
 
 #ifdef __cplusplus
 extern "C" {

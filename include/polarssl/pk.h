@@ -85,7 +85,10 @@
 #endif /* POLARSSL_ECP_C */
 
 
-#define pk_tts( pk )       ( (tts_context *) (pk).pk_ctx )
+#define pk_tts( pk )        ( (tts_context *) (pk).pk_ctx )
+#define pk_rainbow( pk )    ( (rainbow_context *) (pk).pk_ctx )
+#define pk_tts2( pk )       ( (tts2_context *) (pk).pk_ctx )
+#define pk_rainbow2( pk )   ( (rainbow2_context *) (pk).pk_ctx )
 
 
 #ifdef __cplusplus
@@ -105,6 +108,8 @@ typedef enum {
     POLARSSL_PK_RSASSA_PSS,
     OUR_PK_TTS,
     OUR_PK_RAINBOW,
+    OUR_PK_TTS2,
+    OUR_PK_RAINBOW2,
 } pk_type_t;
 
 /**

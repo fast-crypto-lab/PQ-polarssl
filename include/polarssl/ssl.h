@@ -327,6 +327,9 @@
 #define SSL_SIG_RSA                  1
 #define SSL_SIG_ECDSA                3
 #define SSL_SIG_TTS                  4
+#define SSL_SIG_RAINBOW              5
+#define SSL_SIG_TTS2                 6
+#define SSL_SIG_RAINBOW2             7
 
 /*
  * Client Certificate Types
