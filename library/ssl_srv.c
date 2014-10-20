@@ -2258,7 +2258,7 @@ if( ssl_is_dh_ephemeral( ciphersuite_info->key_exchange ) ) {
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA ||
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_PSK )
 */
-    if( ssl->handshake->dhif_info->type == POLARSSL_DH_EC )
+    else if( ssl->handshake->dhif_info->type == POLARSSL_DH_EC )
     {
         /*
          * Ephemeral ECDH parameters:
@@ -2308,6 +2308,14 @@ curve_matching_done:
             if (ret != 0) {
                 return ret;
             }
+        }
+    }
+
+    else {
+        ret = ssl->handshake->dhif_info->set_params(
+                ssl->handshake->dhif_ctx, NULL);
+        if (ret != 0) {
+            return ret;
         }
     }
 
