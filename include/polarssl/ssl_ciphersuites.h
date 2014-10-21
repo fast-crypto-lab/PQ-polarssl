@@ -235,13 +235,22 @@ extern "C" {
 #define TLS_ECDHE_ECDSA_WITH_AES_128_CCM_8      0xC0AE  /**< TLS 1.2 */
 #define TLS_ECDHE_ECDSA_WITH_AES_256_CCM_8      0xC0AF  /**< TLS 1.2 */
 
+#define TLS_ECDHE_RAINBOW_WITH_AES_128_GCM_SHA256       0xCCFE /* Ours */
 #define TLS_ECDHE_TTS_WITH_AES_128_GCM_SHA256           0xCCFF /* Ours */
+
 #define TLS_LATTICEE_TTS_WITH_AES_128_GCM_SHA256        0xCC00 /* Ours */
 #define TLS_LATTICEE_RAINBOW_WITH_AES_128_GCM_SHA256    0xCC01 /* Ours */
 #define TLS_LATTICEE_RSA_WITH_AES_128_GCM_SHA256        0xCC02 /* Ours */
 #define TLS_LATTICEE_ECDSA_WITH_AES_128_GCM_SHA256      0xCC03 /* Ours */
 #define TLS_LATTICEE_TTS2_WITH_AES_128_GCM_SHA256       0xCC04 /* Ours */
 #define TLS_LATTICEE_RAINBOW2_WITH_AES_128_GCM_SHA256   0xCC05 /* Ours */
+
+#define TLS_CV25519E_TTS_WITH_AES_128_GCM_SHA256        0xCC10 /* Ours */
+#define TLS_CV25519E_RAINBOW_WITH_AES_128_GCM_SHA256    0xCC11 /* Ours */
+#define TLS_CV25519E_RSA_WITH_AES_128_GCM_SHA256        0xCC12 /* Ours */
+#define TLS_CV25519E_ECDSA_WITH_AES_128_GCM_SHA256      0xCC13 /* Ours */
+#define TLS_CV25519E_TTS2_WITH_AES_128_GCM_SHA256       0xCC14 /* Ours */
+#define TLS_CV25519E_RAINBOW2_WITH_AES_128_GCM_SHA256   0xCC15 /* Ours */
 
 /* Reminder: update _ssl_premaster_secret when adding a new key exchange */
 typedef enum {
@@ -257,12 +266,19 @@ typedef enum {
     POLARSSL_KEY_EXCHANGE_ECDH_RSA,
     POLARSSL_KEY_EXCHANGE_ECDH_ECDSA,
     OUR_KEY_EXCHANGE_ECDHE_TTS,
+    OUR_KEY_EXCHANGE_ECDHE_RAINBOW,
     OUR_KEY_EXCHANGE_LATTICEE_TTS,
     OUR_KEY_EXCHANGE_LATTICEE_RAINBOW,
     OUR_KEY_EXCHANGE_LATTICEE_RSA,
     OUR_KEY_EXCHANGE_LATTICEE_ECDSA,
     OUR_KEY_EXCHANGE_LATTICEE_TTS2,
     OUR_KEY_EXCHANGE_LATTICEE_RAINBOW2,
+    OUR_KEY_EXCHANGE_CV25519E_TTS,
+    OUR_KEY_EXCHANGE_CV25519E_RAINBOW,
+    OUR_KEY_EXCHANGE_CV25519E_RSA,
+    OUR_KEY_EXCHANGE_CV25519E_ECDSA,
+    OUR_KEY_EXCHANGE_CV25519E_TTS2,
+    OUR_KEY_EXCHANGE_CV25519E_RAINBOW2,
 } key_exchange_type_t;
 
 typedef struct _ssl_ciphersuite_t ssl_ciphersuite_t;
@@ -300,8 +316,22 @@ const ssl_ciphersuite_t *ssl_ciphersuite_from_id( int ciphersuite_id );
 pk_type_t ssl_get_ciphersuite_sig_pk_alg( const ssl_ciphersuite_t *info );
 #endif
 
+typedef
+struct _key_agreement_t
+{
+    key_exchange_type_t key_exchange;
+    dh_type_t dh_alg;
+    pk_type_t sig_alg;
+    int pkc_enc;
+    int psk_auth;
+} key_agree_t;
+
+
+const key_agree_t *ssl_ciphersuite_recognize( key_exchange_type_t key_exchange );
+
 int ssl_ciphersuite_uses_ec( const ssl_ciphersuite_t *info );
 int ssl_ciphersuite_uses_psk( const ssl_ciphersuite_t *info );
+
 
 
 #if defined(POLARSSL_DHIF_C)
