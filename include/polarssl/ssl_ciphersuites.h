@@ -31,6 +31,8 @@
 #include "cipher.h"
 #include "md.h"
 
+#include "dh.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -300,6 +302,18 @@ pk_type_t ssl_get_ciphersuite_sig_pk_alg( const ssl_ciphersuite_t *info );
 
 int ssl_ciphersuite_uses_ec( const ssl_ciphersuite_t *info );
 int ssl_ciphersuite_uses_psk( const ssl_ciphersuite_t *info );
+
+
+#if defined(POLARSSL_DHIF_C)
+dh_type_t ssl_get_dh_type( key_exchange_type_t ssl_type );
+int ssl_is_dh_ephemeral( key_exchange_type_t ssl_type );
+int ssl_is_dh( key_exchange_type_t ssl_type );
+int ssl_is_dh_pkcsign( key_exchange_type_t ssl_type );
+int ssl_is_dh_psk( key_exchange_type_t ssl_type );
+#endif
+
+
+
 
 #ifdef __cplusplus
 }

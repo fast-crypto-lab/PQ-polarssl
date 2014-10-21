@@ -1903,4 +1903,105 @@ int ssl_ciphersuite_uses_psk( const ssl_ciphersuite_t *info )
 }
 #endif /* POLARSSL_KEY_EXCHANGE__SOME__PSK_ENABLED */
 
+
+
+
+
+
+
+dh_type_t ssl_get_dh_type( key_exchange_type_t ssl_type )
+{
+        if( ssl_type == POLARSSL_KEY_EXCHANGE_DHE_RSA ||
+            ssl_type == POLARSSL_KEY_EXCHANGE_DHE_PSK
+        ) return POLARSSL_DH_DHM;
+        if( ssl_type == POLARSSL_KEY_EXCHANGE_ECDHE_RSA ||
+            ssl_type == POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA ||
+            ssl_type == POLARSSL_KEY_EXCHANGE_ECDHE_PSK ||
+            ssl_type == POLARSSL_KEY_EXCHANGE_ECDH_RSA ||
+            ssl_type == POLARSSL_KEY_EXCHANGE_ECDH_ECDSA ||
+            ssl_type == OUR_KEY_EXCHANGE_ECDHE_TTS
+        ) return POLARSSL_DH_EC;
+        if( ssl_type == OUR_KEY_EXCHANGE_LATTICEE_TTS ||
+            ssl_type == OUR_KEY_EXCHANGE_LATTICEE_RAINBOW ||
+            ssl_type == OUR_KEY_EXCHANGE_LATTICEE_RSA ||
+            ssl_type == OUR_KEY_EXCHANGE_LATTICEE_ECDSA ||
+            ssl_type == OUR_KEY_EXCHANGE_LATTICEE_TTS2 ||
+            ssl_type == OUR_KEY_EXCHANGE_LATTICEE_RAINBOW2
+        ) return POLARSSL_DH_LWE;
+
+        return POLARSSL_DH_NONE;
+}
+
+
+int ssl_is_dh( key_exchange_type_t ssl_type )
+{
+        if( ssl_type == POLARSSL_KEY_EXCHANGE_DHE_RSA ||
+            ssl_type == POLARSSL_KEY_EXCHANGE_DHE_PSK ||
+            ssl_type == POLARSSL_KEY_EXCHANGE_ECDHE_RSA ||
+            ssl_type == POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA ||
+            ssl_type == POLARSSL_KEY_EXCHANGE_ECDHE_PSK ||
+            ssl_type == OUR_KEY_EXCHANGE_ECDHE_TTS ||
+            ssl_type == POLARSSL_KEY_EXCHANGE_ECDH_RSA ||
+            ssl_type == POLARSSL_KEY_EXCHANGE_ECDH_ECDSA ||
+            ssl_type == OUR_KEY_EXCHANGE_LATTICEE_TTS ||
+            ssl_type == OUR_KEY_EXCHANGE_LATTICEE_RAINBOW ||
+            ssl_type == OUR_KEY_EXCHANGE_LATTICEE_RSA ||
+            ssl_type == OUR_KEY_EXCHANGE_LATTICEE_ECDSA ||
+            ssl_type == OUR_KEY_EXCHANGE_LATTICEE_TTS2 || 
+            ssl_type == OUR_KEY_EXCHANGE_LATTICEE_RAINBOW2
+        ) return 1;
+        return 0;
+}
+
+
+int ssl_is_dh_psk( key_exchange_type_t ssl_type )
+{
+        if( ssl_type == POLARSSL_KEY_EXCHANGE_DHE_PSK ||
+            ssl_type == POLARSSL_KEY_EXCHANGE_ECDHE_PSK
+        ) return 1;
+        return 0;
+}
+
+
+int ssl_is_dh_pkcsign( key_exchange_type_t ssl_type )
+{
+        if( ssl_type == POLARSSL_KEY_EXCHANGE_DHE_RSA ||
+            ssl_type == POLARSSL_KEY_EXCHANGE_ECDHE_RSA ||
+            ssl_type == POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA ||
+            ssl_type == OUR_KEY_EXCHANGE_ECDHE_TTS ||
+            ssl_type == POLARSSL_KEY_EXCHANGE_ECDH_RSA ||
+            ssl_type == POLARSSL_KEY_EXCHANGE_ECDH_ECDSA ||
+            ssl_type == OUR_KEY_EXCHANGE_LATTICEE_TTS ||
+            ssl_type == OUR_KEY_EXCHANGE_LATTICEE_RAINBOW ||
+            ssl_type == OUR_KEY_EXCHANGE_LATTICEE_RSA ||
+            ssl_type == OUR_KEY_EXCHANGE_LATTICEE_ECDSA ||
+            ssl_type == OUR_KEY_EXCHANGE_LATTICEE_TTS2 ||
+            ssl_type == OUR_KEY_EXCHANGE_LATTICEE_RAINBOW2
+        ) return 1;
+        return 0;
+}
+
+
+int ssl_is_dh_ephemeral( key_exchange_type_t ssl_type )
+{
+        if( ssl_type == POLARSSL_KEY_EXCHANGE_DHE_RSA ||
+            ssl_type == POLARSSL_KEY_EXCHANGE_DHE_PSK ||
+            ssl_type == POLARSSL_KEY_EXCHANGE_ECDHE_RSA ||
+            ssl_type == POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA ||
+            ssl_type == POLARSSL_KEY_EXCHANGE_ECDHE_PSK ||
+            ssl_type == OUR_KEY_EXCHANGE_ECDHE_TTS ||
+            ssl_type == OUR_KEY_EXCHANGE_LATTICEE_TTS ||
+            ssl_type == OUR_KEY_EXCHANGE_LATTICEE_RAINBOW ||
+            ssl_type == OUR_KEY_EXCHANGE_LATTICEE_RSA ||
+            ssl_type == OUR_KEY_EXCHANGE_LATTICEE_ECDSA ||
+            ssl_type == OUR_KEY_EXCHANGE_LATTICEE_TTS2 ||
+            ssl_type == OUR_KEY_EXCHANGE_LATTICEE_RAINBOW2
+        ) return 1;
+
+        return 0;
+}
+
+
+
+
 #endif /* POLARSSL_SSL_TLS_C */

@@ -51,10 +51,5 @@ const dh_info2_t * dh_get_info( dh_type_t type );
 /* have to move to ssl layer later */
 #include "polarssl/ssl_ciphersuites.h"
 
-dh_type_t ssl_get_dh_type( key_exchange_type_t ssl_type );
-int ssl_is_dh_ephemeral( key_exchange_type_t ssl_type );
-int ssl_is_dh( key_exchange_type_t ssl_type );
-int ssl_is_dh_pkcsign( key_exchange_type_t ssl_type );
-int ssl_is_dh_psk( key_exchange_type_t ssl_type );
 
 #endif
