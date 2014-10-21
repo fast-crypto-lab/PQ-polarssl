@@ -88,7 +88,11 @@ void  lwe_free ( lwe_context * ctx ) {
 int lwe_gen_public( lwe_context *ctx, int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
 {
 
-	Poly_q* e = polarssl_malloc ( sizeof( Poly_q) );
+	Poly_q *e, *f, *c, *d, *g;
+	char* buffer;
+	int hash[8];
+	int bufferlength;
+	e = polarssl_malloc ( sizeof( Poly_q) );
 	ctx->pk = polarssl_malloc ( sizeof( Poly_q) );
 	ctx->sk = polarssl_malloc ( sizeof( Poly_q) );
 	ZeroPoly(ctx ->pk,ctx ->n,ctx ->q);
@@ -102,7 +106,7 @@ int lwe_gen_public( lwe_context *ctx, int (*f_rng)(void *, unsigned char *, size
 	if(ctx->srv){
 		ctx ->r = polarssl_malloc ( sizeof( Poly_q) );
 		ctx ->x = polarssl_malloc ( sizeof( Poly_q) );
-		Poly_q* f = polarssl_malloc ( sizeof( Poly_q) );
+		f = polarssl_malloc ( sizeof( Poly_q) );
 		RandomPoly(ctx ->r,	ctx->n, ctx->q, ctx->beta, -1, f_rng, p_rng);
 		RandomPoly(f,			ctx->n, ctx->q, ctx->beta, -1, f_rng, p_rng);
 		ZeroPoly(ctx ->x,ctx->n,ctx->q);
@@ -116,7 +120,7 @@ int lwe_gen_public( lwe_context *ctx, int (*f_rng)(void *, unsigned char *, size
 	}else{
 		ctx ->r = polarssl_malloc ( sizeof( Poly_q) );
 		ctx ->y = polarssl_malloc ( sizeof( Poly_q) );
-		Poly_q* f = polarssl_malloc ( sizeof( Poly_q) );
+		f = polarssl_malloc ( sizeof( Poly_q) );
 		RandomPoly(ctx ->r,	ctx->n, ctx->q, ctx->beta, -1, f_rng, p_rng);
 		RandomPoly(f,			ctx->n, ctx->q, ctx->beta, -1, f_rng, p_rng);
 		ZeroPoly(ctx ->y,ctx->n,ctx->q);
@@ -126,16 +130,15 @@ int lwe_gen_public( lwe_context *ctx, int (*f_rng)(void *, unsigned char *, size
 		polyAdd(ctx->y , ctx->y , f  );
 
 
-		Poly_q* c = polarssl_malloc ( sizeof( Poly_q) );
-		Poly_q* d = polarssl_malloc ( sizeof( Poly_q) );
-		Poly_q* g = polarssl_malloc ( sizeof( Poly_q) );
+		c = polarssl_malloc ( sizeof( Poly_q) );
+		d = polarssl_malloc ( sizeof( Poly_q) );
+		g = polarssl_malloc ( sizeof( Poly_q) );
 		RandomPoly(g,	 ctx->n, ctx->q, ctx->beta, -1, f_rng, p_rng);
 
-		int hash[8];
-		int bufferlength =PolySize(ctx ->x);//i,j is ignored
-		char* buffer = polarssl_malloc(bufferlength );
+		bufferlength =PolySize(ctx ->x);//i,j is ignored
+		buffer = polarssl_malloc(bufferlength );
 		polyWriteBuffer(ctx ->x, buffer);
-		sha256(buffer ,bufferlength  ,(char *)hash ,0);
+		sha256((unsigned char *)buffer ,bufferlength  ,(unsigned char *)hash ,0);
 		RandomPoly(c, ctx->n, ctx->q, ctx->gamma,   hash[0], f_rng, p_rng);
 		polarssl_zeroize(buffer, bufferlength );
 		polarssl_free(buffer);
@@ -144,7 +147,7 @@ int lwe_gen_public( lwe_context *ctx, int (*f_rng)(void *, unsigned char *, size
 		buffer = polarssl_malloc(bufferlength );
 		polyWriteBuffer(ctx ->y, buffer);
 		polyWriteBuffer(ctx ->x, buffer + PolySize(ctx ->y) );
-		sha256(buffer ,bufferlength,(char *)hash ,0);
+		sha256((unsigned char *)buffer ,bufferlength  ,(unsigned char *)hash ,0);
 		RandomPoly(d, ctx->n, ctx->q, ctx->gamma,  hash[0], f_rng, p_rng);
 		polarssl_zeroize(buffer, bufferlength );
 		polarssl_free(buffer);
@@ -175,18 +178,21 @@ int lwe_gen_public( lwe_context *ctx, int (*f_rng)(void *, unsigned char *, size
 
 int lwe_compute_shared ( lwe_context  *ctx, int (*f_rng)(void *, unsigned char *, size_t), void *p_rng ){
 	//maybe some assignment;
+	Poly_q *g, *c, *d;
+	char* buffer;
+	int hash[8];
+	int bufferlength;
 	if(ctx->srv){
-
-		Poly_q* g = polarssl_malloc ( sizeof( Poly_q) );
+		g = polarssl_malloc ( sizeof( Poly_q) );
 		RandomPoly(g,ctx->n, ctx->q, ctx->beta, -1, f_rng, p_rng);
-		Poly_q* c = polarssl_malloc ( sizeof( Poly_q) );
-		Poly_q* d = polarssl_malloc ( sizeof( Poly_q) );
+		c = polarssl_malloc ( sizeof( Poly_q) );
+		d = polarssl_malloc ( sizeof( Poly_q) );
 
-		int hash[8];
-		int bufferlength =PolySize(ctx ->x);//i,j is ignored
-		char* buffer = polarssl_malloc(bufferlength );
+
+		bufferlength =PolySize(ctx ->x);//i,j is ignored
+		buffer = polarssl_malloc(bufferlength );
 		polyWriteBuffer(ctx ->x, buffer);
-		sha256(buffer ,bufferlength  ,(char *)hash ,0);
+		sha256((unsigned char *)buffer ,bufferlength  ,(unsigned char *)hash ,0);
 		RandomPoly(c, ctx->n, ctx->q, ctx->gamma,  hash[0], f_rng, p_rng);
 		polarssl_zeroize(buffer, bufferlength );
 		polarssl_free(buffer);
@@ -195,7 +201,7 @@ int lwe_compute_shared ( lwe_context  *ctx, int (*f_rng)(void *, unsigned char *
 		buffer = polarssl_malloc(bufferlength );
 		polyWriteBuffer(ctx ->y, buffer);
 		polyWriteBuffer(ctx ->x, buffer + PolySize(ctx ->y));
-		sha256(buffer ,bufferlength  ,(char *)hash ,0);
+		sha256((unsigned char *)buffer ,bufferlength  ,(unsigned char *)hash ,0);
 		RandomPoly(d, ctx->n, ctx->q, ctx->gamma,  hash[0], f_rng, p_rng);
 		polarssl_zeroize(buffer, bufferlength );
 		polarssl_free(buffer);
@@ -230,8 +236,8 @@ int lwe_compute_shared ( lwe_context  *ctx, int (*f_rng)(void *, unsigned char *
 }
 
 int lwe_set_params ( lwe_context  *ctx, const void *params ){
-//fake for now
-		
+	if( params == NULL)
+	{
 		ctx->srv = 1;
 		ctx->n = LWE_N;
 		ctx->alpha = LWE_ALPHA;
@@ -245,7 +251,8 @@ int lwe_set_params ( lwe_context  *ctx, const void *params ){
 		ZeroPoly(ctx ->a,ctx ->n,ctx ->q);
 		#include "lattice/polynomial_a_param_1.h"
 //		#include "lattice/polynomial_a_param_3.h"
-
+	}
+//else will crash
 
 	return 0;
 }
@@ -253,11 +260,14 @@ int lwe_set_params ( lwe_context  *ctx, const void *params ){
 
 
 int lwe_read_ske( lwe_context  *ctx, int *rlen, const unsigned char *buf, size_t blen ){
-/*disabled debug
-    if (blen < 2 || blen > 2*ctx -> n * mpi_size( ctx ->q) ) {
-        return POLARSSL_ERR_DHM_BAD_INPUT_DATA;
-    }
+
+	int qsize;
+/* error message disables for now
+	if (blen < 2 || blen > lwe_getsize_ske(ctx) ) {
+		return POLARSSL_ERR_LWE_BAD_INPUT_DATA;
+	}
 */
+	(void) blen;
 	ctx->srv = 0;
 	//get param
 	ctx->n = *((int*)(buf));
@@ -266,7 +276,7 @@ int lwe_read_ske( lwe_context  *ctx, int *rlen, const unsigned char *buf, size_t
 	ctx->gamma = *((float*)(buf+12));
 	ctx->q = polarssl_malloc ( sizeof( mpi ) );
 	mpi_init(ctx->q );
-	int qsize = *((int*)(buf+16));
+	qsize = *((int*)(buf+16));
 	mpi_read_binary( ctx->q, buf+20, qsize );
 	*rlen = 20+qsize;
 	ctx->a  =polarssl_malloc ( sizeof( Poly_q) );
@@ -291,6 +301,8 @@ int lwe_read_ske( lwe_context  *ctx, int *rlen, const unsigned char *buf, size_t
 
 
 int lwe_read_response( lwe_context  *ctx, const unsigned char *buf, size_t blen ){
+	int rlen;
+	(void) blen;
 	//alloc y,w,his_pk
 	ctx ->his_pk = polarssl_malloc ( sizeof( Poly_q) );
 	ctx ->y = polarssl_malloc ( sizeof( Poly_q) );
@@ -299,7 +311,7 @@ int lwe_read_response( lwe_context  *ctx, const unsigned char *buf, size_t blen 
 	ZeroPoly_2(ctx ->w,ctx->n);
 	ZeroPoly(ctx ->his_pk, ctx->n,ctx->q);
 
-	int rlen;
+
 	//y
 	rlen = polyReadBuffer(ctx ->y, buf);
 	//pk
@@ -320,12 +332,14 @@ size_t  lwe_getsize_ske( const lwe_context *ctx ){
 
 int lwe_write_ske( size_t *olen, unsigned char *buf, size_t blen, lwe_context  *ctx ){
 
+	int qsize;
+	(void) blen;
 	*((int*)(buf))= ctx->n  ;
 	*((float*)(buf+4))= ctx->alpha ;
 	*((float*)(buf+8))= ctx->beta ;		
 	*((float*)(buf+12))= ctx->gamma ;
 
-	int qsize = mpi_size(ctx->q);
+	qsize = mpi_size(ctx->q);
 	*((int*)(buf+16)) = qsize;
 	mpi_write_binary( ctx->q, buf+20 , qsize );
 	*olen = 20+qsize;
@@ -347,6 +361,7 @@ size_t lwe_getsize_response( const lwe_context  *ctx ){
 
 int lwe_write_response( size_t *olen, unsigned char *buf, size_t blen, lwe_context  *ctx ){
 
+	(void) blen;
 //	if( ctx == NULL || blen < wdhm_getsize_response(ctx) )
 //		return( POLARSSL_ERR_DHM_BAD_INPUT_DATA );
 
@@ -367,6 +382,7 @@ size_t lwe_getsize_premaster( const lwe_context  *ctx ){
 }
 
 int lwe_write_premaster( size_t *olen, unsigned char *buf, size_t blen, const lwe_context  *ctx ){
+	(void) blen;
 /*
     if( ctx == NULL || blen < ctx->n )
         return( POLARSSL_ERR_DHM_BAD_INPUT_DATA );
@@ -388,21 +404,21 @@ int lwe_write_premaster( size_t *olen, unsigned char *buf, size_t blen, const lw
 const dh_info2_t lwe_info = {
     POLARSSL_DH_LWE,
     "M_LWE",
-    lwe_alloc,
-    lwe_free,
-    lwe_gen_public,
-    lwe_compute_shared,
-    lwe_set_params,
-    lwe_read_ske,
-    lwe_read_response,
+    (void *(*)( void ))lwe_alloc,
+    (void (*)(void *))lwe_free,
+    (int (*)( void *, int (*)(void *, unsigned char *, size_t), void *)) lwe_gen_public,
+    (int (*)( void *, int (*)(void *, unsigned char *, size_t), void *))lwe_compute_shared,
+    (int (*)( void *, const void *))lwe_set_params,
+    (int (*)( void *, int *, const unsigned char *, size_t ))lwe_read_ske,
+    (int (*)( void *, const unsigned char *, size_t ))lwe_read_response,
     NULL,
     NULL,
-    lwe_getsize_ske,
-    lwe_write_ske,
-    lwe_getsize_response,
-    lwe_write_response,
-    lwe_getsize_premaster,
-    lwe_write_premaster,
+    (size_t (*)( const void *))lwe_getsize_ske,
+    (int (*)( size_t *, unsigned char *, size_t , const void *))lwe_write_ske,
+    (size_t (*)( const void *))lwe_getsize_response,
+    (int (*)( size_t *, unsigned char *, size_t , const void *))lwe_write_response,
+    (size_t (*)( const void *))lwe_getsize_premaster,
+    (int (*)( size_t *, unsigned char *, size_t , const void *))lwe_write_premaster,
 };
 
 

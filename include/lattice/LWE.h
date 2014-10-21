@@ -5,13 +5,13 @@
 #include "polarssl/bignum.h"
 #include "lweparam.h"
 #include "polarssl/dh.h"
-
+#define POLARSSL_ERR_LWE_BAD_INPUT_DATA -0x4321
 
 typedef struct
 {
 	int srv;
     /*constant parameters, to be initialized*/
-	int n;
+	size_t  n;
    	float alpha;
 	float beta;
 	float gamma;
@@ -45,7 +45,7 @@ lwe_context;
 
 void lwe_init ( lwe_context  *ctx);
 void *  lwe_alloc ( void ) ;
-void  lwe_free ( lwe_context * ctx );
+void  lwe_free (lwe_context * ctx );
 int lwe_gen_public( lwe_context *ctx, int (*f_rng)(void *, unsigned char *, size_t), void *p_rng );
 int lwe_compute_shared( lwe_context  *ctx, int (*f_rng)(void *, unsigned char *, size_t), void *p_rng );
 int lwe_set_params ( lwe_context  *ctx, const void *params );

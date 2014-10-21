@@ -909,18 +909,25 @@ cleanup:
 static int ghfjdksl_mpi_add_abs( mpi *X, const mpi *A, const mpi *B )
 {
     int ret;
-    size_t i, j;
+    size_t i, j, k;
     t_uint *op1, *op2, *rop, c, t;
 
-	mpi_grow(X, A->n);
+	for( k = A->n; k > 0; k-- )
+		if( A->p[k - 1] != 0 )
+			break;
+	
 	for( j = B->n; j > 0; j-- )
 		if( B->p[j - 1] != 0 )
 			break;
-	
-	if(X->n < j)
-		MPI_CHK( mpi_grow( X, j ) );
-	if(A->n < j)
-		MPI_CHK( mpi_grow( A, j ) );
+
+	if(k < j){//make sure B is smaller
+		const mpi * T = A; A=B; B=T;
+		i=k; k=j; j=i;
+	}
+
+	if(X->n < k)
+		MPI_CHK( mpi_grow( X, k ) );
+
 
 	op1 = A->p; 
 	op2 = B->p;
@@ -940,11 +947,9 @@ static int ghfjdksl_mpi_add_abs( mpi *X, const mpi *A, const mpi *B )
             op1 = A->p + i;
        }
         if(i >= A->n ){
-            MPI_CHK( mpi_grow( A, i + 1 ) );
-            rop = X->p + i;
-            op1 = A->p + i;
+		*rop = c;
+		break;
        }
-
 
         *rop =*op1 + c; 
 	    c = ( *rop < c );
@@ -952,8 +957,8 @@ static int ghfjdksl_mpi_add_abs( mpi *X, const mpi *A, const mpi *B )
 	
     }
 
-	if(X!=A && i < A->n ){//this is stupid
-		for(i; i<A->n; i++)
+	if(X!=A && i < k ){//this is stupid
+		for(; i<k; i++)
 			X->p[i]=A->p[i];
 		memset(X->p+i, 0, ciL*(X->n-i));
 	}
@@ -1011,13 +1016,13 @@ static size_t ghfjdksl_mpi_sub_hlp( size_t n,const  t_uint *sub, const   t_uint 
 }
 
 
-/*remove redundant checking, actually I'd like to ban mpi_sub_abs from user call. Who the hell will need such a function?*/
+/*remove redundant checking, actually I'd like to ban mpi_sub_abs from user call. Who will need such a function?*/
 static int ghfjdksl_mpi_sub_abs( mpi *X, const mpi *A, const mpi *B ) 
 {
     int ret;
-    size_t n, n2;
+    size_t n;
 
-	mpi_grow(X, A->n);
+	MPI_CHK(mpi_grow(X, A->n));
 
     X->s = 1;
     ret = 0;
@@ -1026,12 +1031,10 @@ static int ghfjdksl_mpi_sub_abs( mpi *X, const mpi *A, const mpi *B )
         if( B->p[n - 1] != 0 )
             break;
 
-
- //   mpi_sub_hlp( n, B->p, X->p );
     n = ghfjdksl_mpi_sub_hlp( n, B->p, A->p, X->p );
 	
 	if(X!=A){//this is stupid
-		for(n; n<A->n; n++)
+		for(; n<A->n; n++)
 			X->p[n]=A->p[n];
 		memset(X->p+n, 0, ciL*(X->n-n));
 	}
