@@ -1846,7 +1846,7 @@ int ssl_get_ciphersuite_id( const char *ciphersuite_name )
 }
 
 
-/* CAUTION: has to follow the same order with "key_exchange_type_t;" */
+/* CAUTION: have to follow the same order with "key_exchange_type_t;" */
 static const key_agree_t key_agree_definitions[] =
 { {POLARSSL_KEY_EXCHANGE_NONE,POLARSSL_DH_NONE,POLARSSL_PK_NONE,0,0},
 {POLARSSL_KEY_EXCHANGE_RSA,0,0,1,0},

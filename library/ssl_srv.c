@@ -44,9 +44,6 @@
 #define polarssl_free       free
 #endif
 
-#include "polarssl/dh.h"
-#include "lattice/LWE.h"
-
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -2130,9 +2127,6 @@ static int ssl_write_server_key_exchange( ssl_context *ssl )
     if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDH_RSA ||
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDH_ECDSA )
     {
-#ifdef __BEFORE
-        ssl_get_ecdh_params_from_cert( ssl );
-#else
         /* It is the first time we use ECDH, so we should alloc it first */
         //ssl->handshake->dhif_info = &ecdh_info2;
         ssl->handshake->dhif_info = dh_get_info( ssl_ciphersuite_dh_type(ciphersuite_info->key_exchange) );
@@ -2150,17 +2144,11 @@ static int ssl_write_server_key_exchange( ssl_context *ssl )
         if (ret != 0) {
             return ret;
         }
-#endif
-
         SSL_DEBUG_MSG( 2, ( "<= skip write server key exchange" ) );
         ssl->state++;
         return( 0 );
     }
 
-/*
-    if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_DHE_PSK ||
-        ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_PSK )
-*/
     if( ssl_ciphersuite_is_dh_psk( ciphersuite_info->key_exchange ) )
     {
         /* TODO: Support identity hints */
@@ -2170,149 +2158,77 @@ static int ssl_write_server_key_exchange( ssl_context *ssl )
         n += 2;
     }
 
-if( ssl_ciphersuite_is_dh_ephemeral( ciphersuite_info->key_exchange ) ) {
-
-    ssl->handshake->dhif_info = dh_get_info( ssl_ciphersuite_dh_type(ciphersuite_info->key_exchange) );
-    if( NULL == ssl->handshake->dhif_info ) {
-        SSL_DEBUG_MSG( 1, ( "get dh interface failed." ) );
-        return( POLARSSL_ERR_SSL_NO_CIPHER_CHOSEN );
-    }
-    if (ssl->handshake->dhif_ctx == NULL) {
-        ssl->handshake->dhif_ctx = ssl->handshake->dhif_info->ctx_alloc();
-    }
-
-/*
-    if( ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_TTS     ||
-        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_RAINBOW ||
-        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_RSA     ||
-        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_ECDSA )
-    {
-        ssl->handshake->dhif_info = &lwe_info;
+    if( ssl_ciphersuite_is_dh_ephemeral( ciphersuite_info->key_exchange ) ) {
+        ssl->handshake->dhif_info = dh_get_info( ssl_ciphersuite_dh_type(ciphersuite_info->key_exchange) );
+        if( NULL == ssl->handshake->dhif_info ) {
+            SSL_DEBUG_MSG( 1, ( "get dh interface failed." ) );
+            return( POLARSSL_ERR_SSL_NO_CIPHER_CHOSEN );
+        }
         if (ssl->handshake->dhif_ctx == NULL) {
             ssl->handshake->dhif_ctx = ssl->handshake->dhif_info->ctx_alloc();
         }
-    }
-    if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_DHE_RSA ||
-        ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_DHE_PSK )
-*/
-    if( ssl->handshake->dhif_info->type == POLARSSL_DH_DHM )
-    {
-        /*
-         * Ephemeral DH parameters:
-         *
-         * struct {
-         *     opaque dh_p<1..2^16-1>;
-         *     opaque dh_g<1..2^16-1>;
-         *     opaque dh_Ys<1..2^16-1>;
-         * } ServerDHParams;
-         */
 
-        /* It is the first time we use DHM, so we should alloc it first */
-//        ssl->handshake->dhif_info = &dhm_info2;
-//        if (ssl->handshake->dhif_ctx == NULL) {
-//            ssl->handshake->dhif_ctx = ssl->handshake->dhif_info->ctx_alloc();
-//        }
-//        {
-            /* 選 interface 和 alloc context 和這一段參數設定應該要提前到
-             * ciphersuite 被決定的時後就直接做掉 */
-            struct { mpi P; mpi G; } _params;
-            memset(&_params, 0, 2 * sizeof(mpi));
-            mpi_copy(&_params.P, &ssl->dhm_P);
-            mpi_copy(&_params.G, &ssl->dhm_G);
-            ret = ssl->handshake->dhif_info->set_params(
-                    ssl->handshake->dhif_ctx, &_params);
-            if (ret != 0) {
-                return ret;
-            }
-//        }
-    }
-/*
-    if( ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_ECDHE_TTS        ||
-        ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_RSA ||
-        ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA ||
-        ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_PSK )
-*/
-    else if( ssl->handshake->dhif_info->type == POLARSSL_DH_EC )
-    {
-        /*
-         * Ephemeral ECDH parameters:
-         *
-         * struct {
-         *     ECParameters curve_params;
-         *     ECPoint      public;
-         * } ServerECDHParams;
-         */
-        const ecp_curve_info **curve = NULL;
+       if( ssl->handshake->dhif_info->type == POLARSSL_DH_EC )
+       {
+           /*
+            * Ephemeral ECDH parameters:
+            *
+            * struct {
+            *     ECParameters curve_params;
+            *     ECPoint      public;
+            * } ServerECDHParams;
+            */
+           const ecp_curve_info **curve = NULL;
 #if defined(POLARSSL_SSL_SET_CURVES)
-        const ecp_group_id *gid;
+           const ecp_group_id *gid;
 
-        /* Match our preference list against the offered curves */
-        for( gid = ssl->curve_list; *gid != POLARSSL_ECP_DP_NONE; gid++ )
-            for( curve = ssl->handshake->curves; *curve != NULL; curve++ )
-                if( (*curve)->grp_id == *gid )
-                    goto curve_matching_done;
-
+           /* Match our preference list against the offered curves */
+           for( gid = ssl->curve_list; *gid != POLARSSL_ECP_DP_NONE; gid++ )
+               for( curve = ssl->handshake->curves; *curve != NULL; curve++ )
+                   if( (*curve)->grp_id == *gid )
+                       goto curve_matching_done;
 curve_matching_done:
 #else
-        curve = ssl->handshake->curves;
+           curve = ssl->handshake->curves;
 #endif
 
-        if( *curve == NULL )
-        {
-            SSL_DEBUG_MSG( 1, ( "no matching curve for ECDHE" ) );
-            return( POLARSSL_ERR_SSL_NO_CIPHER_CHOSEN );
-        }
+           if( *curve == NULL )
+           {
+               SSL_DEBUG_MSG( 1, ( "no matching curve for ECDHE" ) );
+               return( POLARSSL_ERR_SSL_NO_CIPHER_CHOSEN );
+           }
 
-        SSL_DEBUG_MSG( 2, ( "ECDHE curve: %s", (*curve)->name ) );
+           SSL_DEBUG_MSG( 2, ( "ECDHE curve: %s", (*curve)->name ) );
 
-        /* It _MIGHT_ be the first time we use ECDH, so we should alloc it first */
-//        ssl->handshake->dhif_info = &ecdh_info2;
-//        if (ssl->handshake->dhif_ctx == NULL) {
-//            ssl->handshake->dhif_ctx = ssl->handshake->dhif_info->ctx_alloc();
-//        }
-        {
-            /* 選 interface 和 alloc context 和這一段參數設定應該要提前到
-             * ciphersuite 被決定的時後就直接做掉 */
-            struct { int point_format; ecp_group_id group_id; } _params;
-            memset(&_params, 0, 2 * sizeof(int));
-            _params.point_format = ssl->handshake->point_format;
-            _params.group_id = (*curve)->grp_id;
-            ret = ssl->handshake->dhif_info->set_params(
+           /* It _MIGHT_ be the first time we use ECDH, so we should alloc it first */
+           {
+               struct { int point_format; ecp_group_id group_id; } _params;
+               memset(&_params, 0, 2 * sizeof(int));
+               _params.point_format = ssl->handshake->point_format;
+               _params.group_id = (*curve)->grp_id;
+               ret = ssl->handshake->dhif_info->set_params(
                     ssl->handshake->dhif_ctx, &_params);
-            if (ret != 0) {
-                return ret;
-            }
+               if (ret != 0) {
+                   return ret;
+               }
+           }
         }
-    }
-
-    else {
-        ret = ssl->handshake->dhif_info->set_params(
+        else /* if DH_EC */
+        {
+           ret = ssl->handshake->dhif_info->set_params(
                 ssl->handshake->dhif_ctx, NULL);
-        if (ret != 0) {
-            return ret;
+           if (ret != 0) {
+               SSL_DEBUG_MSG( 2, ( "DHIF(%s)->set_param(NULL) fails" , dhif_info->name ) );
+               return ret;
         }
-    }
 
-/*
-    if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_DHE_RSA ||
-        ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_DHE_PSK ||
-        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_ECDHE_TTS        ||
-        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_TTS     ||
-        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_RAINBOW ||
-        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_RSA     ||
-        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_ECDSA   ||
-        ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_RSA ||
-        ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA ||
-        ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_PSK )
-    {
-*/
         ret = ssl->handshake->dhif_info->gen_public(
                 ssl->handshake->dhif_ctx, ssl->f_rng, ssl->p_rng);
         if (ret != 0) {
+            SSL_DEBUG_MSG( 2, ( "DHIF(%s)->get_public() fails" , dhif_info->name ) );
             return ret;
         }
 
-        printf("JUST BEFORE write_ske_params()\n");
         fflush(stdout);
         ret = ssl->handshake->dhif_info->write_ske_params(
                 &len, p,
@@ -2320,9 +2236,9 @@ curve_matching_done:
                 ssl->handshake->dhif_info->getsize_ske_params(ssl->handshake->dhif_ctx),
                 ssl->handshake->dhif_ctx);
         if (ret != 0) {
+            SSL_DEBUG_MSG( 2, ( "DHIF(%s)->write_ske_params() fails" , dhif_info->name ) );
             return ret;
         }
-        printf("JUST AFTER write_ske_params()\n");
         fflush(stdout);
 
         dig_signed = p;
@@ -2330,28 +2246,8 @@ curve_matching_done:
 
         p += len;
         n += len;
-//    }
-} // end if dh ephemeral
+    } /* if dh ephemeral */
 
-
-
-
-
-    /* TODO */
-    /* if ( ssl_need_pk_signed(ciphersuite_info->key_exchange) ) { */
-    /* } */
-/*
-    if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_DHE_RSA ||
-        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_ECDHE_TTS        ||
-        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_TTS     ||
-        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_RAINBOW ||
-        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_RSA     ||
-        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_ECDSA   ||
-        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_TTS2    ||
-        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_RAINBOW2||
-        ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_RSA ||
-        ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA )
-*/
     if( ssl_ciphersuite_is_dh_pkcsign( ciphersuite_info->key_exchange ) )
     {
         size_t signature_len = 0;
@@ -2715,18 +2611,7 @@ static int ssl_parse_client_key_exchange( ssl_context *ssl )
         return( POLARSSL_ERR_SSL_BAD_HS_CLIENT_KEY_EXCHANGE );
     }
 
-    if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_DHE_RSA ||
-        ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_RSA ||
-        ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA ||
-        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_ECDHE_TTS        ||
-        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_TTS     ||
-        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_RAINBOW ||
-        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_RSA     ||
-        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_ECDSA   ||
-        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_TTS2    ||
-        ciphersuite_info->key_exchange == OUR_KEY_EXCHANGE_LATTICEE_RAINBOW2||
-        ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDH_RSA ||
-        ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDH_ECDSA )
+    if( ssl_ciphersuite_is_dh( ciphersuite_info->key_exchange ) && (!ssl_ciphersuite_is_dh_psk( ciphersuite_info->key_exchange )) )
     {
         unsigned char *p = ssl->in_msg + 4;
         unsigned char *end = ssl->in_msg + ssl->in_hslen;
@@ -2810,8 +2695,7 @@ static int ssl_parse_client_key_exchange( ssl_context *ssl )
     }
     else
 #endif /* POLARSSL_KEY_EXCHANGE_RSA_PSK_ENABLED */
-    if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_DHE_PSK ||
-        ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_PSK )
+    if( ssl_ciphersuite_is_dh_psk( ciphersuite_info->key_exchange ) )
     {
         unsigned char *p = ssl->in_msg + 4;
         unsigned char *end = ssl->in_msg + ssl->in_hslen;

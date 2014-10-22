@@ -935,7 +935,6 @@ int ssl_psk_derive_premaster( ssl_context *ssl, key_exchange_type_t key_ex )
     }
     else
 #endif /* defined(POLARSSL_KEY_EXCHANGE_RSA_PSK_ENABLED)||defined(POLARSSL_KEY_EXCHANGE_ECDHE_PSK_ENABLED) */
-#if 0
 #if defined(POLARSSL_KEY_EXCHANGE_RSA_PSK_ENABLED)
     if( key_ex == POLARSSL_KEY_EXCHANGE_RSA_PSK )
     {
@@ -949,102 +948,6 @@ int ssl_psk_derive_premaster( ssl_context *ssl, key_exchange_type_t key_ex )
     }
     else
 #endif /* POLARSSL_KEY_EXCHANGE_RSA_PKS_ENABLED */
-#if defined(POLARSSL_KEY_EXCHANGE_DHE_PSK_ENABLED)
-    if( key_ex == POLARSSL_KEY_EXCHANGE_DHE_PSK )
-    {
-        int ret;
-        size_t len = end - ( p + 2 );
-
-        /* Write length only when we know the actual value */
-
-#ifdef __BEFORE
-        if( ( ret = dhm_calc_secret( &ssl->handshake->dhm_ctx,
-                                      p + 2, &len,
-                                      ssl->f_rng, ssl->p_rng ) ) != 0 )
-        {
-            SSL_DEBUG_RET( 1, "dhm_calc_secret", ret );
-            return( ret );
-        }
-
-        *(p++) = (unsigned char)( len >> 8 );
-        *(p++) = (unsigned char)( len );
-        p += len;
-
-        SSL_DEBUG_MPI( 3, "DHM: K ", &ssl->handshake->dhm_ctx.K  );
-#else
-
-        ret = ssl->handshake->dhif_info->compute_shared(
-                ssl->handshake->dhif_ctx,
-                ssl->f_rng,
-                ssl->p_rng);
-        if (ret) {
-            return ret;
-        }
-
-        ret = ssl->handshake->dhif_info->write_premaster(
-                &len,
-                p + 2,
-                end - (p + 2),
-                ssl->handshake->dhif_ctx);
-        if (ret) {
-            return ret;
-        }
-
-        *(p++) = (unsigned char)( len >> 8 );
-        *(p++) = (unsigned char)( len );
-        p += len;
-
-#endif
-    }
-    else
-#endif /* POLARSSL_KEY_EXCHANGE_DHE_PSK_ENABLED */
-#if defined(POLARSSL_KEY_EXCHANGE_ECDHE_PSK_ENABLED)
-    if( key_ex == POLARSSL_KEY_EXCHANGE_ECDHE_PSK )
-    {
-        int ret;
-        size_t zlen;
-
-#ifdef __BEFORE
-        if( ( ret = ecdh_calc_secret( &ssl->handshake->ecdh_ctx, &zlen,
-                                       p + 2, end - ( p + 2 ),
-                                       ssl->f_rng, ssl->p_rng ) ) != 0 )
-        {
-            SSL_DEBUG_RET( 1, "ecdh_calc_secret", ret );
-            return( ret );
-        }
-
-        *(p++) = (unsigned char)( zlen >> 8 );
-        *(p++) = (unsigned char)( zlen      );
-        p += zlen;
-
-        SSL_DEBUG_MPI( 3, "ECDH: z", &ssl->handshake->ecdh_ctx.z );
-#else
-
-        ret = ssl->handshake->dhif_info->compute_shared(
-                ssl->handshake->dhif_ctx,
-                ssl->f_rng,
-                ssl->p_rng);
-        if (ret) {
-            return ret;
-        }
-
-        ret = ssl->handshake->dhif_info->write_premaster(
-                &zlen,
-                p + 2,
-                end - (p + 2),
-                ssl->handshake->dhif_ctx);
-        if (ret) {
-            return ret;
-        }
-
-        *(p++) = (unsigned char)( zlen >> 8 );
-        *(p++) = (unsigned char)( zlen );
-        p += zlen;
-#endif
-    }
-    else
-#endif /* POLARSSL_KEY_EXCHANGE_ECDHE_PSK_ENABLED */
-#endif /* if 0 */
     {
         SSL_DEBUG_MSG( 1, ( "should never happen" ) );
         return( POLARSSL_ERR_SSL_INTERNAL_ERROR );
@@ -3379,13 +3282,15 @@ static void ssl_handshake_params_init( ssl_handshake_params *handshake )
     handshake->update_checksum = ssl_update_checksum_start;
     handshake->sig_alg = SSL_HASH_SHA1;
 
+/* XXX: Check these 2 initializer still necessary !!!
 #if defined(POLARSSL_DHM_C)
     dhm_init( &handshake->dhm_ctx );
 #endif
 #if defined(POLARSSL_ECDH_C)
     ecdh_init( &handshake->ecdh_ctx );
 #endif
-#if defined(POLARSSL_DHM_C) || defined(POLARSSL_ECDH_C) || defined(NACL_CURVE25519_C)
+*/
+#if defined(POLARSSL_DHIF_C)
     handshake->dhif_info = NULL;
     handshake->dhif_ctx = NULL;
 #endif
