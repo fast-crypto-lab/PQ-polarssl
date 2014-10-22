@@ -1,5 +1,6 @@
 /* BEGIN_HEADER */
 #include <polarssl/pk.h>
+#include "rainbow_tts/rainbow.h"
 
 static int rnd_std_rand( void *rng_state, unsigned char *output, size_t len );
 
@@ -27,6 +28,30 @@ static int pk_genkey( pk_context *pk )
         return ecp_gen_keypair( &pk_ec( *pk )->grp, &pk_ec( *pk )->d,
                                 &pk_ec( *pk )->Q, rnd_std_rand, NULL );
     }
+#endif
+#if defined(__TTS__)
+    if( pk_get_type( pk ) == OUR_PK_TTS )
+        return tts_genkey( &pk_tts( *pk )->pk,
+                           &pk_tts( *pk )->sk,
+                           rnd_std_rand, NULL );
+#endif
+#if defined(__TTS_2__)
+    if( pk_get_type( pk ) == OUR_PK_TTS2 )
+        return tts2_genkey( &pk_tts2( *pk )->pk,
+                            &pk_tts2( *pk )->sk,
+                            rnd_std_rand, NULL );
+#endif
+#if defined(__RAINBOW__)
+    if( pk_get_type( pk ) == OUR_PK_RAINBOW )
+        return rb_genkey( &pk_rainbow( *pk )->pk,
+                          &pk_rainbow( *pk )->sk,
+                          rnd_std_rand, NULL );
+#endif
+#if defined(__RAINBOW_2__)
+    if( pk_get_type( pk ) == OUR_PK_RAINBOW2 )
+        return rb2_genkey( &pk_rainbow2( *pk )->pk,
+                           &pk_rainbow2( *pk )->sk,
+                           rnd_std_rand, NULL );
 #endif
     return( -1 );
 }

@@ -2103,32 +2103,6 @@ static int ssl_write_certificate_request( ssl_context *ssl )
           !POLARSSL_KEY_EXCHANGE_ECDHE_RSA_ENABLED &&
           !POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED */
 
-#if defined(POLARSSL_KEY_EXCHANGE_ECDH_RSA_ENABLED) || \
-    defined(POLARSSL_KEY_EXCHANGE_ECDH_ECDSA_ENABLED)
-/* 這個函數我們不用了! */
-static int ssl_get_ecdh_params_from_cert( ssl_context *ssl )
-{
-    int ret;
-
-    if( ! pk_can_do( ssl_own_key( ssl ), POLARSSL_PK_ECKEY ) )
-    {
-        SSL_DEBUG_MSG( 1, ( "server key not ECDH capable" ) );
-        return( POLARSSL_ERR_SSL_PK_TYPE_MISMATCH );
-    }
-
-    if( ( ret = ecdh_get_params( &ssl->handshake->ecdh_ctx,
-                                 pk_ec( *ssl_own_key( ssl ) ),
-                                 POLARSSL_ECDH_OURS ) ) != 0 )
-    {
-        SSL_DEBUG_RET( 1, ( "ecdh_get_params" ), ret );
-        return( ret );
-    }
-
-    return( 0 );
-}
-#endif /* POLARSSL_KEY_EXCHANGE_ECDH_RSA_ENABLED) ||
-          POLARSSL_KEY_EXCHANGE_ECDH_ECDSA_ENABLED */
-
 static int ssl_write_server_key_exchange( ssl_context *ssl )
 {
     int ret;
@@ -2577,48 +2551,6 @@ static int ssl_write_server_hello_done( ssl_context *ssl )
 
     return( 0 );
 }
-
-#if defined(POLARSSL_KEY_EXCHANGE_DHE_RSA_ENABLED) ||                       \
-    defined(POLARSSL_KEY_EXCHANGE_DHE_PSK_ENABLED)
-/* 這個函數我們不用了! */
-static int ssl_parse_client_dh_public( ssl_context *ssl, unsigned char **p,
-                                       const unsigned char *end )
-{
-    int ret = POLARSSL_ERR_SSL_FEATURE_UNAVAILABLE;
-    size_t n;
-
-    /*
-     * Receive G^Y mod P, premaster = (G^Y)^X mod P
-     */
-    if( *p + 2 > end )
-    {
-        SSL_DEBUG_MSG( 1, ( "bad client key exchange message" ) );
-        return( POLARSSL_ERR_SSL_BAD_HS_CLIENT_KEY_EXCHANGE );
-    }
-
-    n = ( (*p)[0] << 8 ) | (*p)[1];
-    *p += 2;
-
-    if( *p + n > end )
-    {
-        SSL_DEBUG_MSG( 1, ( "bad client key exchange message" ) );
-        return( POLARSSL_ERR_SSL_BAD_HS_CLIENT_KEY_EXCHANGE );
-    }
-
-    if( ( ret = dhm_read_public( &ssl->handshake->dhm_ctx, *p, n ) ) != 0 )
-    {
-        SSL_DEBUG_RET( 1, "dhm_read_public", ret );
-        return( POLARSSL_ERR_SSL_BAD_HS_CLIENT_KEY_EXCHANGE_RP );
-    }
-
-    *p += n;
-
-    SSL_DEBUG_MPI( 3, "DHM: GY", &ssl->handshake->dhm_ctx.GY );
-
-    return( ret );
-}
-#endif /* POLARSSL_KEY_EXCHANGE_DHE_RSA_ENABLED ||
-          POLARSSL_KEY_EXCHANGE_DHE_PSK_ENABLED */
 
 #if defined(POLARSSL_KEY_EXCHANGE_RSA_ENABLED) ||                           \
     defined(POLARSSL_KEY_EXCHANGE_RSA_PSK_ENABLED)
