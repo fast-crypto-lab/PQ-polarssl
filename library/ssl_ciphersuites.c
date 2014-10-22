@@ -1846,14 +1846,16 @@ int ssl_get_ciphersuite_id( const char *ciphersuite_name )
 }
 
 
-
+/* CAUTION: has to follow the same order with "key_exchange_type_t;" */
 static const key_agree_t key_agree_definitions[] =
-{ {POLARSSL_KEY_EXCHANGE_RSA,0,0,1,0},
+{ {POLARSSL_KEY_EXCHANGE_NONE,POLARSSL_DH_NONE,POLARSSL_PK_NONE,0,0},
+{POLARSSL_KEY_EXCHANGE_RSA,0,0,1,0},
 
 {POLARSSL_KEY_EXCHANGE_DHE_RSA,POLARSSL_DH_DHM,POLARSSL_PK_RSA,0,0},
 {POLARSSL_KEY_EXCHANGE_ECDHE_RSA,POLARSSL_DH_EC,POLARSSL_PK_RSA,0,0},
 {POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA,POLARSSL_DH_EC,POLARSSL_PK_ECDSA,0,0},
 
+{POLARSSL_KEY_EXCHANGE_PSK,POLARSSL_DH_NONE,POLARSSL_PK_NONE,0,0},
 {POLARSSL_KEY_EXCHANGE_DHE_PSK,POLARSSL_DH_DHM,0,0,1},
 {POLARSSL_KEY_EXCHANGE_RSA_PSK,0,0,1,1},
 {POLARSSL_KEY_EXCHANGE_ECDHE_PSK,POLARSSL_DH_EC,0,0,1},
@@ -1878,12 +1880,26 @@ static const key_agree_t key_agree_definitions[] =
 {OUR_KEY_EXCHANGE_CV25519E_TTS2,NACL_DH_CV25519,OUR_PK_TTS2,0,0},
 {OUR_KEY_EXCHANGE_CV25519E_RAINBOW2,NACL_DH_CV25519,OUR_PK_RAINBOW2,0,0},
 
-{POLARSSL_KEY_EXCHANGE_PSK,POLARSSL_DH_NONE,POLARSSL_PK_NONE,0,0},
 {0,0,0,0,0}
 };
 
 
+const key_agree_t *ssl_ciphersuite_recognize( key_exchange_type_t key_exchange )
+{
+    int idx = (int)key_exchange;
+    const key_agree_t * ret;
+    const int num = sizeof(key_agree_definitions)/sizeof(key_agree_t);
+    if( 0 > idx || idx > num ) return &key_agree_definitions[0];
 
+    ret = &key_agree_definitions[idx];
+    if( ret->key_exchange == key_exchange ) return ret;
+
+    ret = &key_agree_definitions[1];
+    while( 0 != ret->key_exchange ) {
+       if( ret->key_exchange == key_exchange ) return ret;
+    }
+    return ret;
+}
 
 
 
@@ -1891,6 +1907,9 @@ static const key_agree_t key_agree_definitions[] =
 #if defined(POLARSSL_PK_C)
 pk_type_t ssl_get_ciphersuite_sig_pk_alg( const ssl_ciphersuite_t *info )
 {
+    const key_agree_t * ke = ssl_ciphersuite_recognize( info->key_exchange );
+    return ke->sig_alg;
+/*
     switch( info->key_exchange )
     {
         case POLARSSL_KEY_EXCHANGE_RSA:
@@ -1920,12 +1939,18 @@ pk_type_t ssl_get_ciphersuite_sig_pk_alg( const ssl_ciphersuite_t *info )
         default:
             return( POLARSSL_PK_NONE );
     }
+*/
 }
 #endif /* POLARSSL_PK_C */
 
 #if defined(POLARSSL_ECDH_C) || defined(POLARSSL_ECDSA_C)
 int ssl_ciphersuite_uses_ec( const ssl_ciphersuite_t *info )
 {
+    const key_agree_t * ke = ssl_ciphersuite_recognize( info->key_exchange );
+    if( ke->sig_alg == POLARSSL_PK_ECDSA || ke->dh_alg == POLARSSL_DH_EC )
+        return 1;
+    return 0;
+/*
     switch( info->key_exchange )
     {
         case POLARSSL_KEY_EXCHANGE_ECDHE_RSA:
@@ -1938,12 +1963,18 @@ int ssl_ciphersuite_uses_ec( const ssl_ciphersuite_t *info )
         default:
             return( 0 );
     }
+*/
 }
 #endif /* POLARSSL_ECDH_C || POLARSSL_ECDSA_C */
 
 #if defined(POLARSSL_KEY_EXCHANGE__SOME__PSK_ENABLED)
 int ssl_ciphersuite_uses_psk( const ssl_ciphersuite_t *info )
 {
+    const key_agree_t * ke = ssl_ciphersuite_recognize( info->key_exchange );
+    if( ke->psk_auth == 1 || info->key_exchange == POLARSSL_KEY_EXCHANGE_PSK )
+        return 1;
+    return 0;
+/*
     switch( info->key_exchange )
     {
         case POLARSSL_KEY_EXCHANGE_PSK:
@@ -1955,17 +1986,17 @@ int ssl_ciphersuite_uses_psk( const ssl_ciphersuite_t *info )
         default:
             return( 0 );
     }
+*/
 }
 #endif /* POLARSSL_KEY_EXCHANGE__SOME__PSK_ENABLED */
 
 
 
-
-
-
-
 dh_type_t ssl_get_dh_type( key_exchange_type_t ssl_type )
 {
+    const key_agree_t * ke = ssl_ciphersuite_recognize( ssl_type );
+    return ke->dh_alg;
+/*
         if( ssl_type == POLARSSL_KEY_EXCHANGE_DHE_RSA ||
             ssl_type == POLARSSL_KEY_EXCHANGE_DHE_PSK
         ) return POLARSSL_DH_DHM;
@@ -1985,11 +2016,17 @@ dh_type_t ssl_get_dh_type( key_exchange_type_t ssl_type )
         ) return POLARSSL_DH_LWE;
 
         return POLARSSL_DH_NONE;
+*/
 }
 
 
 int ssl_is_dh( key_exchange_type_t ssl_type )
 {
+    const key_agree_t * ke = ssl_ciphersuite_recognize( ssl_type );
+    if( POLARSSL_DH_NONE != ke->dh_alg )
+        return 1;
+    return 0;
+/*
         if( ssl_type == POLARSSL_KEY_EXCHANGE_DHE_RSA ||
             ssl_type == POLARSSL_KEY_EXCHANGE_DHE_PSK ||
             ssl_type == POLARSSL_KEY_EXCHANGE_ECDHE_RSA ||
@@ -2006,20 +2043,32 @@ int ssl_is_dh( key_exchange_type_t ssl_type )
             ssl_type == OUR_KEY_EXCHANGE_LATTICEE_RAINBOW2
         ) return 1;
         return 0;
+*/
 }
 
 
 int ssl_is_dh_psk( key_exchange_type_t ssl_type )
 {
+    const key_agree_t * ke = ssl_ciphersuite_recognize( ssl_type );
+    if( 1 == ke->psk_auth )
+        return 1;
+    return 0;
+/*
         if( ssl_type == POLARSSL_KEY_EXCHANGE_DHE_PSK ||
             ssl_type == POLARSSL_KEY_EXCHANGE_ECDHE_PSK
         ) return 1;
         return 0;
+*/
 }
 
 
 int ssl_is_dh_pkcsign( key_exchange_type_t ssl_type )
 {
+    const key_agree_t * ke = ssl_ciphersuite_recognize( ssl_type );
+    if( POLARSSL_PK_NONE != ke->sig_alg )
+        return 1;
+    return ssl_is_dh(ssl_type);
+/*
         if( ssl_type == POLARSSL_KEY_EXCHANGE_DHE_RSA ||
             ssl_type == POLARSSL_KEY_EXCHANGE_ECDHE_RSA ||
             ssl_type == POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA ||
@@ -2034,11 +2083,16 @@ int ssl_is_dh_pkcsign( key_exchange_type_t ssl_type )
             ssl_type == OUR_KEY_EXCHANGE_LATTICEE_RAINBOW2
         ) return 1;
         return 0;
+*/
 }
 
 
 int ssl_is_dh_ephemeral( key_exchange_type_t ssl_type )
 {
+    if( POLARSSL_KEY_EXCHANGE_ECDH_RSA == ssl_type || POLARSSL_KEY_EXCHANGE_ECDH_ECDSA == ssl_type )
+        return 1;
+    return ssl_is_dh(ssl_type);
+/*
         if( ssl_type == POLARSSL_KEY_EXCHANGE_DHE_RSA ||
             ssl_type == POLARSSL_KEY_EXCHANGE_DHE_PSK ||
             ssl_type == POLARSSL_KEY_EXCHANGE_ECDHE_RSA ||
@@ -2054,6 +2108,7 @@ int ssl_is_dh_ephemeral( key_exchange_type_t ssl_type )
         ) return 1;
 
         return 0;
+*/
 }
 
 
