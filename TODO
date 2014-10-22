@@ -449,17 +449,19 @@ Next meeting date 2014/10/16 (Thu) 10:30 AM at MD631
 
 
 2014/10/20 Mon 13:45:27
+2014/10/22 Wed 18:01:27
 
-    * 整理程式碼（把 bug 修掉，例如 SIGPIPE 以及一些 segfaults ）
     * 然後檢查程式碼是否看起來ＯＫ (看 checklist.txt )
 
-    * 寫文件： (1) 加入新的 pk (2) 關於我們 DH 的包裝 (3) SSH 的修改
-               *這個我們星期四再來丟骰子決定*
+    * 寫文件： (1) 加入新的 pk (2) 關於我們 DH 的包裝 (3) SSL 的修改
+                   吳              張                     陳
 
-    * 再次確認編譯沒有 warning
+    * 筆記一下如何測試 SSL server <---> SSL client 的 cmdline 指令
+
+    * 再次確認編譯沒有 warning (現在幾乎沒有，只剩下一些型態轉換的)
     * 跑一次 beautifier
-    * 覺得可以放上 GitHub 就上
+    * 覺得可以放上 GitHub 就放上去
 
-    NEXT Meeting Data: 2014/10/23 (Thursday) 10:30 at MD631
+    NEXT Meeting Data: 2014/10/24 (Friday) 10:30 am at MD631
 
 
