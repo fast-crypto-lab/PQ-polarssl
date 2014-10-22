@@ -1657,9 +1657,9 @@ static int ssl_parse_server_key_exchange( ssl_context *ssl )
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_RSA_PSK )
         ; /* nothing more to do */
     else
-    if( ssl_is_dh( ciphersuite_info->key_exchange ) )
+    if( ssl_ciphersuite_is_dh( ciphersuite_info->key_exchange ) )
     {
-        ssl->handshake->dhif_info = dh_get_info( ssl_get_dh_type(ciphersuite_info->key_exchange) );
+        ssl->handshake->dhif_info = dh_get_info( ssl_ciphersuite_dh_type(ciphersuite_info->key_exchange) );
         if( NULL == ssl->handshake->dhif_info ) {
             SSL_DEBUG_MSG( 1, ( "get dh interface failed." ) );
             return( POLARSSL_ERR_SSL_NO_CIPHER_CHOSEN );
@@ -1722,7 +1722,7 @@ static int ssl_parse_server_key_exchange( ssl_context *ssl )
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_PSK ||
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA )
 */
-    if( ssl_is_dh_ephemeral( ciphersuite_info->key_exchange ) )
+    if( ssl_ciphersuite_is_dh_ephemeral( ciphersuite_info->key_exchange ) )
     {
         int rlen = -1;
         ret = ssl->handshake->dhif_info->read_ske_params(
@@ -1746,7 +1746,7 @@ static int ssl_parse_server_key_exchange( ssl_context *ssl )
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_RSA ||
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA )
 */
-    if( ssl_is_dh_pkcsign( ciphersuite_info->key_exchange ) )
+    if( ssl_ciphersuite_is_dh_pkcsign( ciphersuite_info->key_exchange ) )
     {
         params_len = p - ( ssl->in_msg + 4 );
 
@@ -2145,7 +2145,7 @@ static int ssl_write_client_key_exchange( ssl_context *ssl )
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDH_RSA ||
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDH_ECDSA )
 */
-    if( ssl_is_dh_pkcsign( ciphersuite_info->key_exchange ) )
+    if( ssl_ciphersuite_is_dh_pkcsign( ciphersuite_info->key_exchange ) )
     {
         ret = ssl->handshake->dhif_info->gen_public(
                 ssl->handshake->dhif_ctx,

@@ -334,11 +334,11 @@ int ssl_ciphersuite_uses_psk( const ssl_ciphersuite_t *info );
 
 
 #if defined(POLARSSL_DHIF_C)
-dh_type_t ssl_get_dh_type( key_exchange_type_t ssl_type );
-int ssl_is_dh_ephemeral( key_exchange_type_t ssl_type );
-int ssl_is_dh( key_exchange_type_t ssl_type );
-int ssl_is_dh_pkcsign( key_exchange_type_t ssl_type );
-int ssl_is_dh_psk( key_exchange_type_t ssl_type );
+dh_type_t ssl_ciphersuite_dh_type( key_exchange_type_t ssl_type );
+int ssl_ciphersuite_is_dh_ephemeral( key_exchange_type_t ssl_type );
+int ssl_ciphersuite_is_dh( key_exchange_type_t ssl_type );
+int ssl_ciphersuite_is_dh_pkcsign( key_exchange_type_t ssl_type );
+int ssl_ciphersuite_is_dh_psk( key_exchange_type_t ssl_type );
 #endif
 
 

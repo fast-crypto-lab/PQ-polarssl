@@ -907,7 +907,7 @@ int ssl_psk_derive_premaster( ssl_context *ssl, key_exchange_type_t key_ex )
     else
 #endif /* POLARSSL_KEY_EXCHANGE_PSK_ENABLED */
 #if defined(POLARSSL_KEY_EXCHANGE_RSA_PSK_ENABLED)||defined(POLARSSL_KEY_EXCHANGE_ECDHE_PSK_ENABLED)
-    if( ssl_is_dh_psk( key_ex ) )
+    if( ssl_ciphersuite_is_dh_psk( key_ex ) )
     {
         int ret;
         size_t len = end - ( p + 2 );
@@ -4952,12 +4952,19 @@ int ssl_check_cert_usage( const x509_crt *cert,
             case POLARSSL_KEY_EXCHANGE_ECDHE_RSA:
             case POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA:
             case OUR_KEY_EXCHANGE_ECDHE_TTS:
+            case OUR_KEY_EXCHANGE_ECDHE_RAINBOW:
             case OUR_KEY_EXCHANGE_LATTICEE_TTS:
             case OUR_KEY_EXCHANGE_LATTICEE_RAINBOW:
             case OUR_KEY_EXCHANGE_LATTICEE_RSA:
             case OUR_KEY_EXCHANGE_LATTICEE_ECDSA:
             case OUR_KEY_EXCHANGE_LATTICEE_TTS2:
             case OUR_KEY_EXCHANGE_LATTICEE_RAINBOW2:
+            case OUR_KEY_EXCHANGE_CV25519E_TTS:
+            case OUR_KEY_EXCHANGE_CV25519E_RAINBOW:
+            case OUR_KEY_EXCHANGE_CV25519E_RSA:
+            case OUR_KEY_EXCHANGE_CV25519E_ECDSA:
+            case OUR_KEY_EXCHANGE_CV25519E_TTS2:
+            case OUR_KEY_EXCHANGE_CV25519E_RAINBOW2:
                 usage = KU_DIGITAL_SIGNATURE;
                 break;
 

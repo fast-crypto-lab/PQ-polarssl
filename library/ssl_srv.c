@@ -2135,7 +2135,7 @@ static int ssl_write_server_key_exchange( ssl_context *ssl )
 #else
         /* It is the first time we use ECDH, so we should alloc it first */
         //ssl->handshake->dhif_info = &ecdh_info2;
-        ssl->handshake->dhif_info = dh_get_info( ssl_get_dh_type(ciphersuite_info->key_exchange) );
+        ssl->handshake->dhif_info = dh_get_info( ssl_ciphersuite_dh_type(ciphersuite_info->key_exchange) );
         if( NULL == ssl->handshake->dhif_info ) {
             SSL_DEBUG_MSG( 1, ( "get dh interface failed." ) );
             return( POLARSSL_ERR_SSL_NO_CIPHER_CHOSEN );
@@ -2161,7 +2161,7 @@ static int ssl_write_server_key_exchange( ssl_context *ssl )
     if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_DHE_PSK ||
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_PSK )
 */
-    if( ssl_is_dh_psk( ciphersuite_info->key_exchange ) )
+    if( ssl_ciphersuite_is_dh_psk( ciphersuite_info->key_exchange ) )
     {
         /* TODO: Support identity hints */
         *(p++) = 0x00;
@@ -2170,9 +2170,9 @@ static int ssl_write_server_key_exchange( ssl_context *ssl )
         n += 2;
     }
 
-if( ssl_is_dh_ephemeral( ciphersuite_info->key_exchange ) ) {
+if( ssl_ciphersuite_is_dh_ephemeral( ciphersuite_info->key_exchange ) ) {
 
-    ssl->handshake->dhif_info = dh_get_info( ssl_get_dh_type(ciphersuite_info->key_exchange) );
+    ssl->handshake->dhif_info = dh_get_info( ssl_ciphersuite_dh_type(ciphersuite_info->key_exchange) );
     if( NULL == ssl->handshake->dhif_info ) {
         SSL_DEBUG_MSG( 1, ( "get dh interface failed." ) );
         return( POLARSSL_ERR_SSL_NO_CIPHER_CHOSEN );
@@ -2352,7 +2352,7 @@ curve_matching_done:
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_RSA ||
         ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA )
 */
-    if( ssl_is_dh_pkcsign( ciphersuite_info->key_exchange ) )
+    if( ssl_ciphersuite_is_dh_pkcsign( ciphersuite_info->key_exchange ) )
     {
         size_t signature_len = 0;
         unsigned int hashlen = 0;

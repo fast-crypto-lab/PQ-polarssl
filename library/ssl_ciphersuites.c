@@ -1894,10 +1894,10 @@ const key_agree_t *ssl_ciphersuite_recognize( key_exchange_type_t key_exchange )
     ret = &key_agree_definitions[idx];
     if( ret->key_exchange == key_exchange ) return ret;
 
-    ret = &key_agree_definitions[1];
-    while( 0 != ret->key_exchange ) {
+    idx = 0;
+    for( ret = &key_agree_definitions[++idx] ; 0 != ret->key_exchange ; ret = &key_agree_definitions[++idx] )
        if( ret->key_exchange == key_exchange ) return ret;
-    }
+
     return ret;
 }
 
@@ -1992,7 +1992,7 @@ int ssl_ciphersuite_uses_psk( const ssl_ciphersuite_t *info )
 
 
 
-dh_type_t ssl_get_dh_type( key_exchange_type_t ssl_type )
+dh_type_t ssl_ciphersuite_dh_type( key_exchange_type_t ssl_type )
 {
     const key_agree_t * ke = ssl_ciphersuite_recognize( ssl_type );
     return ke->dh_alg;
@@ -2020,10 +2020,9 @@ dh_type_t ssl_get_dh_type( key_exchange_type_t ssl_type )
 }
 
 
-int ssl_is_dh( key_exchange_type_t ssl_type )
+int ssl_ciphersuite_is_dh( key_exchange_type_t ssl_type )
 {
-    const key_agree_t * ke = ssl_ciphersuite_recognize( ssl_type );
-    if( POLARSSL_DH_NONE != ke->dh_alg )
+    if( POLARSSL_DH_NONE != ssl_ciphersuite_dh_type(ssl_type) )
         return 1;
     return 0;
 /*
@@ -2047,7 +2046,7 @@ int ssl_is_dh( key_exchange_type_t ssl_type )
 }
 
 
-int ssl_is_dh_psk( key_exchange_type_t ssl_type )
+int ssl_ciphersuite_is_dh_psk( key_exchange_type_t ssl_type )
 {
     const key_agree_t * ke = ssl_ciphersuite_recognize( ssl_type );
     if( 1 == ke->psk_auth )
@@ -2062,12 +2061,12 @@ int ssl_is_dh_psk( key_exchange_type_t ssl_type )
 }
 
 
-int ssl_is_dh_pkcsign( key_exchange_type_t ssl_type )
+int ssl_ciphersuite_is_dh_pkcsign( key_exchange_type_t ssl_type )
 {
     const key_agree_t * ke = ssl_ciphersuite_recognize( ssl_type );
     if( POLARSSL_PK_NONE != ke->sig_alg )
         return 1;
-    return ssl_is_dh(ssl_type);
+    return ssl_ciphersuite_is_dh(ssl_type);
 /*
         if( ssl_type == POLARSSL_KEY_EXCHANGE_DHE_RSA ||
             ssl_type == POLARSSL_KEY_EXCHANGE_ECDHE_RSA ||
@@ -2087,11 +2086,11 @@ int ssl_is_dh_pkcsign( key_exchange_type_t ssl_type )
 }
 
 
-int ssl_is_dh_ephemeral( key_exchange_type_t ssl_type )
+int ssl_ciphersuite_is_dh_ephemeral( key_exchange_type_t ssl_type )
 {
     if( POLARSSL_KEY_EXCHANGE_ECDH_RSA == ssl_type || POLARSSL_KEY_EXCHANGE_ECDH_ECDSA == ssl_type )
         return 1;
-    return ssl_is_dh(ssl_type);
+    return ssl_ciphersuite_is_dh(ssl_type);
 /*
         if( ssl_type == POLARSSL_KEY_EXCHANGE_DHE_RSA ||
             ssl_type == POLARSSL_KEY_EXCHANGE_DHE_PSK ||
