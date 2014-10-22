@@ -2220,6 +2220,7 @@ curve_matching_done:
            if (ret != 0) {
                SSL_DEBUG_MSG( 2, ( "DHIF(%s)->set_param(NULL) fails" , dhif_info->name ) );
                return ret;
+           }
         }
 
         ret = ssl->handshake->dhif_info->gen_public(
