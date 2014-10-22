@@ -2218,7 +2218,7 @@ curve_matching_done:
            ret = ssl->handshake->dhif_info->set_params(
                 ssl->handshake->dhif_ctx, NULL);
            if (ret != 0) {
-               SSL_DEBUG_MSG( 2, ( "DHIF(%s)->set_param(NULL) fails" , dhif_info->name ) );
+               SSL_DEBUG_MSG( 2, ( "DHIF(%s)->set_param(NULL) fails" , ssl->handshake->dhif_info->name ) );
                return ret;
            }
         }
@@ -2226,7 +2226,7 @@ curve_matching_done:
         ret = ssl->handshake->dhif_info->gen_public(
                 ssl->handshake->dhif_ctx, ssl->f_rng, ssl->p_rng);
         if (ret != 0) {
-            SSL_DEBUG_MSG( 2, ( "DHIF(%s)->get_public() fails" , dhif_info->name ) );
+            SSL_DEBUG_MSG( 2, ( "DHIF(%s)->get_public() fails" , ssl->handshake->dhif_info->name ) );
             return ret;
         }
 
@@ -2237,7 +2237,7 @@ curve_matching_done:
                 ssl->handshake->dhif_info->getsize_ske_params(ssl->handshake->dhif_ctx),
                 ssl->handshake->dhif_ctx);
         if (ret != 0) {
-            SSL_DEBUG_MSG( 2, ( "DHIF(%s)->write_ske_params() fails" , dhif_info->name ) );
+            SSL_DEBUG_MSG( 2, ( "DHIF(%s)->write_ske_params() fails" , ssl->handshake->dhif_info->name ) );
             return ret;
         }
         fflush(stdout);
