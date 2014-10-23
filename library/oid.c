@@ -397,25 +397,14 @@ int oid_get_oid_by_sig_alg( pk_type_t pk_alg, md_type_t md_alg, const char **oid
 {
     const oid_sig_alg_t *cur = oid_sig_alg;
 
-    printf("\nInside oid_get_oid_by_sig_alg()\n");
-    printf(" pk_alg = %d", pk_alg);
-    printf(" md_alg = %d\n", md_alg);
-
     while( cur->descriptor.asn1 != NULL ) {
-        printf("\nInside while loop of %s, %s\n", cur->descriptor.name, cur->descriptor.description);
-        printf(" pk_alg = %d", cur->pk_alg);
-        printf(" md_alg = %d", cur->md_alg);
         if( cur->pk_alg == pk_alg && cur->md_alg == md_alg ) {
             *oid = cur->descriptor.asn1;
             *olen = cur->descriptor.asn1_len;
-            printf("\n");
             return( 0 );
-        } else {
-            printf(" (not matched)\n");
         }
         cur++;
     }
-    printf("CANNOT FIND THE MATCHED ONE\n");
     return( POLARSSL_ERR_OID_NOT_FOUND );
 }
 

@@ -40,7 +40,6 @@ static int myrand( void *rng_state, unsigned char *output, size_t len )
 int main( int argc, char *argv[] )
 {
     int ret;
-    //rsa_context rsa;
     tts_context tts;
     pk_context ctx;
     entropy_context entropy;
@@ -68,12 +67,10 @@ int main( int argc, char *argv[] )
         goto exit;
     }
 
-    //printf( " ok\n  . Generating the RSA key [ %d-bit ]...", KEY_SIZE );
     printf( " ok\n  . Generating the TTS key [ %d-bit ]...", TTS_PUBKEY_SIZE_BYTE * 8 );
     fflush( stdout );
 
-    //rsa_init( &rsa, RSA_PKCS_V15, 0 );
-    
+
     if( ( ret = tts_genkey( &tts.pk, &tts.sk, &myrand, NULL ) ) != 0 )
     {
         printf( " failed\n  ! tts_genkey returned %d\n\n", ret );
@@ -89,14 +86,6 @@ int main( int argc, char *argv[] )
         ret = 1;
         goto exit;
     }
-
-    // if( ( ret = mpi_write_file( "N = ", &rsa.N, 16, fpub ) ) != 0 ||
-    //     ( ret = mpi_write_file( "E = ", &rsa.E, 16, fpub ) ) != 0 )
-    // {
-    //     printf( " failed\n  ! mpi_write_file returned %d\n\n", ret );
-    //     goto exit;
-    // }
-    ///////fwrite( &tts.pk, 1, sizeof(tts.pk), fpub );
     pk_write_pubkey_pem( &ctx, large_buffer, 256000 );
     fwrite( large_buffer, 1, 256000, fpub );
 
@@ -110,34 +99,8 @@ int main( int argc, char *argv[] )
         goto exit;
     }
 
-    // if( ( ret = mpi_write_file( "N = " , &rsa.N , 16, fpriv ) ) != 0 ||
-    //     ( ret = mpi_write_file( "E = " , &rsa.E , 16, fpriv ) ) != 0 ||
-    //     ( ret = mpi_write_file( "D = " , &rsa.D , 16, fpriv ) ) != 0 ||
-    //     ( ret = mpi_write_file( "P = " , &rsa.P , 16, fpriv ) ) != 0 ||
-    //     ( ret = mpi_write_file( "Q = " , &rsa.Q , 16, fpriv ) ) != 0 ||
-    //     ( ret = mpi_write_file( "DP = ", &rsa.DP, 16, fpriv ) ) != 0 ||
-    //     ( ret = mpi_write_file( "DQ = ", &rsa.DQ, 16, fpriv ) ) != 0 ||
-    //     ( ret = mpi_write_file( "QP = ", &rsa.QP, 16, fpriv ) ) != 0 )
-    // {
-    //     printf( " failed\n  ! mpi_write_file returned %d\n\n", ret );
-    //     goto exit;
-    // }
     pk_write_key_pem( &ctx, large_buffer, 256000 );
     fwrite( large_buffer, 1, 256000, fpriv );
-
-/*
-    printf( " ok\n  . Generating the certificate..." );
-
-    x509write_init_raw( &cert );
-    x509write_add_pubkey( &cert, &rsa );
-    x509write_add_subject( &cert, "CN='localhost'" );
-    x509write_add_validity( &cert, "2007-09-06 17:00:32",
-                                   "2010-09-06 17:00:32" );
-    x509write_create_selfsign( &cert, &rsa );
-    x509write_crtfile( &cert, "cert.der", X509_OUTPUT_DER );
-    x509write_crtfile( &cert, "cert.pem", X509_OUTPUT_PEM );
-    x509write_free_raw( &cert );
-*/
     printf( " ok\n\n" );
 
 exit:
@@ -148,7 +111,6 @@ exit:
     if( fpriv != NULL )
         fclose( fpriv );
 
-    //rsa_free( &rsa );
     ctr_drbg_free( &ctr_drbg );
     entropy_free( &entropy );
 
