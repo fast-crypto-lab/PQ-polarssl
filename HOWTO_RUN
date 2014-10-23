@@ -1,0 +1,47 @@
+# Run a Testing Server
+
+## 有 TTS 簽章的 ciphersuite (pk 由 self-signed certificate 提供)
+
+    $ ./programs/ssl/ssl_server2                \
+        debug_level=3                           \
+        crt_file=self_signed_stuff/cert.crt     \
+        key_file=self_signed_stuff/tts_priv.pem \
+        force_ciphersuite=TLS-LATTICEE-TTS-WITH-AES-128-GCM-SHA256
+
+    $ ./programs/ssl/ssl_server2                \
+        debug_level=3                           \
+        crt_file=self_signed_stuff/cert.crt     \
+        key_file=self_signed_stuff/tts_priv.pem \
+        force_ciphersuite=TLS-ECDHE-TTS-WITH-AES-128-GCM-SHA256
+
+
+## 有 RAINBOW 簽章的 ciphersuite
+
+    TODO: 現在還沒有憑證
+
+
+## 產生新的 key pair
+
+    $ ./programs/pkey/tts_genkey
+
+    $ ./programs/pkey/rb_genkey
+
+
+## 產生新的憑證
+
+    $ ./programs/x509/cert_write                \
+        selfsign=1                              \
+        subject_key=self-signed/tts_pub.pem \
+         issuer_key=self-signed/tts_prv.pem \
+        output_file=self-signed/tts_crt.pem
+
+    $ ./programs/x509/cert_write                \
+        selfsign=1                              \
+        subject_key=self-signed/rainbow_pub.pem \
+         issuer_key=self-signed/rainbow_prv.pem \
+        output_file=self-signed/rainbow_crt.pem
+
+**FIXME: 現在會噴錯誤訊息**
+
+!  mpi_read_string returned -0xffff8001 - SSL - Hardware acceleration function returned with error : UNKNOWN ERROR CODE (007F)
+
