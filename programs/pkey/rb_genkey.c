@@ -71,7 +71,7 @@ int main( int argc, char *argv[] )
     fflush( stdout );
 
 
-    if( ( ret = rb_genkey( &rb.pk, &rb.sk, &myrand, NULL ) ) != 0 )
+    if( ( ret = rb_genkey( (uint8_t *) &rb.pk, (uint8_t *) &rb.sk, &myrand, NULL ) ) != 0 )
     {
         printf( " failed\n  ! rb_genkey returned %d\n\n", ret );
         goto exit;

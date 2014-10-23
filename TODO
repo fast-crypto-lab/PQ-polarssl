@@ -465,3 +465,7 @@ Next meeting date 2014/10/16 (Thu) 10:30 AM at MD631
     NEXT Meeting Data: 2014/10/24 (Friday) 10:30 am at MD631
 
 
+Some error code is ugly.
+Signature entropy too low (We just expand the 128-bit hash by MD5 with an all-zero padding).
+
+

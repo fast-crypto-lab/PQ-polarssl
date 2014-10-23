@@ -71,7 +71,7 @@ int main( int argc, char *argv[] )
     fflush( stdout );
 
 
-    if( ( ret = tts_genkey( &tts.pk, &tts.sk, &myrand, NULL ) ) != 0 )
+    if( ( ret = tts_genkey( (uint8_t *)&tts.pk, (uint8_t *)&tts.sk, &myrand, NULL ) ) != 0 )
     {
         printf( " failed\n  ! tts_genkey returned %d\n\n", ret );
         goto exit;

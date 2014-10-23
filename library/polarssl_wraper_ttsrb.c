@@ -49,7 +49,7 @@ static int __tts_verify( void *ctx, md_type_t md_alg,
     //          const uint8_t * key ,
     //          const uint8_t * s320b );
 
-    ret = tts_verify( QQ_buffer, (uint8_t *)(&((tts_context *) ctx)->pk), sig );
+    ret = tts_verify( QQ_buffer, (const uint8_t *)(&((tts_context *) ctx)->pk), sig );
     if (ret != 0) {
         /* In fact we need a proper error code here */
         return -1;
@@ -65,13 +65,18 @@ static int __tts_sign( void *ctx, md_type_t md_alg,
     unsigned char QQ_buffer[TTS_DIGEST_SIZE_BYTE] = { 0 };
     unsigned int n_bytes = ( hash_len < TTS_DIGEST_SIZE_BYTE ) ? hash_len : TTS_DIGEST_SIZE_BYTE;
     unsigned int _i = 0;
+
+    ((void) md_alg);
+    ((void) f_rng);
+    ((void) p_rng);
+
     for (_i = 0; _i < n_bytes; ++_i) {
         QQ_buffer[_i] = hash[_i];
     }
 
     *sig_len = TTS_SIGNATURE_SIZE_BYTE;
 
-    return tts_sign(sig, (uint8_t *)(&((tts_context *) ctx)->sk), QQ_buffer);
+    return tts_sign(sig, (const uint8_t *)(&((tts_context *) ctx)->sk), QQ_buffer);
 }
 
 static void *tts_alloc( void )
@@ -112,6 +117,7 @@ const pk_info_t tts_info = {
 
 static size_t rainbow_get_size( const void *ctx )
 {
+    ((void) ctx);
     return 8 * (RB_PUBKEY_SIZE_BYTE + RB_SECKEY_SIZE_BYTE);
 }
 
@@ -125,17 +131,26 @@ static int rainbow_verify( void *ctx, md_type_t md_alg,
                        const unsigned char *sig, size_t sig_len )
 {
     int ret;
+    unsigned char QQ_buffer[RB_DIGEST_SIZE_BYTE] = { 0 };
+    unsigned int n_bytes = ( hash_len < RB_DIGEST_SIZE_BYTE ) ? hash_len : RB_DIGEST_SIZE_BYTE;
+    unsigned int _i = 0;
 
-    if (hash_len < RB_DIGEST_SIZE_BYTE) {
-        /* In fact we need another error code here */
-        return POLARSSL_ERR_PK_SIG_LEN_MISMATCH;
+    ((void) md_alg);
+
+    for (_i = 0; _i < n_bytes; ++_i) {
+        QQ_buffer[_i] = hash[_i];
     }
+
+    //if (hash_len < RB_DIGEST_SIZE_BYTE) {
+    //    /* In fact we need another error code here */
+    //    return POLARSSL_ERR_PK_SIG_LEN_MISMATCH;
+    //}
 
     if (sig_len != RB_SIGNATURE_SIZE_BYTE) {
         return POLARSSL_ERR_PK_SIG_LEN_MISMATCH;
     }
 
-    ret = rb_verify( hash, &((rainbow_context *) ctx)->pk, sig );
+    ret = rb_verify( QQ_buffer, (const uint8_t *)&((rainbow_context *) ctx)->pk, sig );
     if (ret != 0) {
         /* In fact we need a proper error code here */
         return -1;
@@ -148,14 +163,21 @@ static int rainbow_sign( void *ctx, md_type_t md_alg,
                    unsigned char *sig, size_t *sig_len,
                    int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
 {
-    if (hash_len < RB_DIGEST_SIZE_BYTE) {
-        /* In fact we need another error code here */
-        return POLARSSL_ERR_PK_SIG_LEN_MISMATCH;
+    unsigned char QQ_buffer[RB_DIGEST_SIZE_BYTE] = { 0 };
+    unsigned int n_bytes = ( hash_len < RB_DIGEST_SIZE_BYTE ) ? hash_len : RB_DIGEST_SIZE_BYTE;
+    unsigned int _i = 0;
+
+    ((void) md_alg);
+    ((void) f_rng);
+    ((void) p_rng);
+
+    for (_i = 0; _i < n_bytes; ++_i) {
+        QQ_buffer[_i] = hash[_i];
     }
 
     *sig_len = RB_SIGNATURE_SIZE_BYTE;
 
-    return rb_sign(sig, &((rainbow_context *) ctx)->sk, hash);
+    return rb_sign(sig, (const uint8_t *) &((rainbow_context *) ctx)->sk, QQ_buffer);
 }
 
 static void *rainbow_alloc( void )
@@ -214,6 +236,9 @@ static int __tts2_verify( void *ctx, md_type_t md_alg,
     unsigned char QQ_buffer[TTS2_DIGEST_SIZE_BYTE] = { 0 };
     unsigned int n_bytes = ( hash_len < TTS2_DIGEST_SIZE_BYTE ) ? hash_len : TTS2_DIGEST_SIZE_BYTE;
     unsigned int _i = 0;
+
+    ((void) md_alg);
+
     for (_i = 0; _i < n_bytes; ++_i) {
         QQ_buffer[_i] = hash[_i];
     }
@@ -229,7 +254,7 @@ static int __tts2_verify( void *ctx, md_type_t md_alg,
     //          const uint8_t * key ,
     //          const uint8_t * s320b );
 
-    ret = tts2_verify( QQ_buffer, (uint8_t *)(&((tts2_context *) ctx)->pk), sig );
+    ret = tts2_verify( QQ_buffer, (const uint8_t *)(&((tts2_context *) ctx)->pk), sig );
     if (ret != 0) {
         /* In fact we need a proper error code here */
         return -1;
@@ -245,13 +270,18 @@ static int __tts2_sign( void *ctx, md_type_t md_alg,
     unsigned char QQ_buffer[TTS2_DIGEST_SIZE_BYTE] = { 0 };
     unsigned int n_bytes = ( hash_len < TTS2_DIGEST_SIZE_BYTE ) ? hash_len : TTS2_DIGEST_SIZE_BYTE;
     unsigned int _i = 0;
+
+    ((void) md_alg);
+    ((void) f_rng);
+    ((void) p_rng);
+
     for (_i = 0; _i < n_bytes; ++_i) {
         QQ_buffer[_i] = hash[_i];
     }
 
     *sig_len = TTS2_SIGNATURE_SIZE_BYTE;
 
-    return tts2_sign(sig, (uint8_t *)(&((tts2_context *) ctx)->sk), QQ_buffer);
+    return tts2_sign(sig, (const uint8_t *)(&((tts2_context *) ctx)->sk), QQ_buffer);
 }
 
 static void *tts2_alloc( void )
@@ -293,6 +323,7 @@ const pk_info_t tts2_info = {
 
 static size_t rainbow2_get_size( const void *ctx )
 {
+    ((void) ctx);
     return 8 * (RB2_PUBKEY_SIZE_BYTE + RB2_SECKEY_SIZE_BYTE);
 }
 
@@ -306,17 +337,26 @@ static int rainbow2_verify( void *ctx, md_type_t md_alg,
                        const unsigned char *sig, size_t sig_len )
 {
     int ret;
+    unsigned char QQ_buffer[RB2_DIGEST_SIZE_BYTE] = { 0 };
+    unsigned int n_bytes = ( hash_len < RB2_DIGEST_SIZE_BYTE ) ? hash_len : RB2_DIGEST_SIZE_BYTE;
+    unsigned int _i = 0;
 
-    if (hash_len < RB2_DIGEST_SIZE_BYTE) {
-        /* In fact we need another error code here */
-        return POLARSSL_ERR_PK_SIG_LEN_MISMATCH;
+    ((void) md_alg);
+
+    for (_i = 0; _i < n_bytes; ++_i) {
+        QQ_buffer[_i] = hash[_i];
     }
+
+    // if (hash_len < RB2_DIGEST_SIZE_BYTE) {
+    //     /* In fact we need another error code here */
+    //     return POLARSSL_ERR_PK_SIG_LEN_MISMATCH;
+    // }
 
     if (sig_len != RB2_SIGNATURE_SIZE_BYTE) {
         return POLARSSL_ERR_PK_SIG_LEN_MISMATCH;
     }
 
-    ret = rb2_verify( hash, &((rainbow2_context *) ctx)->pk, sig );
+    ret = rb2_verify( QQ_buffer, (const uint8_t *)&((rainbow2_context *) ctx)->pk, sig );
     if (ret != 0) {
         /* In fact we need a proper error code here */
         return -1;
@@ -329,14 +369,21 @@ static int rainbow2_sign( void *ctx, md_type_t md_alg,
                    unsigned char *sig, size_t *sig_len,
                    int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
 {
-    if (hash_len < RB2_DIGEST_SIZE_BYTE) {
-        /* In fact we need another error code here */
-        return POLARSSL_ERR_PK_SIG_LEN_MISMATCH;
+    unsigned char QQ_buffer[RB2_DIGEST_SIZE_BYTE] = { 0 };
+    unsigned int n_bytes = ( hash_len < RB2_DIGEST_SIZE_BYTE ) ? hash_len : RB2_DIGEST_SIZE_BYTE;
+    unsigned int _i = 0;
+
+    ((void) md_alg);
+    ((void) f_rng);
+    ((void) p_rng);
+
+    for (_i = 0; _i < n_bytes; ++_i) {
+        QQ_buffer[_i] = hash[_i];
     }
 
     *sig_len = RB2_SIGNATURE_SIZE_BYTE;
 
-    return rb2_sign(sig, &((rainbow2_context *) ctx)->sk, hash);
+    return rb2_sign(sig, (const uint8_t *) &((rainbow2_context *) ctx)->sk, QQ_buffer);
 }
 
 static void *rainbow2_alloc( void )
