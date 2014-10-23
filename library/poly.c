@@ -1,6 +1,7 @@
 #include "lattice/poly.h"
 #include "stdlib.h"
 #include "polarssl/bignum.h"
+#include"polarssl/sha256.h"
 #define polarssl_malloc malloc
 #define polarssl_free free
 
@@ -186,23 +187,6 @@ int poly2ReadBuffer(Poly_2* f, const void* buf){
 
 
 
-static inline double ranf( int (*f_rng)(void *, unsigned char *, size_t), void *p_rng) 
-{
-//canNOT do this since it may not support 64 bit 
-//	long RandomMax  = 0xffffffffffffffffULL;
-//	long rnd;
-/*
-	t_uint rnd;
-	t_uint RandomMax = 0;
-	RandomMax -=1; //0xffffffff
-	f_rng(p_rng, &rnd, sizeof(t_uint) );
-	return (((double)rnd)/RandomMax );
-*/
-	//remove warning
-	(void) f_rng;
-	(void) p_rng;
-	return (((double)rand())/RAND_MAX);
-}
 
 static inline int myround( double r ) {
     return (r > 0.0) ? (r + 0.5) : (r - 0.5); 
@@ -244,29 +228,53 @@ float mylog(float x){
 	return logx;
 }
 
+static inline double ranf(sha256_context* ctx) 
+{
+/*
+	//remove warning
+	(void) f_rng;
+	(void) p_rng;
+	return (((double)rand())/RAND_MAX);
+*/
+
+	unsigned int RandomMax = 0xffffffff;
+	unsigned char buf[32];
+	memset(buf,0,32);
+	sha256_update( ctx, buf, 32 );
+	return (((double)ctx->state[0])/(double)RandomMax );
+
+}
+
 //init+rand
-void RandomPoly(Poly_q * f, size_t n , mpi* q, float deviation, int hash, int (*f_rng)(void *, unsigned char *, size_t), void *p_rng ){
+void RandomPoly(Poly_q * f, size_t n , mpi* q, float deviation, int* hash, int (*f_rng)(void *, unsigned char *, size_t), void *p_rng ){
 
 	double x1, x2, abs;
 	size_t i;
 	int t;
+	int RandomState[8];
+	sha256_context ctx;
+	
 	f->n = n;
 	f->a =polarssl_malloc(sizeof(mpi*)*n);
 	f->q=q;
 
 	//random sample
 	//copied from http://www.taygeta.com/random/gaussian.html
-
-	if(hash == -1){
-
-	}
+	
+//blame polarssl for the stupidity
+	if(hash == NULL)
+		f_rng(p_rng, (unsigned char *)RandomState, 32);
 	else
-		srand(hash);
+		memcpy(RandomState, hash, 32);
+	
+	sha256_init( &ctx );
+	sha256_starts( &ctx, 0 );
+	sha256_update( &ctx, (unsigned char *)RandomState, 32 );
 
 	for(i=0 ; i<n; i ++){
 		do {
-			x1 = 2.0 * ranf(f_rng, p_rng) - 1.0;
-			x2 = 2.0 * ranf(f_rng, p_rng)  - 1.0;
+			x1 = 2.0 * ranf(&ctx) - 1.0;
+			x2 = 2.0 * ranf(&ctx)  - 1.0;
 			abs = x1 * x1 + x2 * x2;
 		} while ( abs >= 1.0 );
 	

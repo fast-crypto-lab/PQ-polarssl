@@ -96,8 +96,8 @@ int lwe_gen_public( lwe_context *ctx, int (*f_rng)(void *, unsigned char *, size
 	ctx->pk = polarssl_malloc ( sizeof( Poly_q) );
 	ctx->sk = polarssl_malloc ( sizeof( Poly_q) );
 	ZeroPoly(ctx ->pk,ctx ->n,ctx ->q);
-	RandomPoly(ctx->sk, ctx->n, ctx->q, ctx->alpha, -1, f_rng, p_rng);
-	RandomPoly(e,	ctx->n, ctx->q, ctx->alpha, -1, f_rng, p_rng);
+	RandomPoly(ctx->sk, ctx->n, ctx->q, ctx->alpha, NULL, f_rng, p_rng);
+	RandomPoly(e,	ctx->n, ctx->q, ctx->alpha, NULL, f_rng, p_rng);
 	polyMul(ctx->pk ,ctx->sk, ctx->a);
 	polyMulConst( e, 2, e);
 	polyAdd(ctx->pk , ctx->pk , e  );
@@ -107,8 +107,8 @@ int lwe_gen_public( lwe_context *ctx, int (*f_rng)(void *, unsigned char *, size
 		ctx ->r = polarssl_malloc ( sizeof( Poly_q) );
 		ctx ->x = polarssl_malloc ( sizeof( Poly_q) );
 		f = polarssl_malloc ( sizeof( Poly_q) );
-		RandomPoly(ctx ->r,	ctx->n, ctx->q, ctx->beta, -1, f_rng, p_rng);
-		RandomPoly(f,			ctx->n, ctx->q, ctx->beta, -1, f_rng, p_rng);
+		RandomPoly(ctx ->r,	ctx->n, ctx->q, ctx->beta, NULL, f_rng, p_rng);
+		RandomPoly(f,			ctx->n, ctx->q, ctx->beta, NULL, f_rng, p_rng);
 		ZeroPoly(ctx ->x,ctx->n,ctx->q);
 
 		polyMul(ctx->x ,ctx->r, ctx->a);
@@ -121,8 +121,8 @@ int lwe_gen_public( lwe_context *ctx, int (*f_rng)(void *, unsigned char *, size
 		ctx ->r = polarssl_malloc ( sizeof( Poly_q) );
 		ctx ->y = polarssl_malloc ( sizeof( Poly_q) );
 		f = polarssl_malloc ( sizeof( Poly_q) );
-		RandomPoly(ctx ->r,	ctx->n, ctx->q, ctx->beta, -1, f_rng, p_rng);
-		RandomPoly(f,			ctx->n, ctx->q, ctx->beta, -1, f_rng, p_rng);
+		RandomPoly(ctx ->r,	ctx->n, ctx->q, ctx->beta, NULL, f_rng, p_rng);
+		RandomPoly(f,			ctx->n, ctx->q, ctx->beta, NULL, f_rng, p_rng);
 		ZeroPoly(ctx ->y,ctx->n,ctx->q);
 
 		polyMul(ctx->y ,ctx->r, ctx->a);
@@ -133,13 +133,13 @@ int lwe_gen_public( lwe_context *ctx, int (*f_rng)(void *, unsigned char *, size
 		c = polarssl_malloc ( sizeof( Poly_q) );
 		d = polarssl_malloc ( sizeof( Poly_q) );
 		g = polarssl_malloc ( sizeof( Poly_q) );
-		RandomPoly(g,	 ctx->n, ctx->q, ctx->beta, -1, f_rng, p_rng);
+		RandomPoly(g,	 ctx->n, ctx->q, ctx->beta, NULL, f_rng, p_rng);
 
 		bufferlength =PolySize(ctx ->x);//i,j is ignored
 		buffer = polarssl_malloc(bufferlength );
 		polyWriteBuffer(ctx ->x, buffer);
 		sha256((unsigned char *)buffer ,bufferlength  ,(unsigned char *)hash ,0);
-		RandomPoly(c, ctx->n, ctx->q, ctx->gamma,   hash[0], f_rng, p_rng);
+		RandomPoly(c, ctx->n, ctx->q, ctx->gamma,   hash, f_rng, p_rng);
 		polarssl_zeroize(buffer, bufferlength );
 		polarssl_free(buffer);
 
@@ -148,7 +148,7 @@ int lwe_gen_public( lwe_context *ctx, int (*f_rng)(void *, unsigned char *, size
 		polyWriteBuffer(ctx ->y, buffer);
 		polyWriteBuffer(ctx ->x, buffer + PolySize(ctx ->y) );
 		sha256((unsigned char *)buffer ,bufferlength  ,(unsigned char *)hash ,0);
-		RandomPoly(d, ctx->n, ctx->q, ctx->gamma,  hash[0], f_rng, p_rng);
+		RandomPoly(d, ctx->n, ctx->q, ctx->gamma,  hash, f_rng, p_rng);
 		polarssl_zeroize(buffer, bufferlength );
 		polarssl_free(buffer);
 
@@ -184,7 +184,7 @@ int lwe_compute_shared ( lwe_context  *ctx, int (*f_rng)(void *, unsigned char *
 	int bufferlength;
 	if(ctx->srv){
 		g = polarssl_malloc ( sizeof( Poly_q) );
-		RandomPoly(g,ctx->n, ctx->q, ctx->beta, -1, f_rng, p_rng);
+		RandomPoly(g,ctx->n, ctx->q, ctx->beta, NULL, f_rng, p_rng);
 		c = polarssl_malloc ( sizeof( Poly_q) );
 		d = polarssl_malloc ( sizeof( Poly_q) );
 
@@ -193,7 +193,7 @@ int lwe_compute_shared ( lwe_context  *ctx, int (*f_rng)(void *, unsigned char *
 		buffer = polarssl_malloc(bufferlength );
 		polyWriteBuffer(ctx ->x, buffer);
 		sha256((unsigned char *)buffer ,bufferlength  ,(unsigned char *)hash ,0);
-		RandomPoly(c, ctx->n, ctx->q, ctx->gamma,  hash[0], f_rng, p_rng);
+		RandomPoly(c, ctx->n, ctx->q, ctx->gamma,  hash, f_rng, p_rng);
 		polarssl_zeroize(buffer, bufferlength );
 		polarssl_free(buffer);
 
@@ -202,7 +202,7 @@ int lwe_compute_shared ( lwe_context  *ctx, int (*f_rng)(void *, unsigned char *
 		polyWriteBuffer(ctx ->y, buffer);
 		polyWriteBuffer(ctx ->x, buffer + PolySize(ctx ->y));
 		sha256((unsigned char *)buffer ,bufferlength  ,(unsigned char *)hash ,0);
-		RandomPoly(d, ctx->n, ctx->q, ctx->gamma,  hash[0], f_rng, p_rng);
+		RandomPoly(d, ctx->n, ctx->q, ctx->gamma,  hash, f_rng, p_rng);
 		polarssl_zeroize(buffer, bufferlength );
 		polarssl_free(buffer);
 

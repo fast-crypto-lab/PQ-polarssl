@@ -449,7 +449,5 @@ const pk_info_t rsa_alt_info = {
     NULL,
 };
 
-// TODO: Define static functions
-
 
 #endif /* POLARSSL_PK_C */

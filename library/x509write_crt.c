@@ -334,7 +334,6 @@ int x509write_crt_der( x509write_cert *ctx, unsigned char *buf, size_t size,
     /*
      *  SubjectPublicKeyInfo
      */
-    // FIXME
     ASN1_CHK_ADD( pub_len, pk_write_pubkey_der( ctx->subject_key,
                                                 tmp_buf, c - tmp_buf ) );
     c -= pub_len;

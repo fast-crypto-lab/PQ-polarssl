@@ -26,30 +26,22 @@ static int __tts_verify( void *ctx, md_type_t md_alg,
                        const unsigned char *sig, size_t sig_len )
 {
     int ret;
-    unsigned char QQ_buffer[TTS_DIGEST_SIZE_BYTE] = { 0 };
+    //for hash function with shorter output
+    unsigned char large_buffer[TTS_DIGEST_SIZE_BYTE] = { 0 };
     unsigned int n_bytes = ( hash_len < TTS_DIGEST_SIZE_BYTE ) ? hash_len : TTS_DIGEST_SIZE_BYTE;
     unsigned int _i = 0;
     for (_i = 0; _i < n_bytes; ++_i) {
-        QQ_buffer[_i] = hash[_i];
+        large_buffer[_i] = hash[_i];
     }
 
     ((void)md_alg);
 
-    // if (hash_len < TTS_DIGEST_SIZE_BYTE) {
-    //     /* In fact we need another error code here */
-    //     return POLARSSL_ERR_PK_SIG_LEN_MISMATCH;
-    // }
 
     if (sig_len != TTS_SIGNATURE_SIZE_BYTE) {
         return POLARSSL_ERR_PK_SIG_LEN_MISMATCH;
     }
 
-    // int verify_bin(
-    //          const uint8_t * md192b ,
-    //          const uint8_t * key ,
-    //          const uint8_t * s320b );
-
-    ret = tts_verify( QQ_buffer, (uint8_t *)(&((tts_context *) ctx)->pk), sig );
+    ret = tts_verify( large_buffer, (uint8_t *)(&((tts_context *) ctx)->pk), sig );
     if (ret != 0) {
         /* In fact we need a proper error code here */
         return -1;
@@ -62,16 +54,16 @@ static int __tts_sign( void *ctx, md_type_t md_alg,
                    unsigned char *sig, size_t *sig_len,
                    int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
 {
-    unsigned char QQ_buffer[TTS_DIGEST_SIZE_BYTE] = { 0 };
+    unsigned char large_buffer[TTS_DIGEST_SIZE_BYTE] = { 0 };
     unsigned int n_bytes = ( hash_len < TTS_DIGEST_SIZE_BYTE ) ? hash_len : TTS_DIGEST_SIZE_BYTE;
     unsigned int _i = 0;
     for (_i = 0; _i < n_bytes; ++_i) {
-        QQ_buffer[_i] = hash[_i];
+        large_buffer[_i] = hash[_i];
     }
 
     *sig_len = TTS_SIGNATURE_SIZE_BYTE;
 
-    return tts_sign(sig, (uint8_t *)(&((tts_context *) ctx)->sk), QQ_buffer);
+    return tts_sign(sig, (uint8_t *)(&((tts_context *) ctx)->sk), large_buffer);
 }
 
 static void *tts_alloc( void )
@@ -211,11 +203,11 @@ static int __tts2_verify( void *ctx, md_type_t md_alg,
                        const unsigned char *sig, size_t sig_len )
 {
     int ret;
-    unsigned char QQ_buffer[TTS2_DIGEST_SIZE_BYTE] = { 0 };
+    unsigned char large_buffer[TTS2_DIGEST_SIZE_BYTE] = { 0 };
     unsigned int n_bytes = ( hash_len < TTS2_DIGEST_SIZE_BYTE ) ? hash_len : TTS2_DIGEST_SIZE_BYTE;
     unsigned int _i = 0;
     for (_i = 0; _i < n_bytes; ++_i) {
-        QQ_buffer[_i] = hash[_i];
+        large_buffer[_i] = hash[_i];
     }
 
     ((void)md_alg);
@@ -224,12 +216,8 @@ static int __tts2_verify( void *ctx, md_type_t md_alg,
         return POLARSSL_ERR_PK_SIG_LEN_MISMATCH;
     }
 
-    // int verify_bin(
-    //          const uint8_t * md192b ,
-    //          const uint8_t * key ,
-    //          const uint8_t * s320b );
 
-    ret = tts2_verify( QQ_buffer, (uint8_t *)(&((tts2_context *) ctx)->pk), sig );
+    ret = tts2_verify( large_buffer, (uint8_t *)(&((tts2_context *) ctx)->pk), sig );
     if (ret != 0) {
         /* In fact we need a proper error code here */
         return -1;
@@ -242,16 +230,16 @@ static int __tts2_sign( void *ctx, md_type_t md_alg,
                    unsigned char *sig, size_t *sig_len,
                    int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
 {
-    unsigned char QQ_buffer[TTS2_DIGEST_SIZE_BYTE] = { 0 };
+    unsigned char large_buffer[TTS2_DIGEST_SIZE_BYTE] = { 0 };
     unsigned int n_bytes = ( hash_len < TTS2_DIGEST_SIZE_BYTE ) ? hash_len : TTS2_DIGEST_SIZE_BYTE;
     unsigned int _i = 0;
     for (_i = 0; _i < n_bytes; ++_i) {
-        QQ_buffer[_i] = hash[_i];
+        large_buffer[_i] = hash[_i];
     }
 
     *sig_len = TTS2_SIGNATURE_SIZE_BYTE;
 
-    return tts2_sign(sig, (uint8_t *)(&((tts2_context *) ctx)->sk), QQ_buffer);
+    return tts2_sign(sig, (uint8_t *)(&((tts2_context *) ctx)->sk), large_buffer);
 }
 
 static void *tts2_alloc( void )
