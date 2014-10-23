@@ -77,24 +77,24 @@ int main( int argc, char *argv[] )
         goto exit;
     }
 
-    printf( " ok\n  . Exporting the public  key in tts_pub.pem...." );
+    printf( " ok\n  . Exporting the public  key in ./self-signed/tts-pub.pem...." );
     fflush( stdout );
 
-    if( ( fpub = fopen( "tts_pub.pem", "wb+" ) ) == NULL )
+    if( ( fpub = fopen( "./self-signed/tts-pub.pem", "wb+" ) ) == NULL )
     {
-        printf( " failed\n  ! could not open tts_pub.pem for writing\n\n" );
+        printf( " failed\n  ! could not open ./self-signed/tts-pub.pem for writing\n\n" );
         ret = 1;
         goto exit;
     }
     pk_write_pubkey_pem( &ctx, large_buffer, 256000 );
     fwrite( large_buffer, 1, 256000, fpub );
 
-    printf( " ok\n  . Exporting the private key in tts_priv.pem..." );
+    printf( " ok\n  . Exporting the private key in ./self-signed/tts-prv.pem..." );
     fflush( stdout );
 
-    if( ( fpriv = fopen( "tts_priv.pem", "wb+" ) ) == NULL )
+    if( ( fpriv = fopen( "./self-signed/tts-prv.pem", "wb+" ) ) == NULL )
     {
-        printf( " failed\n  ! could not open tts_priv.pem for writing\n" );
+        printf( " failed\n  ! could not open ./self-signed/tts-prv.pem for writing\n" );
         ret = 1;
         goto exit;
     }

@@ -1,47 +1,35 @@
-# Run a Testing Server
+## 執行一個指定 ciphersuite 的 TLS server
 
-## 有 TTS 簽章的 ciphersuite (pk 由 self-signed certificate 提供)
+./programs/ssl/ssl_server2 debug_level=3 crt_file=self_signed_stuff/cert.crt key_file=self_signed_stuff/tts_priv.pem force_ciphersuite=TLS-LATTICEE-TTS-WITH-AES-128-GCM-SHA256
+        Run a LATTICEE-TTS server
 
-    $ ./programs/ssl/ssl_server2                \
-        debug_level=3                           \
-        crt_file=self_signed_stuff/cert.crt     \
-        key_file=self_signed_stuff/tts_priv.pem \
-        force_ciphersuite=TLS-LATTICEE-TTS-WITH-AES-128-GCM-SHA256
-
-    $ ./programs/ssl/ssl_server2                \
-        debug_level=3                           \
-        crt_file=self_signed_stuff/cert.crt     \
-        key_file=self_signed_stuff/tts_priv.pem \
-        force_ciphersuite=TLS-ECDHE-TTS-WITH-AES-128-GCM-SHA256
+./programs/ssl/ssl_server2 debug_level=3 crt_file=self_signed_stuff/cert.crt key_file=self_signed_stuff/tts_priv.pem force_ciphersuite=TLS-ECDHE-TTS-WITH-AES-128-GCM-SHA256
+        Run a ECDHE-TTS server
 
 
-## 有 RAINBOW 簽章的 ciphersuite
+## 產生 TTS 金鑰的憑證
 
-    TODO: 現在還沒有憑證
+./programs/pkey/tts_genkey
+        生成一組 TTS secret key 與 public key 分別寫到
+        self-signed/tts-prv.pem 和
+        self-signed/tts-pub.pem
+
+./programs/x509/cert_write selfsign=1 issuer_key=self-signed/tts-prv.pem subject_key=self-signed/tts-pub.pem output_file=self-signed/tts-crt.crt
+        使用 self-signed/tts-prv.pem
+        來為 self-signed/tts-pub.pem 簽名
+        造出 self-signed/tts-crt.crt X.509 憑證
 
 
-## 產生新的 key pair
+## 產生 RAINBOW 金鑰的憑證
 
-    $ ./programs/pkey/tts_genkey
+./programs/pkey/rb_genkey
+        生成一組 RB secret key 與 public key 分別寫到
+        self-signed/rb-prv.pem 和
+        self-signed/rb-pub.pem
 
-    $ ./programs/pkey/rb_genkey
-
-
-## 產生新的憑證
-
-    $ ./programs/x509/cert_write                \
-        selfsign=1                              \
-        subject_key=self-signed/tts_pub.pem \
-         issuer_key=self-signed/tts_prv.pem \
-        output_file=self-signed/tts_crt.pem
-
-    $ ./programs/x509/cert_write                \
-        selfsign=1                              \
-        subject_key=self-signed/rainbow_pub.pem \
-         issuer_key=self-signed/rainbow_prv.pem \
-        output_file=self-signed/rainbow_crt.pem
-
-**FIXME: 現在會噴錯誤訊息**
-
-!  mpi_read_string returned -0xffff8001 - SSL - Hardware acceleration function returned with error : UNKNOWN ERROR CODE (007F)
+./programs/x509/cert_write selfsign=1 issuer_key=self-signed/rb-prv.pem subject_key=self-signed/rb-pub.pem output_file=self-signed/rb-crt.crt
+        使用 self-signed/rb-prv.pem
+        來為 self-signed/rb-pub.pem 簽名
+        造出 self-signed/rb-crt.crt X.509 憑證
+        但是失敗了
 

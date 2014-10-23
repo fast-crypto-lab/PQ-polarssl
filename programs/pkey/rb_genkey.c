@@ -77,24 +77,24 @@ int main( int argc, char *argv[] )
         goto exit;
     }
 
-    printf( " ok\n  . Exporting the public  key in rainbow_pub.pem...." );
+    printf( " ok\n  . Exporting the public  key in ./self-signed/rb-pub.pem...." );
     fflush( stdout );
 
-    if( ( fpub = fopen( "rainbow_pub.pem", "wb+" ) ) == NULL )
+    if( ( fpub = fopen( "./self-signed/rb-pub.pem", "wb+" ) ) == NULL )
     {
-        printf( " failed\n  ! could not open rainbow_pub.pem for writing\n\n" );
+        printf( " failed\n  ! could not open ./self-signed/rb-pub.pem for writing\n\n" );
         ret = 1;
         goto exit;
     }
     pk_write_pubkey_pem( &ctx, large_buffer, 256000 );
     fwrite( large_buffer, 1, 256000, fpub );
 
-    printf( " ok\n  . Exporting the private key in rainbow_prv.pem..." );
+    printf( " ok\n  . Exporting the private key in ./self-signed/rb-prv.pem..." );
     fflush( stdout );
 
-    if( ( fpriv = fopen( "rainbow_prv.pem", "wb+" ) ) == NULL )
+    if( ( fpriv = fopen( "./self-signed/rb-prv.pem", "wb+" ) ) == NULL )
     {
-        printf( " failed\n  ! could not open rainbow_prv.pem for writing\n" );
+        printf( " failed\n  ! could not open ./self-signed/rb-prv.pem for writing\n" );
         ret = 1;
         goto exit;
     }
