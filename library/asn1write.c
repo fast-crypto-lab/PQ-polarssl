@@ -48,6 +48,7 @@ int asn1_write_len( unsigned char **p, unsigned char *start, size_t len )
         if( *p - start < 1 )
             return( POLARSSL_ERR_ASN1_BUF_TOO_SMALL );
 
+        /* len is 0 ~ 127 */
         *--(*p) = (unsigned char) len;
         return( 1 );
     }
@@ -57,21 +58,41 @@ int asn1_write_len( unsigned char **p, unsigned char *start, size_t len )
         if( *p - start < 2 )
             return( POLARSSL_ERR_ASN1_BUF_TOO_SMALL );
 
+        /* len is 128 ~ 255 */
         *--(*p) = (unsigned char) len;
         *--(*p) = 0x81;
         return( 2 );
     }
 
-    if( *p - start < 3 )
+    if( len <= 0xFFFF )
+    {
+        if( *p - start < 3 )
+            return( POLARSSL_ERR_ASN1_BUF_TOO_SMALL );
+
+        /* len is 256 ~ 65535 */
+        *--(*p) = len % 256;
+        *--(*p) = ( len / 256 ) % 256;
+        *--(*p) = 0x82;
+        return( 3 );
+    }
+
+
+    /* ************************************************************
+     *
+     *  We assume we never have lengths larger than 16777215 bytes
+     *
+     * ************************************************************ */
+
+    if( *p - start < 4 )
         return( POLARSSL_ERR_ASN1_BUF_TOO_SMALL );
 
-    // We assume we never have lengths larger than 65535 bytes
-    //
+    /* len is 65536 ~ 16777215 */
     *--(*p) = len % 256;
     *--(*p) = ( len / 256 ) % 256;
-    *--(*p) = 0x82;
+    *--(*p) = ( len / 65536 ) % 256;
+    *--(*p) = 0x83;
 
-    return( 3 );
+    return( 4 );
 }
 
 int asn1_write_tag( unsigned char **p, unsigned char *start, unsigned char tag )

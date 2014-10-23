@@ -1,10 +1,13 @@
 ## 執行一個指定 ciphersuite 的 TLS server
 
-./programs/ssl/ssl_server2 debug_level=3 crt_file=self_signed_stuff/cert.crt key_file=self_signed_stuff/tts_priv.pem force_ciphersuite=TLS-LATTICEE-TTS-WITH-AES-128-GCM-SHA256
+./programs/ssl/ssl_server2 debug_level=3 crt_file=self-signed/tts-crt.crt key_file=self-signed/tts-prv.pem force_ciphersuite=TLS-LATTICEE-TTS-WITH-AES-128-GCM-SHA256
         Run a LATTICEE-TTS server
 
-./programs/ssl/ssl_server2 debug_level=3 crt_file=self_signed_stuff/cert.crt key_file=self_signed_stuff/tts_priv.pem force_ciphersuite=TLS-ECDHE-TTS-WITH-AES-128-GCM-SHA256
+./programs/ssl/ssl_server2 debug_level=3 crt_file=self-signed/tts-crt.crt key_file=self-signed/tts-prv.pem force_ciphersuite=TLS-ECDHE-TTS-WITH-AES-128-GCM-SHA256
         Run a ECDHE-TTS server
+
+./programs/ssl/ssl_server2 debug_level=3 crt_file=self-signed/rb-crt.crt key_file=self-signed/rb-prv.pem force_ciphersuite=TLS-LATTICEE-RAINBOW-WITH-AES-128-GCM-SHA256
+        Run a LATTICEE-RAINBOW server
 
 
 ## 產生 TTS 金鑰的憑證
