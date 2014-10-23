@@ -281,11 +281,7 @@ void mat_mad32( uint32_t * accu_r , const uint8_t * mat , const uint8_t * vec , 
 void rowmat_mul32( uint8_t * r , const uint32_t * mat , const uint8_t * vec , unsigned len );
 
 
-int solve_linear20( uint8_t * r , uint32_t * rowmat , const uint8_t * inp );
-
-int solve_linear24( uint8_t * r , uint32_t * rowmat , const uint8_t * inp );
-
-int solve_linear4( uint8_t * r , uint32_t * rowmat , const uint8_t * inp );
+int solve_linear( uint8_t * r , uint32_t * rowmat , const uint8_t * inp, const unsigned w );
 
 
 /* mq polynomial library */

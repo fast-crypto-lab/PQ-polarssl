@@ -21,7 +21,8 @@ void init_mont(){
 
 static void mpi_get_right_Rbits(mpi *ROP, mpi *OP){
 
-	int i;
+	size_t  i;
+	t_uint mask = 1;
 #define LWE_NLIMB  ((RBIT+biL-1)/biL)
 
 	mpi_grow( ROP, LWE_NLIMB);
@@ -29,7 +30,6 @@ static void mpi_get_right_Rbits(mpi *ROP, mpi *OP){
 		ROP->p[i] = OP->p[i];
 	}	
 		
-	t_uint mask = 1;
 	mask = mask <<(RBIT % biL);
 	mask = mask  - 1;
 	ROP->p[LWE_NLIMB -1] &= mask ;

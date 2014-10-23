@@ -339,7 +339,7 @@ static int do_tts_sign( uint8_t * s , const tts_seckey_t * key , const uint8_t *
 		vec_negative( tmp3 , tmp3 , 20 );
 		vec_add( tmp3 , tmp2 , 20 );
 		gen_ov_rowmat1( rowmat , key , tmp );
-		badluck = solve_linear20( &tmp[24] , &rowmat[0][0] , tmp3 );
+		badluck = solve_linear( &tmp[24] , &rowmat[0][0] , tmp3, 20 );
 		if( 0 != badluck ) continue;
 
 		calc_constant2( tmp3 , key , tmp );
@@ -347,7 +347,7 @@ static int do_tts_sign( uint8_t * s , const tts_seckey_t * key , const uint8_t *
 		vec_add( tmp3 , &tmp2[20] , 20 );
 		gen_ov_rowmat2( rowmat , key , tmp );
 /* __TTS__ */
-		badluck = solve_linear20( &tmp[44] , &rowmat[0][0] , tmp3 );
+		badluck = solve_linear( &tmp[44] , &rowmat[0][0] , tmp3, 20 );
 		if( 0 == badluck ) break;
 	}
 	if( 0 != badluck ) return -1;
@@ -497,7 +497,7 @@ static int do_rb_sign( uint8_t * s , const rb_seckey_t * key , const uint8_t * m
 		vec_negative( tmp3 , tmp3 , 20 );
 		vec_add( tmp3 , tmp2 , 20 );
 		gen_ov_rowmat( rowmat , key->ol1st_rowmat , & key->ov1st_rowmat[0][0][0] , tmp , 24 );
-		badluck = solve_linear20( &tmp[24] , &rowmat[0][0] , tmp3 );
+		badluck = solve_linear( &tmp[24] , &rowmat[0][0] , tmp3, 20 );
 		if( 0 != badluck ) continue;
 
 		eval_q44x20( tmp3 , &(key->vv2nd) , tmp );
@@ -505,7 +505,7 @@ static int do_rb_sign( uint8_t * s , const rb_seckey_t * key , const uint8_t * m
 		vec_add( tmp3 , &tmp2[20] , 20 );
 		gen_ov_rowmat( rowmat , key->ol2nd_rowmat , & key->ov2nd_rowmat[0][0][0] , tmp , 44 );
 /* __RAINBOW__ */
-		badluck = solve_linear20( &tmp[44] , &rowmat[0][0] , tmp3 );
+		badluck = solve_linear( &tmp[44] , &rowmat[0][0] , tmp3, 20 );
 		if( 0 == badluck ) break;
 	}
 	if( 0 != badluck ) return -1;
@@ -767,14 +767,14 @@ static int rb2_invcmap( uint8_t * r , const rb2_seckey_t * key , const uint8_t *
 		vec_negative( tmp3 , tmp3 , 24 );
 		vec_add( tmp3 , inp , 24 );
 		rb2_gen_ov_rowmat( rowmat , key->ol1st_rowmat , & key->ov1st_rowmat[0][0][0] , r , 26 );
-		badluck = solve_linear24( r+28 , rowmat , tmp3 );
+		badluck = solve_linear( r+28 , rowmat , tmp3, 24 );
 		if( 0 != badluck ) continue;
 
 		eval_q52x4( tmp3 , &(key->vv2nd) , r );
 		vec_negative( tmp3 , tmp3 , 4 );
 		vec_add( tmp3 , inp+24 , 4 );
 		rb2_gen_ov_rowmat_4( rowmat , key->ol2nd_rowmat , & key->ov2nd_rowmat[0][0][0] , r , 52 );
-		badluck = solve_linear4( r+52 , rowmat , tmp3 );
+		badluck = solve_linear( r+52 , rowmat , tmp3, 4 );
 		if( 0 != badluck ) continue;
 
 		eval_q56x24( tmp3 , &(key->vv3rd) , r );
@@ -782,7 +782,7 @@ static int rb2_invcmap( uint8_t * r , const rb2_seckey_t * key , const uint8_t *
 		vec_add( tmp3 , inp+28 , 24 );
 		rb2_gen_ov_rowmat( rowmat , key->ol3rd_rowmat , & key->ov3rd_rowmat[0][0][0] , r , 56 );
 
-		badluck = solve_linear24( r+56 , rowmat , tmp3 );
+		badluck = solve_linear( r+56 , rowmat , tmp3, 24 );
 		if( 0 == badluck ) return 0;
 	}
 	return -1;
@@ -1113,14 +1113,14 @@ static int tts2_invcmap( uint8_t * r , const tts2_seckey_t * key , const uint8_t
 		vec_negative( tmp3 , tmp3 , 24 );
 		vec_add( tmp3 , inp , 24 );
 		tts2_gen_ov_rowmat1( rowmat , key , r );
-		badluck = solve_linear24( r+28 , rowmat , tmp3 );
+		badluck = solve_linear( r+28 , rowmat , tmp3, 24 );
 		if( 0 != badluck ) continue;
 
 		tts2_calc_constant2( tmp3 , key , r );
 		vec_negative( tmp3 , tmp3 , 4 );
 		vec_add( tmp3 , inp+24 , 4 );
 		tts2_gen_ov_rowmat2( rowmat , key , r );
-		badluck = solve_linear4( r+52 , rowmat , tmp3 );
+		badluck = solve_linear( r+52 , rowmat , tmp3, 4 );
 		if( 0 != badluck ) continue;
 
 		tts2_calc_constant3( tmp3 , key , r );
@@ -1128,7 +1128,7 @@ static int tts2_invcmap( uint8_t * r , const tts2_seckey_t * key , const uint8_t
 		vec_add( tmp3 , inp+28 , 24 );
 		tts2_gen_ov_rowmat3( rowmat , key , r );
 
-		badluck = solve_linear24( r+56 , rowmat , tmp3 );
+		badluck = solve_linear( r+56 , rowmat , tmp3, 24 );
 		if( 0 == badluck ) return 0;
 	}
 	return -1;
