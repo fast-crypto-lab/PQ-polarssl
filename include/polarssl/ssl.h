@@ -500,7 +500,8 @@ union _ssl_dh_exchange		//rough guess
  * peers are using it too!
  */
 #if !defined(SSL_MAX_CONTENT_LEN)
-#define SSL_MAX_CONTENT_LEN         (16384 + POLARSSL_DH_SIZE) /**< Size of the input / output buffer */
+#define SSL_MAX_CONTENT_LEN         (163840 + POLARSSL_DH_SIZE) /**< Size of the input / output buffer */
+/* FIXME (16384 + POLARSSL_DH_SIZE) is still too small, we cannot hold a TTS2 certificate */
 #endif
 
 #define SSL_BUFFER_LEN  ( SSL_MAX_CONTENT_LEN               \

@@ -36,6 +36,9 @@ static int __tts_verify( void *ctx, md_type_t md_alg,
 
     ((void)md_alg);
 
+    printf("\n*** INSIDE pk_info->verify_func() function ***\n"
+           " The hash_len = %zu 'hash' gets truncated or padded"
+           " ---> n_bytes = %zu 'QQ_buffer'\n", hash_len, n_bytes);
 
     if (sig_len != TTS_SIGNATURE_SIZE_BYTE) {
         return POLARSSL_ERR_PK_SIG_LEN_MISMATCH;
@@ -61,6 +64,10 @@ static int __tts_sign( void *ctx, md_type_t md_alg,
     ((void) md_alg);
     ((void) f_rng);
     ((void) p_rng);
+
+    printf("\n*** INSIDE pk_info->sign_func() function ***\n"
+           " The hash_len = %zu 'hash' gets truncated or padded"
+           " ---> n_bytes = %zu 'QQ_buffer'\n", hash_len, n_bytes);
 
     for (_i = 0; _i < n_bytes; ++_i) {
         QQ_buffer[_i] = hash[_i];
@@ -133,6 +140,10 @@ static int rainbow_verify( void *ctx, md_type_t md_alg,
         QQ_buffer[_i] = hash[_i];
     }
 
+    printf("\n*** INSIDE pk_info->verify_func() function ***\n"
+           " The hash_len = %zu 'hash' gets truncated or padded"
+           " ---> n_bytes = %zu 'QQ_buffer'\n", hash_len, n_bytes);
+
     //if (hash_len < RB_DIGEST_SIZE_BYTE) {
     //    /* In fact we need another error code here */
     //    return POLARSSL_ERR_PK_SIG_LEN_MISMATCH;
@@ -162,6 +173,10 @@ static int rainbow_sign( void *ctx, md_type_t md_alg,
     ((void) md_alg);
     ((void) f_rng);
     ((void) p_rng);
+
+    printf("\n*** INSIDE pk_info->sign_func() function ***\n"
+           " The hash_len = %zu 'hash' gets truncated or padded"
+           " ---> n_bytes = %zu 'QQ_buffer'\n", hash_len, n_bytes);
 
     for (_i = 0; _i < n_bytes; ++_i) {
         QQ_buffer[_i] = hash[_i];
@@ -235,6 +250,10 @@ static int __tts2_verify( void *ctx, md_type_t md_alg,
         QQ_buffer[_i] = hash[_i];
     }
 
+    printf("\n*** INSIDE pk_info->verify_func() function ***\n"
+           " The hash_len = %zu 'hash' gets truncated or padded"
+           " ---> n_bytes = %zu 'QQ_buffer'\n", hash_len, n_bytes);
+
     ((void)md_alg);
 
     if (sig_len != TTS2_SIGNATURE_SIZE_BYTE) {
@@ -262,6 +281,10 @@ static int __tts2_sign( void *ctx, md_type_t md_alg,
     ((void) md_alg);
     ((void) f_rng);
     ((void) p_rng);
+
+    printf("\n*** INSIDE pk_info->sign_func() function ***\n"
+           " The hash_len = %zu 'hash' gets truncated or padded"
+           " ---> n_bytes = %zu 'QQ_buffer'\n", hash_len, n_bytes);
 
     for (_i = 0; _i < n_bytes; ++_i) {
         QQ_buffer[_i] = hash[_i];
@@ -335,6 +358,10 @@ static int rainbow2_verify( void *ctx, md_type_t md_alg,
         QQ_buffer[_i] = hash[_i];
     }
 
+    printf("\n*** INSIDE pk_info->verify_func() function ***\n"
+           " The hash_len = %zu 'hash' gets truncated or padded"
+           " ---> n_bytes = %zu 'QQ_buffer'\n", hash_len, n_bytes);
+
     if (sig_len != RB2_SIGNATURE_SIZE_BYTE) {
         return POLARSSL_ERR_PK_SIG_LEN_MISMATCH;
     }
@@ -359,6 +386,10 @@ static int rainbow2_sign( void *ctx, md_type_t md_alg,
     ((void) md_alg);
     ((void) f_rng);
     ((void) p_rng);
+
+    printf("\n*** INSIDE pk_info->sign_func() function ***\n"
+           " The hash_len = %zu 'hash' gets truncated or padded"
+           " ---> n_bytes = %zu 'QQ_buffer'\n", hash_len, n_bytes);
 
     for (_i = 0; _i < n_bytes; ++_i) {
         QQ_buffer[_i] = hash[_i];

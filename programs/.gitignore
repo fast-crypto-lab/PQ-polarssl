@@ -26,6 +26,7 @@ pkey/rsa_sign_pss
 pkey/rsa_verify
 pkey/rsa_verify_pss
 pkey/tts_genkey
+pkey/tts2_genkey
 pkey/rb_genkey
 random/gen_entropy
 random/gen_random_ctr_drbg

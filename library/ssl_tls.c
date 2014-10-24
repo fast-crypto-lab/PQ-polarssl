@@ -2192,6 +2192,7 @@ int ssl_read_record( ssl_context *ssl )
         if( ssl->in_msglen < 4 || ssl->in_msg[1] != 0 )
         {
             SSL_DEBUG_MSG( 1, ( "bad handshake length" ) );
+            if (ssl->in_msglen < 4) { SSL_DEBUG_MSG(1, ("<4")); } else { SSL_DEBUG_MSG(1, ("!=0")) }
             return( POLARSSL_ERR_SSL_INVALID_RECORD );
         }
 
