@@ -252,19 +252,6 @@
 #define SSL_DEFAULT_TICKET_LIFETIME     86400 /**< Lifetime of session tickets (if enabled) */
 #endif
 
-/*
- * Size of the input / output buffer.
- * Note: the RFC defines the default size of SSL / TLS messages. If you
- * change the value here, other clients / servers may not be able to
- * communicate with you anymore. Only change this value if you control
- * both sides of the connection and have it reduced at both sides, or
- * if you're using the Max Fragment Length extension and you know all your
- * peers are using it too!
- */
-#if !defined(SSL_MAX_CONTENT_LEN)
-#define SSL_MAX_CONTENT_LEN         16384 //+ POLARSSL_DH_SIZE /**< Size of the input / output buffer */
-#endif
-
 /* \} name SECTION: Module settings */
 
 /*
@@ -299,12 +286,6 @@
 #define SSL_PADDING_ADD              0
 #endif
 
-#define SSL_BUFFER_LEN  ( SSL_MAX_CONTENT_LEN               \
-                        + SSL_COMPRESSION_ADD               \
-                        + 40000 /* counter + header + IV */    \
-                        + SSL_MAC_ADD                       \
-                        + SSL_PADDING_ADD                   \
-                        )
 
 /*
  * Signaling ciphersuite values (SCSV)
@@ -454,10 +435,80 @@ union _ssl_premaster_secret
     unsigned char _pms_ecdhe_psk[4 + POLARSSL_ECP_MAX_BYTES
                                    + POLARSSL_PSK_MAX_LEN];     /* RFC 5489 2 */
 #endif
-    unsigned char HAHA[4096];
+#if defined(POLARSSL_KEY_EXCHANGE_LATTICEE_TTS_ENABLED)     || \
+    defined(POLARSSL_KEY_EXCHANGE_LATTICEE_RAINBOW_ENABLED) || \
+    defined(POLARSSL_KEY_EXCHANGE_LATTICEE_RSA_ENABLED)     || \
+    defined(POLARSSL_KEY_EXCHANGE_LATTICEE_ECDSA_ENABLED)   || \
+    defined(POLARSSL_KEY_EXCHANGE_LATTICEE_TTS2_ENABLED)    || \
+    defined(POLARSSL_KEY_EXCHANGE_LATTICEE_RAINBOW2_ENABLED)
+    unsigned char latticepremaster[2048];
+#endif
+
+
 };
 
 #define POLARSSL_PREMASTER_SIZE     sizeof( union _ssl_premaster_secret )
+
+union _ssl_dh_exchange		//rough guess
+{
+#if defined(POLARSSL_KEY_EXCHANGE_RSA_ENABLED)
+    unsigned char _pms_rsa[512];
+#endif
+#if defined(POLARSSL_KEY_EXCHANGE_DHE_RSA_ENABLED)
+    unsigned char _pms_dhm[512*5];
+#endif
+#if defined(POLARSSL_KEY_EXCHANGE_ECDHE_RSA_ENABLED)    || \
+    defined(POLARSSL_KEY_EXCHANGE_ECDH_RSA_ENABLED)
+    unsigned char _pms_ecdh_rsa[64*3*2+ 512];
+#endif
+#if defined(POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED)  || \
+    defined(POLARSSL_KEY_EXCHANGE_ECDH_ECDSA_ENABLED)
+    unsigned char _pms_ecdh_ecdsa[64*3*3];
+#endif
+#if defined(POLARSSL_KEY_EXCHANGE_PSK_ENABLED)
+    unsigned char _pms_psk[2 * POLARSSL_PSK_MAX_LEN];
+#endif
+#if defined(POLARSSL_KEY_EXCHANGE_DHE_PSK_ENABLED)
+    unsigned char _pms_dhe_psk[512*5];
+#endif
+#if defined(POLARSSL_KEY_EXCHANGE_RSA_PSK_ENABLED)
+    unsigned char _pms_rsa_psk[512*5];
+#endif
+#if defined(POLARSSL_KEY_EXCHANGE_DHE_PSK_ENABLED)
+    unsigned char _pms_ecdhe_psk[64*3*2+POLARSSL_PSK_MAX_LEN];     /* RFC 5489 2 */
+#endif
+#if defined(POLARSSL_KEY_EXCHANGE_LATTICEE_TTS_ENABLED)     || \
+    defined(POLARSSL_KEY_EXCHANGE_LATTICEE_RAINBOW_ENABLED) || \
+    defined(POLARSSL_KEY_EXCHANGE_LATTICEE_RSA_ENABLED)     || \
+    defined(POLARSSL_KEY_EXCHANGE_LATTICEE_ECDSA_ENABLED)   || \
+    defined(POLARSSL_KEY_EXCHANGE_LATTICEE_TTS2_ENABLED)    || \
+    defined(POLARSSL_KEY_EXCHANGE_LATTICEE_RAINBOW2_ENABLED)
+    unsigned char latticepremaster[2048*8*3+32+512];
+#endif
+
+};
+
+#define POLARSSL_DH_SIZE     sizeof( union _ssl_dh_exchange )
+
+/*
+ * Size of the input / output buffer.
+ * Note: the RFC defines the default size of SSL / TLS messages. If you
+ * change the value here, other clients / servers may not be able to
+ * communicate with you anymore. Only change this value if you control
+ * both sides of the connection and have it reduced at both sides, or
+ * if you're using the Max Fragment Length extension and you know all your
+ * peers are using it too!
+ */
+#if !defined(SSL_MAX_CONTENT_LEN)
+#define SSL_MAX_CONTENT_LEN         (16384 + POLARSSL_DH_SIZE) /**< Size of the input / output buffer */
+#endif
+
+#define SSL_BUFFER_LEN  ( SSL_MAX_CONTENT_LEN               \
+                        + SSL_COMPRESSION_ADD               \
+                        + 29 /* counter + header + IV */    \
+                        + SSL_MAC_ADD                       \
+                        + SSL_PADDING_ADD                   \
+                        )
 
 #ifdef __cplusplus
 extern "C" {

@@ -443,7 +443,7 @@ int main( int argc, char *argv[] )
         else if( strcmp( p, "request_size" ) == 0 )
         {
             opt.request_size = atoi( q );
-            if( opt.request_size < 0 || opt.request_size > SSL_MAX_CONTENT_LEN )
+            if( opt.request_size < 0 || opt.request_size > (int) SSL_MAX_CONTENT_LEN )
                 goto usage;
         }
         else if( strcmp( p, "ca_file" ) == 0 )
