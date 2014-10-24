@@ -57,6 +57,8 @@
 #include "polarssl/ecdh.h"
 #include "polarssl/error.h"
 
+#include "rainbow_tts/rainbow.h"
+
 #if defined _MSC_VER && !defined snprintf
 #define snprintf _snprintf
 #endif
@@ -160,14 +162,14 @@ typedef struct {
     char md4, md5, ripemd160, sha1, sha256, sha512,
          arc4, des3, des, aes_cbc, aes_gcm, aes_ccm, camellia, blowfish,
          havege, ctr_drbg, hmac_drbg,
-         rsa, dhm, ecdsa, ecdh;
+         rsa, dhm, ecdsa, ecdh, tts, rainbow;
 } todo_list;
 
 #define OPTIONS                                                         \
     "md4, md5, ripemd160, sha1, sha256, sha512,\n"                      \
     "arc4, des3, des, aes_cbc, aes_gcm, aes_ccm, camellia, blowfish,\n" \
     "havege, ctr_drbg, hmac_drbg\n"                                     \
-    "rsa, dhm, ecdsa, ecdh.\n"
+    "rsa, dhm, ecdsa, ecdh, tts, rainbow.\n"
 
 int main( int argc, char *argv[] )
 {
@@ -226,6 +228,10 @@ int main( int argc, char *argv[] )
                 todo.ecdsa = 1;
             else if( strcmp( argv[i], "ecdh" ) == 0 )
                 todo.ecdh = 1;
+            else if( strcmp( argv[i], "tts" ) == 0 )
+                todo.tts = 1;
+            else if( strcmp( argv[i], "rainbow" ) == 0 )
+                todo.rainbow = 1;
             else
             {
                 printf( "Unrecognized option: %s\n", argv[i] );
@@ -634,6 +640,62 @@ int main( int argc, char *argv[] )
         }
     }
 #endif
+    if( todo.tts )
+    {
+        tts_context tts;
+        unsigned char tmp1[200];
+        unsigned char tmp2[200];
+
+        memset( buf, 0x11, sizeof( buf ) );
+
+        tts_genkey( &tts.pk, &tts.sk, myrand, NULL );
+
+        TIME_PUBLIC( "tts", "sign",
+                tts_sign( tmp1, &tts.sk, tmp2) );
+
+        TIME_PUBLIC( "tts", "verify",
+                tts_verify( tmp2, &tts.pk, tmp1 ) );
+
+        tts2_context tts2;
+        memset( buf, 0x11, sizeof( buf ) );
+
+        tts2_genkey( &tts2.pk, &tts2.sk, myrand, NULL );
+
+        TIME_PUBLIC( "tts2", "sign",
+                tts2_sign( tmp1, &tts2.sk, tmp2) );
+
+        TIME_PUBLIC( "tts2", "verify",
+                tts2_verify( tmp2, &tts2.pk, tmp1 ) );
+    }
+
+    if( todo.rainbow )
+    {
+        rainbow_context rb;
+        unsigned char tmp1[200];
+        unsigned char tmp2[200];
+
+        memset( buf, 0x11, sizeof( buf ) );
+
+        rb_genkey( &rb.pk, &rb.sk, myrand, NULL );
+
+        TIME_PUBLIC( "rb", "sign",
+                rb_sign( tmp1, &rb.sk, tmp2) );
+
+        TIME_PUBLIC( "rb", "verify",
+                rb_verify( tmp2, &rb.pk, tmp1 ) );
+
+        rainbow2_context rb2;
+        memset( buf, 0x11, sizeof( buf ) );
+
+        rb2_genkey( &rb2.pk, &rb2.sk, myrand, NULL );
+
+        TIME_PUBLIC( "rb2", "sign",
+                rb2_sign( tmp1, &rb2.sk, tmp2) );
+
+        TIME_PUBLIC( "rb2", "verify",
+                rb2_verify( tmp2, &rb2.pk, tmp1 ) );
+
+    }
     printf( "\n" );
 
 #if defined(_WIN32)
