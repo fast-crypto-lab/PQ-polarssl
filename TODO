@@ -465,11 +465,17 @@ Next meeting date 2014/10/16 (Thu) 10:30 AM at MD631
     NEXT Meeting Data: 2014/10/24 (Friday) 10:30 am at MD631
 
 
-Some error code is ugly.
-Signature entropy too low (We just expand the 128-bit hash by MD5 with an all-zero padding).
 
 
-把 include/polarssl/ssl.h 的 #define SSL_BUFFER_LEN 換掉 40000 應該是 29
-把 include/polarssl/ssl.h 的 #define SSL_MAX_CONTENT_LEN 換掉變成 sizeof( ourunion )
-把一些東西的 ENABLED macro 寫進 include/polarssl/config.h 例如 LWE
+
+2014/10/24 Fri 12:34:46
+
+- TODO: Continue to finish some simple documents
+- FIXME: Signature entropy too low (We just expand the 128-bit hash by MD5 with an all-zero padding)
+- TODO: Rerun performance for all crypto computation and SSL server<-->client
+
+- TODO: Make sure everything has an on-or-off MACRO in config.h
+- TODO: Some error code is ugly, maybe we need to add new ones
+- TODO: Reformat the whole codebase (no tabs, no trailing whitespaces, no OUR Chinese comments)
+- TODO: Publish code to GitHub
 
