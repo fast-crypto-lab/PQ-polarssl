@@ -262,7 +262,7 @@
  * peers are using it too!
  */
 #if !defined(SSL_MAX_CONTENT_LEN)
-#define SSL_MAX_CONTENT_LEN         163840  /**< Size of the input / output buffer */
+#define SSL_MAX_CONTENT_LEN         16384 //+ POLARSSL_DH_SIZE /**< Size of the input / output buffer */
 #endif
 
 /* \} name SECTION: Module settings */

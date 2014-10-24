@@ -262,10 +262,14 @@ inline static void vec_fullreduce32_inp( uint32_t *vec , unsigned len )
 
 int solve_linear( uint8_t * r , uint32_t * rowmat , const uint8_t * inp, const unsigned w )
 {
-	uint32_t cons[w];
-	uint32_t swap[w];
+	uint32_t cons[24] = { 0 };
+	uint32_t swap[24] = { 0 };
 	unsigned i,j;
 	uint32_t pivot,tmp;
+
+	if(w>24)
+		return -1;
+	
 	vec_assign32( cons , inp , w );
 
 	for(i=0;i<w;i++){

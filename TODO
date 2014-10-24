@@ -469,3 +469,7 @@ Some error code is ugly.
 Signature entropy too low (We just expand the 128-bit hash by MD5 with an all-zero padding).
 
 
+把 include/polarssl/ssl.h 的 #define SSL_BUFFER_LEN 換掉 40000 應該是 29
+把 include/polarssl/ssl.h 的 #define SSL_MAX_CONTENT_LEN 換掉變成 sizeof( ourunion )
+把一些東西的 ENABLED macro 寫進 include/polarssl/config.h 例如 LWE
+

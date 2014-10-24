@@ -26,6 +26,7 @@ static int __tts_verify( void *ctx, md_type_t md_alg,
                        const unsigned char *sig, size_t sig_len )
 {
     int ret;
+    //for hash function with shorter output
     unsigned char QQ_buffer[TTS_DIGEST_SIZE_BYTE] = { 0 };
     unsigned int n_bytes = ( hash_len < TTS_DIGEST_SIZE_BYTE ) ? hash_len : TTS_DIGEST_SIZE_BYTE;
     unsigned int _i = 0;
@@ -35,19 +36,10 @@ static int __tts_verify( void *ctx, md_type_t md_alg,
 
     ((void)md_alg);
 
-    // if (hash_len < TTS_DIGEST_SIZE_BYTE) {
-    //     /* In fact we need another error code here */
-    //     return POLARSSL_ERR_PK_SIG_LEN_MISMATCH;
-    // }
 
     if (sig_len != TTS_SIGNATURE_SIZE_BYTE) {
         return POLARSSL_ERR_PK_SIG_LEN_MISMATCH;
     }
-
-    // int verify_bin(
-    //          const uint8_t * md192b ,
-    //          const uint8_t * key ,
-    //          const uint8_t * s320b );
 
     ret = tts_verify( QQ_buffer, (const uint8_t *)(&((tts_context *) ctx)->pk), sig );
     if (ret != 0) {
@@ -249,10 +241,6 @@ static int __tts2_verify( void *ctx, md_type_t md_alg,
         return POLARSSL_ERR_PK_SIG_LEN_MISMATCH;
     }
 
-    // int verify_bin(
-    //          const uint8_t * md192b ,
-    //          const uint8_t * key ,
-    //          const uint8_t * s320b );
 
     ret = tts2_verify( QQ_buffer, (const uint8_t *)(&((tts2_context *) ctx)->pk), sig );
     if (ret != 0) {
@@ -281,7 +269,7 @@ static int __tts2_sign( void *ctx, md_type_t md_alg,
 
     *sig_len = TTS2_SIGNATURE_SIZE_BYTE;
 
-    return tts2_sign(sig, (const uint8_t *)(&((tts2_context *) ctx)->sk), QQ_buffer);
+    return tts2_sign(sig, (uint8_t *)(&((tts2_context *) ctx)->sk), QQ_buffer);
 }
 
 static void *tts2_alloc( void )
@@ -346,11 +334,6 @@ static int rainbow2_verify( void *ctx, md_type_t md_alg,
     for (_i = 0; _i < n_bytes; ++_i) {
         QQ_buffer[_i] = hash[_i];
     }
-
-    // if (hash_len < RB2_DIGEST_SIZE_BYTE) {
-    //     /* In fact we need another error code here */
-    //     return POLARSSL_ERR_PK_SIG_LEN_MISMATCH;
-    // }
 
     if (sig_len != RB2_SIGNATURE_SIZE_BYTE) {
         return POLARSSL_ERR_PK_SIG_LEN_MISMATCH;
