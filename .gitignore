@@ -8,3 +8,4 @@ Coverage
 *.gcda
 library/polarssl.info
 tags
+*.dSYM
