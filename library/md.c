@@ -52,16 +52,6 @@ static void polarssl_zeroize( void *v, size_t n ) {
 
 static const int supported_digests[] = {
 
-#if defined(POLARSSL_SHA512_C)
-        POLARSSL_MD_SHA384,
-        POLARSSL_MD_SHA512,
-#endif
-
-#if defined(POLARSSL_SHA256_C)
-        POLARSSL_MD_SHA224,
-        POLARSSL_MD_SHA256,
-#endif
-
 #if defined(POLARSSL_SHA1_C)
         POLARSSL_MD_SHA1,
 #endif
@@ -80,6 +70,16 @@ static const int supported_digests[] = {
 
 #if defined(POLARSSL_MD2_C)
         POLARSSL_MD_MD2,
+#endif
+
+#if defined(POLARSSL_SHA512_C)
+        POLARSSL_MD_SHA384,
+        POLARSSL_MD_SHA512,
+#endif
+
+#if defined(POLARSSL_SHA256_C)
+        POLARSSL_MD_SHA224,
+        POLARSSL_MD_SHA256,
 #endif
 
         POLARSSL_MD_NONE

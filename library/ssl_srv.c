@@ -491,11 +491,15 @@ static int ssl_parse_signature_algorithms_ext( ssl_context *ssl,
      * So, just look at the HashAlgorithm part.
      */
     for( md_cur = md_list(); *md_cur != POLARSSL_MD_NONE; md_cur++ ) {
+        printf("{{ Server has md_cur = %d }}\n", *md_cur);
         for( p = buf + 2; p < end; p += 2 ) {
+            printf("  {{ Client provides md_alg = %d, sig_alg = %d }}\n", p[0], p[1]);
             if( *md_cur == (int) ssl_md_alg_from_hash( p[0] ) ) {
+                printf("    * matched ssl_md_alg_from_hash(md_alg=%d) = %d\n", p[0], (int) ssl_md_alg_from_hash( p[0] ));
                 ssl->handshake->sig_alg = p[0];
                 break;
             }
+            printf("    * not matched\n");
         }
     }
 
@@ -2226,7 +2230,7 @@ curve_matching_done:
         ret = ssl->handshake->dhif_info->gen_public(
                 ssl->handshake->dhif_ctx, ssl->f_rng, ssl->p_rng);
         if (ret != 0) {
-            SSL_DEBUG_MSG( 2, ( "DHIF(%s)->get_public() fails" , ssl->handshake->dhif_info->name ) );
+            SSL_DEBUG_MSG( 2, ( "DHIF(%s)->get_public() fails, ret=%d" , ssl->handshake->dhif_info->name, ret ) );
             return ret;
         }
 

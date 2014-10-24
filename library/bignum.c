@@ -908,7 +908,7 @@ cleanup:
 
 static int ghfjdksl_mpi_add_abs( mpi *X, const mpi *A, const mpi *B )
 {
-    int ret;
+    int ret = 0;
     size_t i, j, k;
     t_uint *op1, *op2, *rop, c, t;
 
@@ -1019,7 +1019,7 @@ static size_t ghfjdksl_mpi_sub_hlp( size_t n,const  t_uint *sub, const   t_uint 
 /*remove redundant checking, actually I'd like to ban mpi_sub_abs from user call. Who will need such a function?*/
 static int ghfjdksl_mpi_sub_abs( mpi *X, const mpi *A, const mpi *B ) 
 {
-    int ret;
+    int ret = 0;
     size_t n;
 
 	MPI_CHK(mpi_grow(X, A->n));
