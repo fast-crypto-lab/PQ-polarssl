@@ -4,6 +4,10 @@
 #include"polarssl/sha256.h"
 #define polarssl_malloc malloc
 #define polarssl_free free
+static inline  void polarssl_zeroize( void *v, size_t n ) {
+    volatile unsigned char *p = v; while( n-- ) *p++ = 0;
+}
+
 
 mpi* WArray=NULL;
 mpi* WinvArray=NULL;
@@ -236,7 +240,6 @@ static inline double ranf(sha256_context* ctx)
 	(void) p_rng;
 	return (((double)rand())/RAND_MAX);
 */
-
 	unsigned int RandomMax = 0xffffffff;
 	unsigned char buf[32];
 	memset(buf,0,32);
@@ -298,8 +301,9 @@ void RandomPoly(Poly_q * f, size_t n , mpi* q, float deviation, int* hash, int (
 
 
 	FFT(f,FFT_FORWARD);
-
-
+	sha256_free( &ctx );
+	polarssl_zeroize(RandomState, 32);
+	
 }
 
 void invFFT(Poly_q * f){
