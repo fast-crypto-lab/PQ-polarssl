@@ -454,10 +454,60 @@ union _ssl_premaster_secret
     unsigned char _pms_ecdhe_psk[4 + POLARSSL_ECP_MAX_BYTES
                                    + POLARSSL_PSK_MAX_LEN];     /* RFC 5489 2 */
 #endif
-    unsigned char HAHA[4096];
+#if defined(POLARSSL_KEY_EXCHANGE_LATTICEE_TTS _ENABLED)    || \
+    defined(POLARSSL_KEY_EXCHANGE_LATTICEE_RAINBOW_ENABLED)  || \
+    defined(POLARSSL_KEY_EXCHANGE_LATTICEE_RSA_ENABLED)     || \
+    defined(POLARSSL_KEY_EXCHANGE_LATTICEE_ECDSA _ENABLED)  || \
+    defined(POLARSSL_KEY_EXCHANGE_LATTICEE_TTS2 _ENABLED)     || \
+    defined(POLARSSL_KEY_EXCHANGE_LATTICEE_RAINBOW2_ENABLED)
+    unsigned char latticepremaster[2048];
+#endif
+
+
 };
 
 #define POLARSSL_PREMASTER_SIZE     sizeof( union _ssl_premaster_secret )
+
+union _ssl_dh_exchange		//rough guess
+{
+#if defined(POLARSSL_KEY_EXCHANGE_RSA_ENABLED)
+    unsigned char _pms_rsa[512];                         
+#endif
+#if defined(POLARSSL_KEY_EXCHANGE_DHE_RSA_ENABLED)
+    unsigned char _pms_dhm[512*5];     
+#endif
+#if defined(POLARSSL_KEY_EXCHANGE_ECDHE_RSA_ENABLED)    || \
+    defined(POLARSSL_KEY_EXCHANGE_ECDH_RSA_ENABLED)    
+    unsigned char _pms_ecdh[64*3*2+ 512];    
+#endif
+#if defined(POLARSSL_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED)  || \
+    defined(POLARSSL_KEY_EXCHANGE_ECDH_ECDSA_ENABLED)
+    unsigned char _pms_ecdh[64*3*3];   
+#endif
+#if defined(POLARSSL_KEY_EXCHANGE_PSK_ENABLED)
+    unsigned char _pms_psk[2 * POLARSSL_PSK_MAX_LEN];
+#endif
+#if defined(POLARSSL_KEY_EXCHANGE_DHE_PSK_ENABLED)
+    unsigned char _pms_dhe_psk[512*5]; 
+#endif
+#if defined(POLARSSL_KEY_EXCHANGE_RSA_PSK_ENABLED)
+    unsigned char _pms_rsa_psk[512*5];
+#endif
+#if defined(POLARSSL_KEY_EXCHANGE_DHE_PSK_ENABLED)
+    unsigned char _pms_ecdhe_psk[64*3*2+POLARSSL_PSK_MAX_LEN];     /* RFC 5489 2 */
+#endif
+#if defined(POLARSSL_KEY_EXCHANGE_LATTICEE_TTS _ENABLED)    || \
+    defined(POLARSSL_KEY_EXCHANGE_LATTICEE_RAINBOW_ENABLED)  || \
+    defined(POLARSSL_KEY_EXCHANGE_LATTICEE_RSA_ENABLED)     || \
+    defined(POLARSSL_KEY_EXCHANGE_LATTICEE_ECDSA _ENABLED)  || \
+    defined(POLARSSL_KEY_EXCHANGE_LATTICEE_TTS2 _ENABLED)     || \
+    defined(POLARSSL_KEY_EXCHANGE_LATTICEE_RAINBOW2_ENABLED)
+    unsigned char latticepremaster[2048*8*3+32+512];
+#endif
+
+};
+
+#define POLARSSL_DH_SIZE     sizeof( _ssl_dh_exchange )
 
 #ifdef __cplusplus
 extern "C" {
