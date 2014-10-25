@@ -643,57 +643,59 @@ int main( int argc, char *argv[] )
     if( todo.tts )
     {
         tts_context tts;
+        tts2_context tts2;
         unsigned char tmp1[200];
         unsigned char tmp2[200];
 
         memset( buf, 0x11, sizeof( buf ) );
 
-        tts_genkey( &tts.pk, &tts.sk, myrand, NULL );
+        tts_genkey( (uint8_t *)&tts.pk, (uint8_t *)&tts.sk, myrand, NULL );
 
         TIME_PUBLIC( "tts", "sign",
-                tts_sign( tmp1, &tts.sk, tmp2) );
+                tts_sign( tmp1, (uint8_t *)&tts.sk, tmp2) );
 
         TIME_PUBLIC( "tts", "verify",
-                tts_verify( tmp2, &tts.pk, tmp1 ) );
+                tts_verify( tmp2, (uint8_t *)&tts.pk, tmp1 ) );
 
-        tts2_context tts2;
+
         memset( buf, 0x11, sizeof( buf ) );
 
-        tts2_genkey( &tts2.pk, &tts2.sk, myrand, NULL );
+        tts2_genkey( (uint8_t *)&tts2.pk, (uint8_t *)&tts2.sk, myrand, NULL );
 
         TIME_PUBLIC( "tts2", "sign",
-                tts2_sign( tmp1, &tts2.sk, tmp2) );
+                tts2_sign( tmp1, (uint8_t *)&tts2.sk, tmp2) );
 
         TIME_PUBLIC( "tts2", "verify",
-                tts2_verify( tmp2, &tts2.pk, tmp1 ) );
+                tts2_verify( tmp2, (uint8_t *)&tts2.pk, tmp1 ) );
     }
 
     if( todo.rainbow )
     {
         rainbow_context rb;
+        rainbow2_context rb2;
         unsigned char tmp1[200];
         unsigned char tmp2[200];
 
         memset( buf, 0x11, sizeof( buf ) );
 
-        rb_genkey( &rb.pk, &rb.sk, myrand, NULL );
+        rb_genkey( (uint8_t *)&rb.pk, (uint8_t *)&rb.sk, myrand, NULL );
 
         TIME_PUBLIC( "rb", "sign",
-                rb_sign( tmp1, &rb.sk, tmp2) );
+                rb_sign( tmp1, (uint8_t *)&rb.sk, tmp2) );
 
         TIME_PUBLIC( "rb", "verify",
-                rb_verify( tmp2, &rb.pk, tmp1 ) );
+                rb_verify( tmp2, (uint8_t *)&rb.pk, tmp1 ) );
 
-        rainbow2_context rb2;
+
         memset( buf, 0x11, sizeof( buf ) );
 
-        rb2_genkey( &rb2.pk, &rb2.sk, myrand, NULL );
+        rb2_genkey( (uint8_t *)&rb2.pk, (uint8_t *)&rb2.sk, myrand, NULL );
 
         TIME_PUBLIC( "rb2", "sign",
-                rb2_sign( tmp1, &rb2.sk, tmp2) );
+                rb2_sign( tmp1, (uint8_t *)&rb2.sk, tmp2) );
 
         TIME_PUBLIC( "rb2", "verify",
-                rb2_verify( tmp2, &rb2.pk, tmp1 ) );
+                rb2_verify( tmp2, (uint8_t *)&rb2.pk, tmp1 ) );
 
     }
     printf( "\n" );
