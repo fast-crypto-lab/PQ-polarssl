@@ -13,6 +13,9 @@ TTS or RAINBOW 的 key pairs 每次生成應該都一樣（吧？）
 ./programs/ssl/ssl_client2 debug_level=3 auth_mode=none force_ciphersuite=TLS-LATTICEE-RAINBOW-WITH-AES-128-GCM-SHA256
         Runs a LATTICEE-RAINBOW client
 
+./programs/ssl/ssl_client2 debug_level=3 auth_mode=none force_ciphersuite=TLS-LATTICEE-TTS2-WITH-AES-128-GCM-SHA256
+        Runs a LATTICEE-TTS2 client
+
 
 
 ## 執行一個指定 ciphersuite 的 TLS server
@@ -22,6 +25,9 @@ TTS or RAINBOW 的 key pairs 每次生成應該都一樣（吧？）
 
 ./programs/ssl/ssl_server2 debug_level=3 crt_file=self-signed/rb-crt.crt key_file=self-signed/rb-prv.pem force_ciphersuite=TLS-LATTICEE-RAINBOW-WITH-AES-128-GCM-SHA256
         Runs a LATTICEE-RAINBOW server
+
+./programs/ssl/ssl_server2 debug_level=3 crt_file=self-signed/tts2-crt.crt key_file=self-signed/tts2-prv.pem force_ciphersuite=TLS-LATTICEE-TTS2-WITH-AES-128-GCM-SHA256
+        Runs a LATTICEE-TTS2 server
 
 
 
