@@ -1,0 +1,148 @@
+
+# Things About Adding New Public-Key Cryptography
+
+We've tried to add two types of new post-quantum digital signature
+implementations into the PolarSSL codebase, one is TTS, the other is
+Rainbow Signature.
+
+Since PolarSSL already has its own Public Key Cryptography module, which
+is responsible for signing a message and verifying a signature, we just
+follow its design, implementing the interface for signature signing and
+verifying as a public key container:
+
+        typedef struct
+        {
+            const pk_info_t *   pk_info;
+            void *              pk_ctx;
+        } pk_context;
+
+where the pk_info contains functions of the actual operations.
+
+
+
+
+
+## Changes to X.509
+
+No change is needed in the PolarSSL X.509 module.
+
+
+
+
+
+## Changes to PK
+
+In "include/polarssl/pk.h", add new IDs to uniquely identify each new PK
+type in the `pk_type_t` enumeration:
+
+        OUR_PK_TTS
+        OUR_PK_RAINBOW
+        OUR_PK_TTS2
+        OUR_PK_RAINBOW2
+
+Also in "include/polarssl/pk.h", we define macros to easily extract
+low-level public key context of type "void *" from a public key
+container of type "pk_context", and then cast that result into its
+corresponding type:
+
+        pk_tts( pk )
+        pk_rainbow( pk )
+        pk_tts2( pk )
+        pk_rainbow2( pk )
+
+In "include/polarssl/pk_wrap.h", add extern declaration for each public
+key container implementations.
+
+        extern const pk_info_t tts_info;
+        extern const pk_info_t rainbow_info;
+        extern const pk_info_t tts2_info;
+        extern const pk_info_t rainbow2_info;
+
+In "library/polarssl_wraper_ttsrb.c", implement all the details for each
+public key container:
+
+        const pk_info_t tts_info = { };
+        const pk_info_t rainbow_info = { };
+        const pk_info_t tts2_info = { };
+        const pk_info_t rainbow2_info = { };
+
+In "library/pk.c", add new cases in function `pk_info_from_type()` that
+returns a public key container (pk_info_t *) for each possible given
+public key type (pk_type_t):
+
+        case OUR_PK_TTS: ...;
+        case OUR_PK_RAINBOW: ...;
+        case OUR_PK_TTS2: ...;
+        case OUR_PK_RAINBOW2: ...;
+
+In "library/pkparse.c", for each new public key container type,
+we add a new case in the function `pk_parse_subpubkey()` so that
+PolarSSL can read in a public key from an X.509 certificate:
+
+        if (pk_alg == OUR_PK_TTS) { ... }
+        if (pk_alg == OUR_PK_TTS2) { ... }
+        if (pk_alg == OUR_PK_RAINBOW) { ... }
+        if (pk_alg == OUR_PK_RAINBOW2) { ... }
+
+and a new case `pk_parse_key()` so that PolarSSL can read in a secret
+key file of that type:
+
+        #if defined(__TTS__)
+        #if defined(__TTS_2__)
+        #if defined(__RAINBOW__)
+        #if defined(__RAINBOW_2__)
+
+In "library/pkwrite.c", for each new public key container type,
+we add a new case in function `pk_write_pubkey()` so that PolarSSL can
+write out a public key into an X.509 certificate structure:
+
+        if (pk_get_type(key) == OUR_PK_TTS) { ... }
+        if (pk_get_type(key) == OUR_PK_TTS2) { ... }
+        if (pk_get_type(key) == OUR_PK_RAINBOW) { ... }
+        if (pk_get_type(key) == OUR_PK_RAINBOW2) { ... }
+
+and a new case in functions `pk_write_key_der()` and
+`pk_write_key_pem()` so that PolarSSL can properly write out a secret
+key:
+
+        if (pk_get_type(key) == OUR_PK_TTS) { ... }
+        if (pk_get_type(key) == OUR_PK_TTS2) { ... }
+        if (pk_get_type(key) == OUR_PK_RAINBOW) { ... }
+        if (pk_get_type(key) == OUR_PK_RAINBOW2) { ... }
+
+
+
+
+
+## Changes to OID
+
+To mimic how a SubjectPublicKey is saved in an X.509 certificate
+normaly, we need some sort of unique ID for each public key type and
+signature type.  We define in "include/polarssl/oid.h" these new macros:
+
+        OID_OUR_ALG_TTS
+        OID_OUR_ALG_RAINBOW
+        OID_OUR_ALG_TTS2
+        OID_OUR_ALG_RAINBOW2
+
+        OID_OUR_ALG_TTS_SHA256
+        OID_OUR_ALG_RAINBOW_SHA256
+        OID_OUR_ALG_TTS2_SHA256
+        OID_OUR_ALG_RAINBOW2_SHA256
+
+In "library/oid.c", for each new pk_type_t,
+we add a new oid_sig_alg_t into `oid_sig_alg` (with SHA-256):
+
+        POLARSSL_MD_SHA256,   OUR_PK_TTS,
+        POLARSSL_MD_SHA256,   OUR_PK_RAINBOW,
+        POLARSSL_MD_SHA256,   OUR_PK_TTS2,
+        POLARSSL_MD_SHA256,   OUR_PK_RAINBOW2,
+
+and a new oid_pk_alg_t into `oid_pk_alg`:
+
+        OUR_PK_TTS,
+        OUR_PK_RAINBOW,
+        OUR_PK_TTS2,
+        OUR_PK_RAINBOW2,
+
+
