@@ -1,7 +1,16 @@
-## NOTE
+## 執行一個指定 ciphersuite 的 TLS server
 
-TTS or RAINBOW 的 key pairs 每次生成應該都一樣（吧？）
-除了檔案末的一堆亂碼每次都不同...
+./programs/ssl/ssl_server2 debug_level=3 crt_file=self-signed/tts-crt.crt key_file=self-signed/tts-prv.pem force_ciphersuite=TLS-LATTICEE-TTS-WITH-AES-128-GCM-SHA256
+        Runs a LATTICEE-TTS server
+
+./programs/ssl/ssl_server2 debug_level=3 crt_file=self-signed/tts2-crt.crt key_file=self-signed/tts2-prv.pem force_ciphersuite=TLS-LATTICEE-TTS2-WITH-AES-128-GCM-SHA256
+        Runs a LATTICEE-TTS2 server
+
+./programs/ssl/ssl_server2 debug_level=3 crt_file=self-signed/rb-crt.crt key_file=self-signed/rb-prv.pem force_ciphersuite=TLS-LATTICEE-RAINBOW-WITH-AES-128-GCM-SHA256
+        Runs a LATTICEE-RAINBOW server
+
+./programs/ssl/ssl_server2 debug_level=3 crt_file=self-signed/rb2-crt.crt key_file=self-signed/rb2-prv.pem force_ciphersuite=TLS-LATTICEE-RAINBOW2-WITH-AES-128-GCM-SHA256
+        Runs a LATTICEE-RAINBOW2 server
 
 
 
@@ -10,53 +19,31 @@ TTS or RAINBOW 的 key pairs 每次生成應該都一樣（吧？）
 ./programs/ssl/ssl_client2 debug_level=3 auth_mode=none force_ciphersuite=TLS-LATTICEE-TTS-WITH-AES-128-GCM-SHA256
         Runs a LATTICEE-TTS client
 
-./programs/ssl/ssl_client2 debug_level=3 auth_mode=none force_ciphersuite=TLS-LATTICEE-RAINBOW-WITH-AES-128-GCM-SHA256
-        Runs a LATTICEE-RAINBOW client
-
 ./programs/ssl/ssl_client2 debug_level=3 auth_mode=none force_ciphersuite=TLS-LATTICEE-TTS2-WITH-AES-128-GCM-SHA256
         Runs a LATTICEE-TTS2 client
 
+./programs/ssl/ssl_client2 debug_level=3 auth_mode=none force_ciphersuite=TLS-LATTICEE-RAINBOW-WITH-AES-128-GCM-SHA256
+        Runs a LATTICEE-RAINBOW client
 
-
-## 執行一個指定 ciphersuite 的 TLS server
-
-./programs/ssl/ssl_server2 debug_level=3 crt_file=self-signed/tts-crt.crt key_file=self-signed/tts-prv.pem force_ciphersuite=TLS-LATTICEE-TTS-WITH-AES-128-GCM-SHA256
-        Runs a LATTICEE-TTS server
-
-./programs/ssl/ssl_server2 debug_level=3 crt_file=self-signed/rb-crt.crt key_file=self-signed/rb-prv.pem force_ciphersuite=TLS-LATTICEE-RAINBOW-WITH-AES-128-GCM-SHA256
-        Runs a LATTICEE-RAINBOW server
-
-./programs/ssl/ssl_server2 debug_level=3 crt_file=self-signed/tts2-crt.crt key_file=self-signed/tts2-prv.pem force_ciphersuite=TLS-LATTICEE-TTS2-WITH-AES-128-GCM-SHA256
-        Runs a LATTICEE-TTS2 server
+./programs/ssl/ssl_client2 debug_level=3 auth_mode=none force_ciphersuite=TLS-LATTICEE-RAINBOW2-WITH-AES-128-GCM-SHA256
+        Runs a LATTICEE-RAINBOW2 client
 
 
 
-## 產生 TTS 金鑰的憑證
+## 產生 TTS 與 TTS2 與 RAINBOW 與 RAINBOW2 的金鑰 & 憑證
+
+        注意 TTS or RAINBOW 的 key pairs 每次生成應該都一樣（吧？）除了檔案末的一堆亂碼每次都不同...
 
 ./programs/pkey/tts_genkey
-        生成一組 TTS secret key 與 public key 分別寫到
-        self-signed/tts-prv.pem 和
-        self-signed/tts-pub.pem
-
 ./programs/x509/cert_write selfsign=1 issuer_key=self-signed/tts-prv.pem subject_key=self-signed/tts-pub.pem output_file=self-signed/tts-crt.crt
-        使用 self-signed/tts-prv.pem
-        來為 self-signed/tts-pub.pem 簽名
-        造出 self-signed/tts-crt.crt X.509 憑證
 
-
-
-## 產生 RAINBOW 金鑰的憑證
+./programs/pkey/tts2_genkey
+./programs/x509/cert_write selfsign=1 issuer_key=self-signed/tts2-prv.pem subject_key=self-signed/tts2-pub.pem output_file=self-signed/tts2-crt.crt
 
 ./programs/pkey/rb_genkey
-        生成一組 RB secret key 與 public key 分別寫到
-        self-signed/rb-prv.pem 和
-        self-signed/rb-pub.pem
-
 ./programs/x509/cert_write selfsign=1 issuer_key=self-signed/rb-prv.pem subject_key=self-signed/rb-pub.pem output_file=self-signed/rb-crt.crt
-        使用 self-signed/rb-prv.pem
-        來為 self-signed/rb-pub.pem 簽名
-        造出 self-signed/rb-crt.crt X.509 憑證
-        但是失敗了
 
+./programs/pkey/rb2_genkey
+./programs/x509/cert_write selfsign=1 issuer_key=self-signed/rb2-prv.pem subject_key=self-signed/rb2-pub.pem output_file=self-signed/rb2-crt.crt
 
 
