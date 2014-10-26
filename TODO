@@ -479,6 +479,6 @@ Next meeting date 2014/10/16 (Thu) 10:30 AM at MD631
 - TODO: Reformat the whole codebase (no tabs, no trailing whitespaces, no OUR Chinese comments)
 - TODO: Publish code to GitHub
 
-- TODO: 改錯字，例如檔名中的 "wraper" 還有程式碼應該也要 spellcheck?
+- TODO: 改錯字，例如檔名中的 "wraper" (已修) 還有程式碼應該也要 spellcheck?
 - TODO: 加測試 for ssl? 好像太難自動化了, 先放棄
 - TODO: 有可能把所有東西都用 ifdef macro 包起來嗎? 好像太麻煩了, 先放棄

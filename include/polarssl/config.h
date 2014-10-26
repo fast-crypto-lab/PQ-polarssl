@@ -1428,7 +1428,7 @@
  *
  * Enable Diffie-Hellman interfaces.
  *
- * Module:  library/dhif_wraper.c
+ * Module:  library/dhif_wrapper.c
  * Caller:  library/ssl_tls.c
             library/ssl_cli.c
             library/ssl_srv.c

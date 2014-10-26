@@ -58,7 +58,7 @@ key container implementations.
         extern const pk_info_t tts2_info;
         extern const pk_info_t rainbow2_info;
 
-In "library/polarssl_wraper_ttsrb.c", implement all the details for each
+In "library/polarssl_wrapper_ttsrb.c", implement all the details for each
 public key container:
 
         const pk_info_t tts_info = { };

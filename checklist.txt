@@ -54,7 +54,7 @@
 張
  library/linear31.c                          |  589 ++
  library/nacl_curve25519_ref_smult.c         |  273 +
- library/polarssl_wraper_ttsrb.c             |  375 ++
+ library/polarssl_wrapper_ttsrb.c            |  375 ++
  library/rainbow.c                           | 1272 +++++
 
 陳

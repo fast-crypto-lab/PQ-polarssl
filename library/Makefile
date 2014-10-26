@@ -67,7 +67,7 @@ OBJS=	aes.o		aesni.o		arc4.o			\
 		nacl_curve25519_ref_smult.o				\
 		linear31.o	rainbow.o					\
 		poly.o LWE.o	dhif_dhm.o	dhif_ecdh.o	\
-		polarssl_wraper_ttsrb.o mont_mpi.o
+		polarssl_wrapper_ttsrb.o mont_mpi.o
 
 .SILENT:
 

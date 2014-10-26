@@ -137,7 +137,7 @@ PK 要加新的數位簽章演算法
         case OUR_PK_TTS:
             return( &tts_info );
 
-* library/pk_wrap.c ===> library/polarssl_wraper_ttsrb.c
+* library/pk_wrap.c ===> library/polarssl_wrapper_ttsrb.c
     新增這兩個結構以及他們需要的函數:
         const pk_info_t tts_info = { ... };
         const pk_info_t rainbow_info = { ... };
