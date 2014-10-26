@@ -492,7 +492,7 @@ int pk_write_key_der( pk_context *key, unsigned char *buf, size_t size )
 int pk_write_pubkey_pem( pk_context *key, unsigned char *buf, size_t size )
 {
     int ret;
-    unsigned char output_buf[128000];
+    unsigned char output_buf[1280000];
     size_t olen = 0;
 
     if( ( ret = pk_write_pubkey_der( key, output_buf,
@@ -514,7 +514,7 @@ int pk_write_pubkey_pem( pk_context *key, unsigned char *buf, size_t size )
 int pk_write_key_pem( pk_context *key, unsigned char *buf, size_t size )
 {
     int ret;
-    unsigned char output_buf[128000];
+    unsigned char output_buf[1280000];
     const char *begin, *end;
     size_t olen = 0;
 

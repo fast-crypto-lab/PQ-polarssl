@@ -23,15 +23,10 @@ int wecdh_gen_public( void *_ctx , int (*f_rng)(void *, unsigned char *, size_t)
     ecdh_context *ctx = (ecdh_context *)_ctx;
     int ret = 0;
 
-    if ( ctx == NULL || ctx->grp.pbits == 0 ) {
-        printf("DIE 1\n");
+    if ( ctx == NULL || ctx->grp.pbits == 0 )
         return ( POLARSSL_ERR_ECP_BAD_INPUT_DATA );
-    }
 
     ret = ecdh_gen_public( &ctx->grp, &ctx->d, &ctx->Q, f_rng, p_rng );
-    if (ret != 0) {
-        printf("DIE 2 ret = %d\n", ret);
-    }
 
     return ret;
 }

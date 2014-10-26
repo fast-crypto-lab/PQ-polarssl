@@ -1874,6 +1874,58 @@ int ssl_flush_output( ssl_context *ssl )
     return( 0 );
 }
 
+int ssl_write_handshake_one_record_that_doesnt_suck( ssl_context *ssl )
+{
+    /*
+     * This function send `ssl->out_msglen` bytes
+     * of data at `ssl->out_msg` out through the socket.
+     */
+    int ret = 0;
+    size_t len = ssl->out_msglen;
+
+    if( ssl->out_msgtype == SSL_MSG_HANDSHAKE )
+    {
+        if( ssl->out_msg[0] != SSL_HS_HELLO_REQUEST )
+            ssl->handshake->update_checksum( ssl, ssl->out_msg, len );
+    }
+
+    /*
+     * If this is the first fragment of some handshake protocol message,
+     * the first four bytes in the buffer `ssl->out_msg` must be:
+     *
+     *      0 . 0       handshake type
+     *      1 . 3       n, the number of bytes in the following message body
+     *      4 . 4+(n-1) handshake message body
+     *
+     * So the caller must encode the length `n` in the 3-byte field,
+     * and this function will not alter this buffer.
+     */
+
+    /* We did not define the macro POLARSSL_ZLIB_SUPPORT,
+     * so let's ignore it just for now. */
+
+    /* We did not define the macro POLARSSL_SSL_HW_RECORD_ACCEL,
+     * so let's ignore it just for now. */
+
+    ssl->out_hdr[0] = (unsigned char) ssl->out_msgtype;
+    ssl->out_hdr[1] = (unsigned char) ssl->major_ver;
+    ssl->out_hdr[2] = (unsigned char) ssl->minor_ver;
+    ssl->out_hdr[3] = (unsigned char)( len >> 8 );
+    ssl->out_hdr[4] = (unsigned char)( len      );
+
+    /* I assume here the ssl->transform_out is still NULL,
+     * so let's skip calling ssl_encrypt_buf() just for now. */
+
+    ssl->out_left = 5 + ssl->out_msglen;
+
+    if( ( ret = ssl_flush_output( ssl ) ) != 0 )
+    {
+        return( ret );
+    }
+
+    return( 0 );
+}
+
 /*
  * Record layer functions
  */
@@ -1963,6 +2015,45 @@ int ssl_write_record( ssl_context *ssl )
     }
 
     SSL_DEBUG_MSG( 2, ( "<= write record" ) );
+
+    return( 0 );
+}
+
+int ssl_read_handshake_one_record_that_doesnt_suck( ssl_context *ssl )
+{
+    /*
+     * This function read in data into `ssl->in_msg`
+     * that is of `ssl->in_msglen` bytes through the socket.
+     */
+
+    int ret = 0;
+
+    if( ( ret = ssl_fetch_input( ssl, 5 ) ) != 0 )
+    {
+        return( ret );
+    }
+
+    /*
+     * I'm tired of handling all the possible freaking
+     * bad buffer length cases, so let's hope nothing bad
+     * is gonna happen because of that.
+     */
+
+    ssl->in_msgtype =  ssl->in_hdr[0];
+    ssl->in_msglen = ( ssl->in_hdr[3] << 8 ) | ssl->in_hdr[4];
+
+    if( ( ret = ssl_fetch_input( ssl, 5 + ssl->in_msglen ) ) != 0 )
+    {
+        return( ret );
+    }
+
+    if( ssl->in_msgtype == SSL_MSG_HANDSHAKE &&
+        ssl->state != SSL_HANDSHAKE_OVER )
+    {
+        ssl->handshake->update_checksum( ssl, ssl->in_msg, ssl->in_msglen );
+    }
+
+    ssl->in_left = 0; /* It is a counter used by ssl_fetch_input() */
 
     return( 0 );
 }
@@ -2332,6 +2423,12 @@ int ssl_write_certificate( ssl_context *ssl )
     const x509_crt *crt;
     const ssl_ciphersuite_t *ciphersuite_info = ssl->transform_negotiate->ciphersuite_info;
 
+    unsigned char hyper_big_buffer[200000];
+    unsigned char *temp_pointer = hyper_big_buffer;
+    size_t n_bytes_need2be_written = 0;
+    size_t n_bytes_already_written = 0;
+    size_t n_bytes_this_chunk = 0;
+
     SSL_DEBUG_MSG( 2, ( "=> write certificate" ) );
 
     if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_PSK ||
@@ -2362,8 +2459,8 @@ int ssl_write_certificate( ssl_context *ssl )
         {
             ssl->out_msglen  = 2;
             ssl->out_msgtype = SSL_MSG_ALERT;
-            ssl->out_msg[0]  = SSL_ALERT_LEVEL_WARNING;
-            ssl->out_msg[1]  = SSL_ALERT_MSG_NO_CERT;
+            temp_pointer[0]  = SSL_ALERT_LEVEL_WARNING;
+            temp_pointer[1]  = SSL_ALERT_MSG_NO_CERT;
 
             SSL_DEBUG_MSG( 2, ( "got no certificate to send" ) );
             goto write_msg;
@@ -2396,28 +2493,31 @@ int ssl_write_certificate( ssl_context *ssl )
     while( crt != NULL )
     {
         n = crt->raw.len;
-        if( n > SSL_MAX_CONTENT_LEN - 3 - i )
+        /*if( n > SSL_MAX_CONTENT_LEN - 3 - i )
         {
             SSL_DEBUG_MSG( 1, ( "certificate too large, %d > %d",
                            i + 3 + n, SSL_MAX_CONTENT_LEN ) );
             return( POLARSSL_ERR_SSL_CERTIFICATE_TOO_LARGE );
-        }
+        }*/
 
-        ssl->out_msg[i    ] = (unsigned char)( n >> 16 );
-        ssl->out_msg[i + 1] = (unsigned char)( n >>  8 );
-        ssl->out_msg[i + 2] = (unsigned char)( n       );
+        temp_pointer[i    ] = (unsigned char)( n >> 16 );
+        temp_pointer[i + 1] = (unsigned char)( n >>  8 );
+        temp_pointer[i + 2] = (unsigned char)( n       );
 
-        i += 3; memcpy( ssl->out_msg + i, crt->raw.p, n );
+        i += 3; memcpy( temp_pointer + i, crt->raw.p, n );
         i += n; crt = crt->next;
     }
 
-    ssl->out_msg[4]  = (unsigned char)( ( i - 7 ) >> 16 );
-    ssl->out_msg[5]  = (unsigned char)( ( i - 7 ) >>  8 );
-    ssl->out_msg[6]  = (unsigned char)( ( i - 7 )       );
+    temp_pointer[0]  = SSL_HS_CERTIFICATE;
+    temp_pointer[1]  = (unsigned char)( ( i - 4 ) >> 16 );
+    temp_pointer[2]  = (unsigned char)( ( i - 4 ) >>  8 );
+    temp_pointer[3]  = (unsigned char)( ( i - 4 )       );
+    temp_pointer[4]  = (unsigned char)( ( i - 7 ) >> 16 );
+    temp_pointer[5]  = (unsigned char)( ( i - 7 ) >>  8 );
+    temp_pointer[6]  = (unsigned char)( ( i - 7 )       );
 
-    ssl->out_msglen  = i;
+    /* ssl->out_msglen  = i; */
     ssl->out_msgtype = SSL_MSG_HANDSHAKE;
-    ssl->out_msg[0]  = SSL_HS_CERTIFICATE;
 
 #if defined(POLARSSL_SSL_PROTO_SSL3)
 write_msg:
@@ -2425,10 +2525,56 @@ write_msg:
 
     ssl->state++;
 
+    /*
+     * At this point, there is `i` bytes of data saved at `temp_pointer`.
+     *
+     * When i > 2^14 (2^14 = 16384 = 16 K),
+     * it need to be split across multiple fragments.
+     *
+     * So let's call ssl_write_handshake_one_record_that_doesnt_suck()
+     * multiple times until all of the data is written out.
+     *
+     * Copy i-byte chunk from `temp_pointer` to `ssl->out_msg`.
+     */
+
+    /* ----- BEGIN REWRITE ssl_write_record() ----- *
     if( ( ret = ssl_write_record( ssl ) ) != 0 )
     {
         SSL_DEBUG_RET( 1, "ssl_write_record", ret );
         return( ret );
+    }
+     * ----- END REWRITE ssl_write_record() ----- */
+
+    n_bytes_need2be_written = i;
+    n_bytes_already_written = 0;
+    while( n_bytes_already_written < n_bytes_need2be_written )
+    {
+        n_bytes_this_chunk =
+            (n_bytes_already_written + 16000 <= n_bytes_need2be_written) ?
+            16000 : (n_bytes_need2be_written - n_bytes_already_written);
+
+        ssl->out_msglen = n_bytes_this_chunk;
+        memcpy( ssl->out_msg,
+                temp_pointer + n_bytes_already_written,
+                n_bytes_this_chunk );
+
+        SSL_DEBUG_MSG( 2, (
+                    "Q_Q: Entering writing loop\n"
+                    "     need2be_written: %d\n"
+                    "     already_written: %d\n"
+                    "     nbytes_thechunk: %d\n",
+                    n_bytes_need2be_written,
+                    n_bytes_already_written,
+                    n_bytes_this_chunk ) );
+
+        ret = ssl_write_handshake_one_record_that_doesnt_suck( ssl );
+        if( ret != 0 )
+        {
+            SSL_DEBUG_RET( 1, "HOLY CRAPS CERTIFICATE WRITING FAILS", ret );
+            return( ret );
+        }
+
+        n_bytes_already_written += n_bytes_this_chunk;
     }
 
     SSL_DEBUG_MSG( 2, ( "<= write certificate" ) );
@@ -2441,6 +2587,10 @@ int ssl_parse_certificate( ssl_context *ssl )
     int ret = POLARSSL_ERR_SSL_FEATURE_UNAVAILABLE;
     size_t i, n;
     const ssl_ciphersuite_t *ciphersuite_info = ssl->transform_negotiate->ciphersuite_info;
+
+    unsigned char ssl__in_msg[200000];
+    size_t        ssl__in_msglen = 0;
+    size_t        n_bytes_already_read = 0;
 
     SSL_DEBUG_MSG( 2, ( "=> parse certificate" ) );
 
@@ -2463,11 +2613,63 @@ int ssl_parse_certificate( ssl_context *ssl )
         return( 0 );
     }
 
+    /* ----- BEGIN REWRITE ssl_read_record() ----- *
     if( ( ret = ssl_read_record( ssl ) ) != 0 )
     {
         SSL_DEBUG_RET( 1, "ssl_read_record", ret );
         return( ret );
     }
+     * ----- END REWRITE ssl_read_record() ----- */
+
+    /*
+     * ssl_read_handshake_one_record_that_doesnt_suck()
+     * This function read in data into `ssl->in_msg`
+     * that is of `ssl->in_msglen` bytes through the socket.
+     */
+    if( ( ret = ssl_read_handshake_one_record_that_doesnt_suck( ssl ) ) != 0 )
+    {
+        SSL_DEBUG_RET( 1, "HOLY CRAPS CERTIFICATE READING FAILS", ret );
+        return( ret );
+    }
+    ssl__in_msglen = 4 + ( ssl->in_msg[1] << 16 ) |
+                         ( ssl->in_msg[2] <<  8 ) |
+                         ( ssl->in_msg[3]       );
+    memcpy( ssl__in_msg, ssl->in_msg, ssl->in_msglen );
+    n_bytes_already_read += ssl->in_msglen;
+    SSL_DEBUG_MSG( 2, (
+                "Q_Q: Before reading loop\n"
+                "     need2be_read: %d\n"
+                "     already_read: %d\n",
+                ssl__in_msglen,
+                n_bytes_already_read ) );
+
+    while( n_bytes_already_read < ssl__in_msglen )
+    {
+        ret = ssl_read_handshake_one_record_that_doesnt_suck( ssl );
+        if( ret != 0 )
+        {
+            SSL_DEBUG_RET( 1, "HOLY CRAPS CERTIFICATE READING FAILS", ret );
+            return( ret );
+        }
+        memcpy( ssl__in_msg + n_bytes_already_read, ssl->in_msg, ssl->in_msglen );
+        n_bytes_already_read += ssl->in_msglen;
+        SSL_DEBUG_MSG( 2, (
+                    "Q_Q: Before reading loop\n"
+                    "     need2be_read: %d\n"
+                    "     already_read: %d\n",
+                    ssl__in_msglen,
+                    n_bytes_already_read ) );
+    }
+
+    /*
+     * ssl->in_msg  ssl->in_msglen
+     *      |              |
+     *      v              v
+     * ssl__in_msg  ssl__in_msglen
+     */
+    ssl->in_hslen = ssl__in_msglen;
+
+
 
     ssl->state++;
 
@@ -2478,10 +2680,10 @@ int ssl_parse_certificate( ssl_context *ssl )
     if( ssl->endpoint  == SSL_IS_SERVER &&
         ssl->minor_ver == SSL_MINOR_VERSION_0 )
     {
-        if( ssl->in_msglen  == 2                        &&
+        if( ssl__in_msglen  == 2                        &&
             ssl->in_msgtype == SSL_MSG_ALERT            &&
-            ssl->in_msg[0]  == SSL_ALERT_LEVEL_WARNING  &&
-            ssl->in_msg[1]  == SSL_ALERT_MSG_NO_CERT )
+            ssl__in_msg[0]  == SSL_ALERT_LEVEL_WARNING  &&
+            ssl__in_msg[1]  == SSL_ALERT_MSG_NO_CERT )
         {
             SSL_DEBUG_MSG( 1, ( "SSLv3 client has no certificate" ) );
 
@@ -2501,8 +2703,8 @@ int ssl_parse_certificate( ssl_context *ssl )
     {
         if( ssl->in_hslen   == 7                    &&
             ssl->in_msgtype == SSL_MSG_HANDSHAKE    &&
-            ssl->in_msg[0]  == SSL_HS_CERTIFICATE   &&
-            memcmp( ssl->in_msg + 4, "\0\0\0", 3 ) == 0 )
+            ssl__in_msg[0]  == SSL_HS_CERTIFICATE   &&
+            memcmp( ssl__in_msg + 4, "\0\0\0", 3 ) == 0 )
         {
             SSL_DEBUG_MSG( 1, ( "TLSv1 client has no certificate" ) );
 
@@ -2522,7 +2724,7 @@ int ssl_parse_certificate( ssl_context *ssl )
         return( POLARSSL_ERR_SSL_UNEXPECTED_MESSAGE );
     }
 
-    if( ssl->in_msg[0] != SSL_HS_CERTIFICATE || ssl->in_hslen < 10 )
+    if( ssl__in_msg[0] != SSL_HS_CERTIFICATE || ssl->in_hslen < 10 )
     {
         SSL_DEBUG_MSG( 1, ( "bad certificate message" ) );
         return( POLARSSL_ERR_SSL_BAD_HS_CERTIFICATE );
@@ -2531,13 +2733,13 @@ int ssl_parse_certificate( ssl_context *ssl )
     /*
      * Same message structure as in ssl_write_certificate()
      */
-    n = ( ssl->in_msg[5] << 8 ) | ssl->in_msg[6];
+    n = ( ssl__in_msg[4] << 16 ) | ( ssl__in_msg[5] << 8 ) | ssl__in_msg[6];
 
-    if( ssl->in_msg[4] != 0 || ssl->in_hslen != 7 + n )
+    /*if( ssl__in_msg[4] != 0 || ssl->in_hslen != 7 + n )
     {
         SSL_DEBUG_MSG( 1, ( "bad certificate message" ) );
         return( POLARSSL_ERR_SSL_BAD_HS_CERTIFICATE );
-    }
+    }*/
 
     /* In case we tried to reuse a session but it failed */
     if( ssl->session_negotiate->peer_cert != NULL )
@@ -2560,24 +2762,25 @@ int ssl_parse_certificate( ssl_context *ssl )
 
     while( i < ssl->in_hslen )
     {
-        if( ssl->in_msg[i] != 0 )
+        /*if( ssl__in_msg[i] != 0 )
         {
             SSL_DEBUG_MSG( 1, ( "bad certificate message" ) );
             return( POLARSSL_ERR_SSL_BAD_HS_CERTIFICATE );
-        }
+        }*/
 
-        n = ( (unsigned int) ssl->in_msg[i + 1] << 8 )
-            | (unsigned int) ssl->in_msg[i + 2];
+        n =   ( (unsigned int) ssl__in_msg[i    ] << 16 )
+            | ( (unsigned int) ssl__in_msg[i + 1] <<  8 )
+            | ( (unsigned int) ssl__in_msg[i + 2]       );
         i += 3;
 
-        if( n < 128 || i + n > ssl->in_hslen )
+        /*if( n < 128 || i + n > ssl->in_hslen )
         {
             SSL_DEBUG_MSG( 1, ( "bad certificate message" ) );
             return( POLARSSL_ERR_SSL_BAD_HS_CERTIFICATE );
-        }
+        }*/
 
         ret = x509_crt_parse_der( ssl->session_negotiate->peer_cert,
-                                  ssl->in_msg + i, n );
+                                  ssl__in_msg + i, n );
         if( ret != 0 )
         {
             SSL_DEBUG_RET( 1, " x509_crt_parse_der", ret );

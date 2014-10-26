@@ -1722,9 +1722,7 @@ static int ecp_check_pubkey_sw( const ecp_group *grp, const ecp_point *pt )
     }
 
     MPI_CHK( mpi_mul_mpi( &RHS, &RHS,     &pt->X  ) );  MOD_MUL( RHS );
-
-    MPI_CHK( mpi_add_mpi( &RHS, &RHS,     &grp->B ) ); //***
-    MOD_ADD( RHS ); //***
+    MPI_CHK( mpi_add_mpi( &RHS, &RHS,     &grp->B ) ); MOD_ADD( RHS );
 
     if( mpi_cmp_mpi( &YY, &RHS ) != 0 )
         ret = POLARSSL_ERR_ECP_INVALID_KEY;

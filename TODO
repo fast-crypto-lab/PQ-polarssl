@@ -482,3 +482,9 @@ Next meeting date 2014/10/16 (Thu) 10:30 AM at MD631
 - TODO: 改錯字，例如檔名中的 "wraper" (已修) 還有程式碼應該也要 spellcheck?
 - TODO: 加測試 for ssl? 好像太難自動化了, 先放棄
 - TODO: 有可能把所有東西都用 ifdef macro 包起來嗎? 好像太麻煩了, 先放棄
+
+
+CHECK TODO:
+        應該要不 force ciphersuite 的情況下也要可以正常選用我們的新 PQ 演算法...
+        有些 digital signature 還沒寫 unitest
+
