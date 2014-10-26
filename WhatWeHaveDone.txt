@@ -1,0 +1,341 @@
+To add a key exchange scheme, the programmer must first implement the desired cryptosystem according to the interface:
+
+typedef struct {
+    dh_type_t type;
+    const char *name;
+
+    void *(*ctx_alloc)( void );
+    void (*ctx_free)( void *ctx );
+
+    int (*gen_public)( void *ctx, int (*f_rng)(void *, unsigned char *, size_t), void *p_rng );
+    int (*compute_shared)( void *ctx, int (*f_rng)(void *, unsigned char *, size_t), void *p_rng );
+
+    int (*set_params)( void *ctx, const void *params );
+    int (*read_ske_params)( void *ctx, int *rlen, const unsigned char *buf, size_t blen );
+    int (*read_public)( void *ctx, const unsigned char *buf, size_t blen );
+
+    /* A "pk_ctx" represents an interface with a certificate
+     * which is initialized in pk_parse_subpubkey() in library/pkparse.c */
+    int (*read_from_self_pk_ctx)( void *ctx, const void *pk_ctx );
+    int (*read_from_peer_pk_ctx)( void *ctx, const void *pk_ctx );
+
+    size_t (*getsize_ske_params)( const void *ctx );
+    int (*write_ske_params)( size_t *olen, unsigned char *buf, size_t blen, const void *ctx );
+    size_t (*getsize_public)( const void *ctx );
+    int (*write_public)( size_t *olen, unsigned char *buf, size_t blen, const void *ctx );
+    size_t (*getsize_premaster)( const void *ctx );
+    int (*write_premaster)( size_t *olen, unsigned char *buf, size_t blen, const void *ctx );
+} dh_info2_t;
+
+
+The functions will be executed in the following order:
+
+		server								client
+
+	ctx_alloc								ctx_alloc
+	set_params
+	gen_public
+	getsize_ske_params
+	write_ske_params
+								------>
+						(unsigned char *buf)
+											read_ske_params
+											gen_public
+											getsize_public
+											write_public
+								<------
+						(unsigned char *buf)
+	compute_shared					compute_shared
+	getsize_premaster					getsize_premaster
+	write_premaster					write_premaster
+	ctx_free								ctx_free
+
+ctx_alloc:
+	This function allocates the programmer-defined context, and is send to each of the consequent function implementation.
+There is no restriction to the content of the context.
+
+ctx_free:
+	This function frees the content of the programmer-defined context, and is called after the key exchange ends, or should any error occurs.
+
+set_params:
+	On server side, one should set all parameters in the context here. It is possible to take parameter form upper layer, but it is not currently
+implemented in polarssl, so the params argument is always NULL.
+
+gen_public:
+	The main computation should take place here, such as g^a in the Diffie-Hellman scheme. Note that this function is executed at both side of
+the exchange, but at different timing.
+	The f_rng argument is a random number generator, with first argement its state, second argument the buffer to be randomized,
+third argument the buffer length. When using, one should pass p_rng to f_rng as the first argument.
+
+getsize_ske_params:
+write_ske_params:
+	ske_param denotes every data one need to pass to the client side. The getsize function requires the size returned in byte.
+	In write_ske_params,  one should write these data to buf. blen denotes the size of buf, and one should write the actual byte
+written in olen.
+
+read_ske_params:
+	The clients reads data from buf, which is exactly what is written in write_ske_params. blen denotes the size of buf, and one should
+ write the actual byte read in rlen.
+
+
+getsize_public:
+write_public:
+read_public:
+	these functions are the counterpart of
+	getsize_ske_params
+	write_ske_params
+	read_ske_params
+	The explaination is omitted, the only difference is that one does not need to report rlen in read_public.
+
+compute_shared:
+	Computes the shared secret, the main computation should take place here, such as (g^a)^b in the Diffie-Hellman scheme.
+	The argument is that same as gen_public.
+
+getsize_premaster:
+	Returns the size of the shared secret.
+
+write_premaster
+	Write the shared secret into buf.
+
+
+After the implementation, one should do the following to merge the implemented scheme into polarssl.
+	In dh_wrap.h, add the newly implemented interface so the rest of the code can properly recognize it.
+	In ssl.h, make sure SSL_BUFFER_LEN is large enough for the communication. Also, add elements
+in union _ssl_premaster_secret to make sure the size is large enough for premaster.
+	In ssl_tls.c, ssl_srv.c, ssl_cli.c, include your header.
+
+
+After all of these, the new KE should work.
+
+
+
+
+
+-------------------------------------------------------------------
+
+
+
+
+
+After adding a new key exchange protocal and/or public key authentication protocal, one should conbine
+them into a ciphersuite for user usage. To do this, the following changes should be made:
+
+In ssl_ciphersuite.h, define the new ciphersuite, also add it to the enum key_exchange_type_t.
+In ssl_ciphersuite.c, add the new ciphersuite definition to ciphersuite_definitions and key_agree_definitions.
+
+
+
+========================================================================
+
+
+
+# Things About Adding New Public-Key Cryptography
+
+We've tried to add two types of new post-quantum digital signature
+implementations into the PolarSSL codebase, one is TTS, the other is
+Rainbow Signature.
+
+Since PolarSSL already has its own Public Key Cryptography module, which
+is responsible for signing a message and verifying a signature, we just
+follow its design, implementing the interface for signature signing and
+verifying as a public key container:
+
+        typedef struct
+        {
+            const pk_info_t *   pk_info;
+            void *              pk_ctx;
+        } pk_context;
+
+where the pk_info contains functions of the actual operations.
+
+
+
+
+
+## Changes to X.509
+
+No change is needed in the PolarSSL X.509 module.
+
+
+
+
+
+## Changes to PK
+
+In "include/polarssl/pk.h", add new IDs to uniquely identify each new PK
+type in the `pk_type_t` enumeration:
+
+        OUR_PK_TTS
+        OUR_PK_RAINBOW
+        OUR_PK_TTS2
+        OUR_PK_RAINBOW2
+
+Also in "include/polarssl/pk.h", we define macros to easily extract
+low-level public key context of type "void *" from a public key
+container of type "pk_context", and then cast that result into its
+corresponding type:
+
+        pk_tts( pk )
+        pk_rainbow( pk )
+        pk_tts2( pk )
+        pk_rainbow2( pk )
+
+In "include/polarssl/pk_wrap.h", add extern declaration for each public
+key container implementations.
+
+        extern const pk_info_t tts_info;
+        extern const pk_info_t rainbow_info;
+        extern const pk_info_t tts2_info;
+        extern const pk_info_t rainbow2_info;
+
+In "library/polarssl_wrapper_ttsrb.c", implement all the details for each
+public key container:
+
+        const pk_info_t tts_info = { };
+        const pk_info_t rainbow_info = { };
+        const pk_info_t tts2_info = { };
+        const pk_info_t rainbow2_info = { };
+
+In "library/pk.c", add new cases in function `pk_info_from_type()` that
+returns a public key container (pk_info_t *) for each possible given
+public key type (pk_type_t):
+
+        case OUR_PK_TTS: ...;
+        case OUR_PK_RAINBOW: ...;
+        case OUR_PK_TTS2: ...;
+        case OUR_PK_RAINBOW2: ...;
+
+In "library/pkparse.c", for each new public key container type,
+we add a new case in the function `pk_parse_subpubkey()` so that
+PolarSSL can read in a public key from an X.509 certificate:
+
+        if (pk_alg == OUR_PK_TTS) { ... }
+        if (pk_alg == OUR_PK_TTS2) { ... }
+        if (pk_alg == OUR_PK_RAINBOW) { ... }
+        if (pk_alg == OUR_PK_RAINBOW2) { ... }
+
+and a new case `pk_parse_key()` so that PolarSSL can read in a secret
+key file of that type:
+
+        #if defined(__TTS__)
+        #if defined(__TTS_2__)
+        #if defined(__RAINBOW__)
+        #if defined(__RAINBOW_2__)
+
+In "library/pkwrite.c", for each new public key container type,
+we add a new case in function `pk_write_pubkey()` so that PolarSSL can
+write out a public key into an X.509 certificate structure:
+
+        if (pk_get_type(key) == OUR_PK_TTS) { ... }
+        if (pk_get_type(key) == OUR_PK_TTS2) { ... }
+        if (pk_get_type(key) == OUR_PK_RAINBOW) { ... }
+        if (pk_get_type(key) == OUR_PK_RAINBOW2) { ... }
+
+and a new case in functions `pk_write_key_der()` and
+`pk_write_key_pem()` so that PolarSSL can properly write out a secret
+key:
+
+        if (pk_get_type(key) == OUR_PK_TTS) { ... }
+        if (pk_get_type(key) == OUR_PK_TTS2) { ... }
+        if (pk_get_type(key) == OUR_PK_RAINBOW) { ... }
+        if (pk_get_type(key) == OUR_PK_RAINBOW2) { ... }
+
+
+
+
+
+## Changes to OID
+
+To mimic how a SubjectPublicKey is saved in an X.509 certificate
+normaly, we need some sort of unique ID for each public key type and
+signature type.  We define in "include/polarssl/oid.h" these new macros:
+
+        OID_OUR_ALG_TTS
+        OID_OUR_ALG_RAINBOW
+        OID_OUR_ALG_TTS2
+        OID_OUR_ALG_RAINBOW2
+
+        OID_OUR_ALG_TTS_SHA256
+        OID_OUR_ALG_RAINBOW_SHA256
+        OID_OUR_ALG_TTS2_SHA256
+        OID_OUR_ALG_RAINBOW2_SHA256
+
+In "library/oid.c", for each new pk_type_t,
+we add a new oid_sig_alg_t into `oid_sig_alg` (with SHA-256):
+
+        POLARSSL_MD_SHA256,   OUR_PK_TTS,
+        POLARSSL_MD_SHA256,   OUR_PK_RAINBOW,
+        POLARSSL_MD_SHA256,   OUR_PK_TTS2,
+        POLARSSL_MD_SHA256,   OUR_PK_RAINBOW2,
+
+and a new oid_pk_alg_t into `oid_pk_alg`:
+
+        OUR_PK_TTS,
+        OUR_PK_RAINBOW,
+        OUR_PK_TTS2,
+        OUR_PK_RAINBOW2,
+
+
+========================================================================
+
+Changes to PolarSSL
+
+0. We added 2 Key Exchange(KE) protocols:  RLWE protocols [include/lattices, LWE.c poly.c mont_mpi.c]
+     and curve 25519 (CV25519) [include/nacl , nacl_cv25519XXXX.c].
+     We added 4 Signature algorithms: TTS/TTS2 , RAINBOW/RAINBOW2 [include/ttsrainbow, rainbow.c linear31.c]
+
+1.  In ssl_ciphersuite.h/.c
+   a.  we add some new identifiers for new authenticate key exchange(AKE) protocols.
+
+        #define TLS_ECDHE_RAINBOW_WITH_AES_128_GCM_SHA256       0xCCFE /* Ours */
+        #define TLS_ECDHE_TTS_WITH_AES_128_GCM_SHA256           0xCCFF /* Ours */
+        #define TLS_LATTICEE_TTS_WITH_AES_128_GCM_SHA256        0xCC00 /* Ours */
+        #define TLS_LATTICEE_RAINBOW_WITH_AES_128_GCM_SHA256    0xCC01 /* Ours */
+            ......
+
+    b. we add new functions to recognize AKE protocols.
+
+    A stuct key_agree_t is desinged to funish a AKE.
+    It contains dh-like key exchange(KE), signature algorithm(or MAC for psk), PKC for encrypted a session key.
+        typedef sturct {
+            key_exchange_type_t key_exchange;
+            .........
+        } key_agree_t;
+
+    We use the following functions to recognize AKE in a higher level of view.
+    So we can avoid a detailed  protocol identifier appeared in a huge  conditions  in if statement.
+
+    const key_agree_t *ssl_ciphersuite_recognize( key_exchange_type_t key_exchange );
+    pk_type_t ssl_get_ciphersuite_sig_pk_alg( const ssl_ciphersuite_t *info );
+    int ssl_ciphersuite_uses_ec( const ssl_ciphersuite_t *info );
+    int ssl_ciphersuite_uses_psk( const ssl_ciphersuite_t *info );
+    dh_type_t ssl_ciphersuite_dh_type( key_exchange_type_t ssl_type );
+    int ssl_ciphersuite_is_dh_ephemeral( key_exchange_type_t ssl_type );
+    int ssl_ciphersuite_is_dh( key_exchange_type_t ssl_type );
+    int ssl_ciphersuite_is_dh_pkcsign( key_exchange_type_t ssl_type );
+    int ssl_ciphersuite_is_dh_psk( key_exchange_type_t ssl_type );
+
+
+2. Add new interface for DH-like protocols [include/polarssl/dh.h,dh_wrap.h, dhif_XXX.c, dh_wrap.c]
+    for DH-like Key Exchange(KE),  we designed a new interfaces. Please refer to DH documents for more details.
+
+3. What is changed in ssl_cli/ssl_srv/ssl_tls [.c]
+    a. We replaced original DH-related code with our new interfaces.
+    b. We use a high level semantics recognizing functions as the conditions in if statement, so as to hide
+        huge  details in cipher suites and make a more clear program logics.
+
+4.  several new apps are added in program/pkey/  for generating key pairs of TTS/RAINBOW.
+      Please refer to HOWTO_RUN for details.
+
+5. We add several test suites corresponding to new DH interface and new PK algos in tests/suites
+
+6. mpi.h/c
+    a. modified to add/sub functions for avoiding redundant alloc/free.
+    b. add functions for montgomery multiplication.
+
+Bugs fixed:
+7. The method of choosing hash functions for signature is changed to pick a stronger hash function.
+
+
+
+
