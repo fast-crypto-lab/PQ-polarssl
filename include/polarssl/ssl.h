@@ -500,7 +500,7 @@ union _ssl_dh_exchange		//rough guess
  * peers are using it too!
  */
 #if !defined(SSL_MAX_CONTENT_LEN)
-#define SSL_MAX_CONTENT_LEN         (16384 + POLARSSL_DH_SIZE) /**< Size of the input / output buffer */
+#define SSL_MAX_CONTENT_LEN         16384 /**< Size of the input / output buffer */
 #endif
 
 #define SSL_BUFFER_LEN  ( SSL_MAX_CONTENT_LEN               \
