@@ -2735,11 +2735,11 @@ int ssl_parse_certificate( ssl_context *ssl )
      */
     n = ( ssl__in_msg[4] << 16 ) | ( ssl__in_msg[5] << 8 ) | ssl__in_msg[6];
 
-    if( /*ssl__in_msg[4] != 0 ||*/ ssl->in_hslen != 7 + n )
+    /*if( ssl__in_msg[4] != 0 || ssl->in_hslen != 7 + n )
     {
         SSL_DEBUG_MSG( 1, ( "bad certificate message" ) );
         return( POLARSSL_ERR_SSL_BAD_HS_CERTIFICATE );
-    }
+    }*/
 
     /* In case we tried to reuse a session but it failed */
     if( ssl->session_negotiate->peer_cert != NULL )
@@ -2773,11 +2773,11 @@ int ssl_parse_certificate( ssl_context *ssl )
             | ( (unsigned int) ssl__in_msg[i + 2]       );
         i += 3;
 
-        if( n < 128 || i + n > ssl->in_hslen )
+        /*if( n < 128 || i + n > ssl->in_hslen )
         {
             SSL_DEBUG_MSG( 1, ( "bad certificate message" ) );
             return( POLARSSL_ERR_SSL_BAD_HS_CERTIFICATE );
-        }
+        }*/
 
         ret = x509_crt_parse_der( ssl->session_negotiate->peer_cert,
                                   ssl__in_msg + i, n );
