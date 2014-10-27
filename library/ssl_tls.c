@@ -5020,10 +5020,26 @@ int ssl_write_large_ctx( ssl_context *ssl)
     size_t startcount = 0;// should be able to optimize this 
     size_t totallen = ssl->out_msglen;
     unsigned int max_len = SSL_MAX_CONTENT_LEN;
-
-//MAX_FRAGMENT_LENGTH should be negotiable, but is ignored now
-
     unsigned char* buf =malloc(len);
+
+#if defined(POLARSSL_SSL_MAX_FRAGMENT_LENGTH)
+    /*
+     * Assume mfl_code is correct since it was checked when set
+     */
+    max_len = mfl_code_to_length[ssl->mfl_code];
+
+    /*
+     * Check if a smaller max length was negotiated
+     */
+    if( ssl->session_out != NULL &&
+        mfl_code_to_length[ssl->session_out->mfl_code] < max_len )
+    {
+        max_len = mfl_code_to_length[ssl->session_out->mfl_code];
+    }
+#endif /* POLARSSL_SSL_MAX_FRAGMENT_LENGTH */
+
+
+
 
 	ssl->out_msg[1] = (unsigned char)( ( len - 4 ) >> 16 );
 	ssl->out_msg[2] = (unsigned char)( ( len - 4 ) >>  8 );
@@ -5032,13 +5048,12 @@ int ssl_write_large_ctx( ssl_context *ssl)
 		ssl->handshake->update_checksum( ssl, ssl->out_msg, len );
 
 	memcpy(buf, ssl->out_msg, len );
-	memset(ssl->out_msg, 0, len );
+//	memset(ssl->out_msg, 0, len );
 
      SSL_DEBUG_MSG( 2, ( "=> write" ) );
-	printf("WTFFFFFFFFFFFFFFFFFFFFFFFF %d\n",len  );
 	while(len>0){
 
-		int ThisSendLength =	 (len < (int)max_len) ? len : max_len;
+		int ThisSendLength =(len <(int)max_len) ? len : (int)max_len;
 		memcpy(ssl->out_msg, buf+startcount, ThisSendLength);
 		ssl->out_msglen = ThisSendLength;
 
@@ -5048,7 +5063,7 @@ int ssl_write_large_ctx( ssl_context *ssl)
 			return( ret );
 		}
 
-		memset(ssl->out_msg, 0, ThisSendLength);	
+//		memset(ssl->out_msg, 0, ThisSendLength);	
 		len -= max_len;
 		startcount  += max_len;
 
@@ -5348,7 +5363,7 @@ int ssl_read_large_ctx( ssl_context *ssl)
 	len = ssl->in_hslen;
 	buf =malloc(len);
 	memcpy(buf, ssl->in_msg, ssl->in_msglen );
-	memset(ssl->in_msg, 0, ssl->in_msglen );
+//	memset(ssl->in_msg, 0, ssl->in_msglen );
 
 	totalread  += ssl->in_msglen;
 
@@ -5364,7 +5379,7 @@ int ssl_read_large_ctx( ssl_context *ssl)
     		}
 
 		memcpy(buf+totalread, ssl->in_msg, ssl->in_msglen );
-		memset(ssl->in_msg, 0, ssl->in_msglen );
+//		memset(ssl->in_msg, 0, ssl->in_msglen );
 
 		totalread  += ssl->in_msglen;
 	}
@@ -5374,8 +5389,9 @@ int ssl_read_large_ctx( ssl_context *ssl)
 	memcpy(ssl->in_msg, buf , totalread );
 	if( ssl->state != SSL_HANDSHAKE_OVER )
 		ssl->handshake->update_checksum( ssl, ssl->in_msg, ssl->in_hslen );
-
-
+	
+	free(buf);
+	
     return( 0);
 }
 
