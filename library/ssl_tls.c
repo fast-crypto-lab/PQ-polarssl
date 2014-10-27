@@ -2331,6 +2331,7 @@ int ssl_write_certificate( ssl_context *ssl )
     int ret = POLARSSL_ERR_SSL_FEATURE_UNAVAILABLE;
     size_t i, n;
     const x509_crt *crt;
+    unsigned char hyper_big_buffer[LENGTH_LARGE_ENOUGH];
     const ssl_ciphersuite_t *ciphersuite_info = ssl->transform_negotiate->ciphersuite_info;
 
     SSL_DEBUG_MSG( 2, ( "=> write certificate" ) );
@@ -2363,8 +2364,8 @@ int ssl_write_certificate( ssl_context *ssl )
         {
             ssl->out_msglen  = 2;
             ssl->out_msgtype = SSL_MSG_ALERT;
-            ssl->out_msg[0]  = SSL_ALERT_LEVEL_WARNING;
-            ssl->out_msg[1]  = SSL_ALERT_MSG_NO_CERT;
+            hyper_big_buffer[0]  = SSL_ALERT_LEVEL_WARNING;
+            hyper_big_buffer[1]  = SSL_ALERT_MSG_NO_CERT;
 
             SSL_DEBUG_MSG( 2, ( "got no certificate to send" ) );
             goto write_msg;
@@ -2407,21 +2408,21 @@ int ssl_write_certificate( ssl_context *ssl )
             return( POLARSSL_ERR_SSL_CERTIFICATE_TOO_LARGE );
         }
 */
-        ssl->out_msg[i    ] = (unsigned char)( n >> 16 );
-        ssl->out_msg[i + 1] = (unsigned char)( n >>  8 );
-        ssl->out_msg[i + 2] = (unsigned char)( n       );
+        hyper_big_buffer[i    ] = (unsigned char)( n >> 16 );
+        hyper_big_buffer[i + 1] = (unsigned char)( n >>  8 );
+        hyper_big_buffer[i + 2] = (unsigned char)( n       );
 
-        i += 3; memcpy( ssl->out_msg + i, crt->raw.p, n );
+        i += 3; memcpy( hyper_big_buffer + i, crt->raw.p, n );
         i += n; crt = crt->next;
     }
 
-    ssl->out_msg[4]  = (unsigned char)( ( i - 7 ) >> 16 );
-    ssl->out_msg[5]  = (unsigned char)( ( i - 7 ) >>  8 );
-    ssl->out_msg[6]  = (unsigned char)( ( i - 7 )       );
+    hyper_big_buffer[4]  = (unsigned char)( ( i - 7 ) >> 16 );
+    hyper_big_buffer[5]  = (unsigned char)( ( i - 7 ) >>  8 );
+    hyper_big_buffer[6]  = (unsigned char)( ( i - 7 )       );
 
     ssl->out_msglen  = i;
     ssl->out_msgtype = SSL_MSG_HANDSHAKE;
-    ssl->out_msg[0]  = SSL_HS_CERTIFICATE;
+    hyper_big_buffer[0]  = SSL_HS_CERTIFICATE;
 
 #if defined(POLARSSL_SSL_PROTO_SSL3)
 write_msg:
@@ -2429,7 +2430,7 @@ write_msg:
 
     ssl->state++;
 
-    if( ( ret = ssl_write_large_ctx( ssl) ) != 0 )
+    if( ( ret = ssl_write_large_ctx( ssl, hyper_big_buffer, i) ) != 0 )
     {
         SSL_DEBUG_RET( 1, "ssl_write_record", ret );
         return( ret );
@@ -2445,6 +2446,7 @@ int ssl_parse_certificate( ssl_context *ssl )
     int ret = POLARSSL_ERR_SSL_FEATURE_UNAVAILABLE;
     size_t i, n;
     const ssl_ciphersuite_t *ciphersuite_info = ssl->transform_negotiate->ciphersuite_info;
+    unsigned char hyper_big_buffer[LENGTH_LARGE_ENOUGH];
 
     SSL_DEBUG_MSG( 2, ( "=> parse certificate" ) );
 
@@ -2467,7 +2469,7 @@ int ssl_parse_certificate( ssl_context *ssl )
         return( 0 );
     }
 
-    if( ( ret = ssl_read_large_ctx( ssl) ) != 0 )
+    if( ( ret = ssl_read_large_ctx( ssl, hyper_big_buffer) ) != 0 )
     {
         SSL_DEBUG_RET( 1, "ssl_read_record", ret );
         return( ret );
@@ -2484,8 +2486,8 @@ int ssl_parse_certificate( ssl_context *ssl )
     {
         if( ssl->in_msglen  == 2                        &&
             ssl->in_msgtype == SSL_MSG_ALERT            &&
-            ssl->in_msg[0]  == SSL_ALERT_LEVEL_WARNING  &&
-             ssl->in_msg[1]  == SSL_ALERT_MSG_NO_CERT )
+            hyper_big_buffer[0]  == SSL_ALERT_LEVEL_WARNING  &&
+            hyper_big_buffer[1]  == SSL_ALERT_MSG_NO_CERT )
         {
             SSL_DEBUG_MSG( 1, ( "SSLv3 client has no certificate" ) );
 
@@ -2505,8 +2507,8 @@ int ssl_parse_certificate( ssl_context *ssl )
     {
         if( ssl->in_hslen   == 7                    &&
             ssl->in_msgtype == SSL_MSG_HANDSHAKE    &&
-             ssl->in_msg[0]  == SSL_HS_CERTIFICATE   &&
-            memcmp(  ssl->in_msg + 4, "\0\0\0", 3 ) == 0 )
+             hyper_big_buffer[0]  == SSL_HS_CERTIFICATE   &&
+            memcmp( hyper_big_buffer + 4, "\0\0\0", 3 ) == 0 )
         {
             SSL_DEBUG_MSG( 1, ( "TLSv1 client has no certificate" ) );
 
@@ -2526,7 +2528,7 @@ int ssl_parse_certificate( ssl_context *ssl )
         return( POLARSSL_ERR_SSL_UNEXPECTED_MESSAGE );
     }
 
-    if( ssl->in_msg[0] != SSL_HS_CERTIFICATE || ssl->in_hslen < 10 )
+    if( hyper_big_buffer[0] != SSL_HS_CERTIFICATE || ssl->in_hslen < 10 )
     {
         SSL_DEBUG_MSG( 1, ( "bad certificate message" ) );
         return( POLARSSL_ERR_SSL_BAD_HS_CERTIFICATE );
@@ -2535,9 +2537,9 @@ int ssl_parse_certificate( ssl_context *ssl )
     /*
      * Same message structure as in ssl_write_certificate()
      */
-    n = ( ssl->in_msg[4] << 16 ) | ( ssl->in_msg[5] << 8 ) |  ssl->in_msg[6];
+    n = ( hyper_big_buffer[4] << 16 ) | ( hyper_big_buffer[5] << 8 ) |  hyper_big_buffer[6];
 /*
-    if(  ssl->in_msg[4] != 0 || ssl->in_hslen != 7 + n )
+    if(  hyper_big_buffer[4] != 0 || ssl->in_hslen != 7 + n )
     {
         SSL_DEBUG_MSG( 1, ( "bad certificate message" ) );
         return( POLARSSL_ERR_SSL_BAD_HS_CERTIFICATE );
@@ -2565,16 +2567,16 @@ int ssl_parse_certificate( ssl_context *ssl )
     while( i < ssl->in_hslen )
     {
 /*
-        if(  ssl->in_msg[i] != 0 )
+        if(  hyper_big_buffer[i] != 0 )
         {
             SSL_DEBUG_MSG( 1, ( "bad certificate message" ) );
             return( POLARSSL_ERR_SSL_BAD_HS_CERTIFICATE );
         }
 */
 
-        n = ( (unsigned int)  ssl->in_msg[i 	 ] << 16 )
-		| ( (unsigned int)  ssl->in_msg[i + 1] << 8 )
-            | (unsigned int)  ssl->in_msg[i + 2];
+        n = ( (unsigned int)  hyper_big_buffer[i 	 ] << 16 )
+		| ( (unsigned int)  hyper_big_buffer[i + 1] << 8 )
+            | (unsigned int)  hyper_big_buffer[i + 2];
         i += 3;
 /*
         if( n < 128 || i + n > ssl->in_hslen )
@@ -2584,7 +2586,7 @@ int ssl_parse_certificate( ssl_context *ssl )
         }
 */
         ret = x509_crt_parse_der( ssl->session_negotiate->peer_cert,
-                                   ssl->in_msg + i, n );
+                                   hyper_big_buffer + i, n );
         if( ret != 0 )
         {
             SSL_DEBUG_RET( 1, " x509_crt_parse_der", ret );
@@ -5013,14 +5015,12 @@ int ssl_my_write_record( ssl_context *ssl)
 
 
 // NOTE: assuming ssl->out_msgtype == SSL_MSG_HANDSHAKE 
-int ssl_write_large_ctx( ssl_context *ssl)
+int ssl_write_large_ctx( ssl_context *ssl,  unsigned char* buf, int len)
 {
     int ret;
-    int len = ssl->out_msglen;
-    size_t startcount = 0;// should be able to optimize this 
+    size_t startcount = 0;
     size_t totallen = ssl->out_msglen;
     unsigned int max_len = SSL_MAX_CONTENT_LEN;
-    unsigned char* buf =malloc(len);
 
 #if defined(POLARSSL_SSL_MAX_FRAGMENT_LENGTH)
     /*
@@ -5039,16 +5039,12 @@ int ssl_write_large_ctx( ssl_context *ssl)
 #endif /* POLARSSL_SSL_MAX_FRAGMENT_LENGTH */
 
 
+	buf[1] = (unsigned char)( ( len - 4 ) >> 16 );
+	buf[2] = (unsigned char)( ( len - 4 ) >>  8 );
+	buf[3] = (unsigned char)( ( len - 4 )       );
+	if(buf[0] != SSL_HS_HELLO_REQUEST  )
+		ssl->handshake->update_checksum( ssl, buf, len );
 
-
-	ssl->out_msg[1] = (unsigned char)( ( len - 4 ) >> 16 );
-	ssl->out_msg[2] = (unsigned char)( ( len - 4 ) >>  8 );
-	ssl->out_msg[3] = (unsigned char)( ( len - 4 )       );
-	if( ssl->out_msg[0] != SSL_HS_HELLO_REQUEST  )
-		ssl->handshake->update_checksum( ssl, ssl->out_msg, len );
-
-	memcpy(buf, ssl->out_msg, len );
-//	memset(ssl->out_msg, 0, len );
 
      SSL_DEBUG_MSG( 2, ( "=> write" ) );
 	while(len>0){
@@ -5070,10 +5066,6 @@ int ssl_write_large_ctx( ssl_context *ssl)
 	}
 
     SSL_DEBUG_MSG( 2, ( "<= write" ) );
-
-	ssl->out_msglen=totallen ;
-	memcpy(ssl->out_msg, buf, totallen);	//I'm NOT sure about this
-	free(buf );
 
     return( 0);
 }
@@ -5347,12 +5339,11 @@ int ssl_my_read_record( ssl_context *ssl )
 
 
 // NOTE: assuming ssl->in_msgtype == SSL_MSG_HANDSHAKE 
-int ssl_read_large_ctx( ssl_context *ssl)
+int ssl_read_large_ctx( ssl_context *ssl, unsigned char* buf)
 {
 	int ret =0;
 	size_t len =0;
 	size_t totalread =0;
-	unsigned char *buf;
 
     if( ( ret = 	ssl_my_read_record(ssl) ) != 0 )
     {
@@ -5361,7 +5352,6 @@ int ssl_read_large_ctx( ssl_context *ssl)
     }
 
 	len = ssl->in_hslen;
-	buf =malloc(len);
 	memcpy(buf, ssl->in_msg, ssl->in_msglen );
 //	memset(ssl->in_msg, 0, ssl->in_msglen );
 
@@ -5386,12 +5376,10 @@ int ssl_read_large_ctx( ssl_context *ssl)
 
 	ssl->in_hslen = len;
 	ssl->in_msglen = len;
-	memcpy(ssl->in_msg, buf , totalread );
 	if( ssl->state != SSL_HANDSHAKE_OVER )
-		ssl->handshake->update_checksum( ssl, ssl->in_msg, ssl->in_hslen );
+		ssl->handshake->update_checksum( ssl, buf, ssl->in_hslen );
 	
-	free(buf);
-	
+
     return( 0);
 }
 

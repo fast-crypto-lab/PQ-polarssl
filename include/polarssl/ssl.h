@@ -509,7 +509,7 @@ union _ssl_dh_exchange		//rough guess
                         + 29 /* counter + header + IV */    \
                         + SSL_MAC_ADD                       \
                         + SSL_PADDING_ADD                   \
-                        + 1280000                   \
+                        + POLARSSL_DH_SIZE/*will go wrong*/                   \
                         )
 
 #ifdef __cplusplus
@@ -1816,8 +1816,9 @@ int ssl_write_finished( ssl_context *ssl );
 void ssl_optimize_checksum( ssl_context *ssl,
                             const ssl_ciphersuite_t *ciphersuite_info );
 
-int ssl_write_large_ctx( ssl_context *ssl);
-int ssl_read_large_ctx( ssl_context *ssl);
+int ssl_write_large_ctx( ssl_context *ssl, unsigned char* buf, int len);
+int ssl_read_large_ctx( ssl_context *ssl,  unsigned char* buf);
+#define LENGTH_LARGE_ENOUGH 200000
 
 
 #if defined(POLARSSL_KEY_EXCHANGE__SOME__PSK_ENABLED)
