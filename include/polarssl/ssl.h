@@ -1818,7 +1818,7 @@ void ssl_optimize_checksum( ssl_context *ssl,
 
 int ssl_write_large_ctx( ssl_context *ssl, unsigned char* buf, int len);
 int ssl_read_large_ctx( ssl_context *ssl,  unsigned char* buf);
-#define LENGTH_LARGE_ENOUGH 200000
+#define LENGTH_LARGE_ENOUGH 256000
 
 
 #if defined(POLARSSL_KEY_EXCHANGE__SOME__PSK_ENABLED)
