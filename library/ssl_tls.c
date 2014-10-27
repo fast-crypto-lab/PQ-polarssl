@@ -5029,19 +5029,16 @@ int ssl_write_large_ctx( ssl_context *ssl)
 	ssl->out_msg[2] = (unsigned char)( ( len - 4 ) >>  8 );
 	ssl->out_msg[3] = (unsigned char)( ( len - 4 )       );
 	if( ssl->out_msg[0] != SSL_HS_HELLO_REQUEST  )
-		ssl->handshake->update_checksum( ssl, buf, len );
+		ssl->handshake->update_checksum( ssl, ssl->out_msg, len );
 
 	memcpy(buf, ssl->out_msg, len );
 	memset(ssl->out_msg, 0, len );
 
      SSL_DEBUG_MSG( 2, ( "=> write" ) );
-
-	printf("WTFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF %d\n", len);
-
-
+	printf("WTFFFFFFFFFFFFFFFFFFFFFFFF %d\n",len  );
 	while(len>0){
 
-		int ThisSendLength =	 ((size_t)len < max_len) ? len : max_len;
+		int ThisSendLength =	 (len < (int)max_len) ? len : max_len;
 		memcpy(ssl->out_msg, buf+startcount, ThisSendLength);
 		ssl->out_msglen = ThisSendLength;
 
@@ -5355,14 +5352,12 @@ int ssl_read_large_ctx( ssl_context *ssl)
 
 	totalread  += ssl->in_msglen;
 
-	printf("FTWWWWWWWWWWWWWWWWWWWWWWWWWWWWW %d\n", len );
-
 	while(totalread   < len ){
 		ssl->in_hslen = 0;
 		ssl->in_msglen = 0;
 			
 
-    		if( ( ret = 	ssl_my_read_record(ssl) ) != 0 )
+    		if( ( ret = ssl_my_read_record(ssl) ) != 0 )
     		{
         		SSL_DEBUG_RET( 1, "ssl_read_record", ret );
         		return( ret );
@@ -5378,7 +5373,7 @@ int ssl_read_large_ctx( ssl_context *ssl)
 	ssl->in_msglen = len;
 	memcpy(ssl->in_msg, buf , totalread );
 	if( ssl->state != SSL_HANDSHAKE_OVER )
-		ssl->handshake->update_checksum( ssl, buf , ssl->in_hslen );
+		ssl->handshake->update_checksum( ssl, ssl->in_msg, ssl->in_hslen );
 
 
     return( 0);

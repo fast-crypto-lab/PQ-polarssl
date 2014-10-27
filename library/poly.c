@@ -22,8 +22,12 @@ void init_fft(){
 			mpi_init(&WArray[i]);
 			mpi_init(&WinvArray[i]);
 		}		
+#ifdef LWE_PARAM_1
 		#include "lattice/define_fftarrays_param_1.h"
-		//#include "lattice/define_fftarrays_param_3.h"
+#else 
+		#include "lattice/define_fftarrays_param_3.h"
+#endif
+
 	}
 }
 
