@@ -1423,7 +1423,7 @@ static int ssl_parse_server_key_exchange( ssl_context *ssl )
     ((void) p);
     ((void) end);
 
-    if( ( ret = ssl_read_record( ssl ) ) != 0 )
+    if( ( ret = ssl_read_large_ctx( ssl ) ) != 0 )
     {
         SSL_DEBUG_RET( 1, "ssl_read_record", ret );
         return( ret );
@@ -2015,7 +2015,7 @@ static int ssl_write_client_key_exchange( ssl_context *ssl )
 
     ssl->state++;
 
-    if( ( ret = ssl_write_record( ssl ) ) != 0 )
+    if( ( ret = ssl_write_large_ctx( ssl ) ) != 0 )
     {
         SSL_DEBUG_RET( 1, "ssl_write_record", ret );
         return( ret );

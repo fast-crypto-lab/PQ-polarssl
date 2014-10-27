@@ -500,7 +500,7 @@ union _ssl_dh_exchange		//rough guess
  * peers are using it too!
  */
 #if !defined(SSL_MAX_CONTENT_LEN)
-#define SSL_MAX_CONTENT_LEN         (163840 + POLARSSL_DH_SIZE) /**< Size of the input / output buffer */
+#define SSL_MAX_CONTENT_LEN         (16384) /**< Size of the input / output buffer */
 /* FIXME (16384 + POLARSSL_DH_SIZE) is still too small, we cannot hold a TTS2 certificate */
 #endif
 
@@ -509,6 +509,7 @@ union _ssl_dh_exchange		//rough guess
                         + 29 /* counter + header + IV */    \
                         + SSL_MAC_ADD                       \
                         + SSL_PADDING_ADD                   \
+                        + 1280000                   \
                         )
 
 #ifdef __cplusplus
@@ -1814,6 +1815,10 @@ int ssl_write_finished( ssl_context *ssl );
 
 void ssl_optimize_checksum( ssl_context *ssl,
                             const ssl_ciphersuite_t *ciphersuite_info );
+
+int ssl_write_large_ctx( ssl_context *ssl);
+int ssl_read_large_ctx( ssl_context *ssl);
+
 
 #if defined(POLARSSL_KEY_EXCHANGE__SOME__PSK_ENABLED)
 int ssl_psk_derive_premaster( ssl_context *ssl, key_exchange_type_t key_ex );

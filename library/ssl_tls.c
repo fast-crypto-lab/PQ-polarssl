@@ -2394,16 +2394,19 @@ int ssl_write_certificate( ssl_context *ssl )
     i = 7;
     crt = ssl_own_cert( ssl );
 
+
+
     while( crt != NULL )
     {
         n = crt->raw.len;
+/*
         if( n > SSL_MAX_CONTENT_LEN - 3 - i )
         {
             SSL_DEBUG_MSG( 1, ( "certificate too large, %d > %d",
                            i + 3 + n, SSL_MAX_CONTENT_LEN ) );
             return( POLARSSL_ERR_SSL_CERTIFICATE_TOO_LARGE );
         }
-
+*/
         ssl->out_msg[i    ] = (unsigned char)( n >> 16 );
         ssl->out_msg[i + 1] = (unsigned char)( n >>  8 );
         ssl->out_msg[i + 2] = (unsigned char)( n       );
@@ -2426,7 +2429,7 @@ write_msg:
 
     ssl->state++;
 
-    if( ( ret = ssl_write_record( ssl ) ) != 0 )
+    if( ( ret = ssl_write_large_ctx( ssl) ) != 0 )
     {
         SSL_DEBUG_RET( 1, "ssl_write_record", ret );
         return( ret );
@@ -2464,7 +2467,7 @@ int ssl_parse_certificate( ssl_context *ssl )
         return( 0 );
     }
 
-    if( ( ret = ssl_read_record( ssl ) ) != 0 )
+    if( ( ret = ssl_read_large_ctx( ssl) ) != 0 )
     {
         SSL_DEBUG_RET( 1, "ssl_read_record", ret );
         return( ret );
@@ -2482,7 +2485,7 @@ int ssl_parse_certificate( ssl_context *ssl )
         if( ssl->in_msglen  == 2                        &&
             ssl->in_msgtype == SSL_MSG_ALERT            &&
             ssl->in_msg[0]  == SSL_ALERT_LEVEL_WARNING  &&
-            ssl->in_msg[1]  == SSL_ALERT_MSG_NO_CERT )
+             ssl->in_msg[1]  == SSL_ALERT_MSG_NO_CERT )
         {
             SSL_DEBUG_MSG( 1, ( "SSLv3 client has no certificate" ) );
 
@@ -2502,8 +2505,8 @@ int ssl_parse_certificate( ssl_context *ssl )
     {
         if( ssl->in_hslen   == 7                    &&
             ssl->in_msgtype == SSL_MSG_HANDSHAKE    &&
-            ssl->in_msg[0]  == SSL_HS_CERTIFICATE   &&
-            memcmp( ssl->in_msg + 4, "\0\0\0", 3 ) == 0 )
+             ssl->in_msg[0]  == SSL_HS_CERTIFICATE   &&
+            memcmp(  ssl->in_msg + 4, "\0\0\0", 3 ) == 0 )
         {
             SSL_DEBUG_MSG( 1, ( "TLSv1 client has no certificate" ) );
 
@@ -2532,14 +2535,14 @@ int ssl_parse_certificate( ssl_context *ssl )
     /*
      * Same message structure as in ssl_write_certificate()
      */
-    n = ( ssl->in_msg[5] << 8 ) | ssl->in_msg[6];
-
-    if( ssl->in_msg[4] != 0 || ssl->in_hslen != 7 + n )
+    n = ( ssl->in_msg[4] << 16 ) | ( ssl->in_msg[5] << 8 ) |  ssl->in_msg[6];
+/*
+    if(  ssl->in_msg[4] != 0 || ssl->in_hslen != 7 + n )
     {
         SSL_DEBUG_MSG( 1, ( "bad certificate message" ) );
         return( POLARSSL_ERR_SSL_BAD_HS_CERTIFICATE );
     }
-
+*/
     /* In case we tried to reuse a session but it failed */
     if( ssl->session_negotiate->peer_cert != NULL )
     {
@@ -2561,24 +2564,27 @@ int ssl_parse_certificate( ssl_context *ssl )
 
     while( i < ssl->in_hslen )
     {
-        if( ssl->in_msg[i] != 0 )
+/*
+        if(  ssl->in_msg[i] != 0 )
         {
             SSL_DEBUG_MSG( 1, ( "bad certificate message" ) );
             return( POLARSSL_ERR_SSL_BAD_HS_CERTIFICATE );
         }
+*/
 
-        n = ( (unsigned int) ssl->in_msg[i + 1] << 8 )
-            | (unsigned int) ssl->in_msg[i + 2];
+        n = ( (unsigned int)  ssl->in_msg[i 	 ] << 16 )
+		| ( (unsigned int)  ssl->in_msg[i + 1] << 8 )
+            | (unsigned int)  ssl->in_msg[i + 2];
         i += 3;
-
+/*
         if( n < 128 || i + n > ssl->in_hslen )
         {
             SSL_DEBUG_MSG( 1, ( "bad certificate message" ) );
             return( POLARSSL_ERR_SSL_BAD_HS_CERTIFICATE );
         }
-
+*/
         ret = x509_crt_parse_der( ssl->session_negotiate->peer_cert,
-                                  ssl->in_msg + i, n );
+                                   ssl->in_msg + i, n );
         if( ret != 0 )
         {
             SSL_DEBUG_RET( 1, " x509_crt_parse_der", ret );
@@ -4918,5 +4924,465 @@ int ssl_check_cert_usage( const x509_crt *cert,
     return( 0 );
 }
 #endif /* POLARSSL_X509_CRT_PARSE_C */
+
+/*
+ * Record layer functions
+ */
+int ssl_my_write_record( ssl_context *ssl)
+{
+    int ret, done = 0;
+    size_t len = ssl->out_msglen;
+
+    SSL_DEBUG_MSG( 2, ( "=> write record" ) );
+
+
+#if defined(POLARSSL_ZLIB_SUPPORT)
+    if( ssl->transform_out != NULL &&
+        ssl->session_out->compression == SSL_COMPRESS_DEFLATE )
+    {
+        if( ( ret = ssl_compress_buf( ssl ) ) != 0 )
+        {
+            SSL_DEBUG_RET( 1, "ssl_compress_buf", ret );
+            return( ret );
+        }
+
+        len = ssl->out_msglen;
+    }
+#endif /*POLARSSL_ZLIB_SUPPORT */
+
+#if defined(POLARSSL_SSL_HW_RECORD_ACCEL)
+    if( ssl_hw_record_write != NULL )
+    {
+        SSL_DEBUG_MSG( 2, ( "going for ssl_hw_record_write()" ) );
+
+        ret = ssl_hw_record_write( ssl );
+        if( ret != 0 && ret != POLARSSL_ERR_SSL_HW_ACCEL_FALLTHROUGH )
+        {
+            SSL_DEBUG_RET( 1, "ssl_hw_record_write", ret );
+            return( POLARSSL_ERR_SSL_HW_ACCEL_FAILED );
+        }
+
+        if( ret == 0 )
+            done = 1;
+    }
+#endif /* POLARSSL_SSL_HW_RECORD_ACCEL */
+    if( !done )
+    {
+        ssl->out_hdr[0] = (unsigned char) ssl->out_msgtype;
+        ssl->out_hdr[1] = (unsigned char) ssl->major_ver;
+        ssl->out_hdr[2] = (unsigned char) ssl->minor_ver;
+        ssl->out_hdr[3] = (unsigned char)( len >> 8 );
+        ssl->out_hdr[4] = (unsigned char)( len      );
+
+        if( ssl->transform_out != NULL )
+        {
+            if( ( ret = ssl_encrypt_buf( ssl ) ) != 0 )
+            {
+                SSL_DEBUG_RET( 1, "ssl_encrypt_buf", ret );
+                return( ret );
+            }
+
+            len = ssl->out_msglen;
+            ssl->out_hdr[3] = (unsigned char)( len >> 8 );
+            ssl->out_hdr[4] = (unsigned char)( len      );
+        }
+
+        ssl->out_left = 5 + ssl->out_msglen;
+
+        SSL_DEBUG_MSG( 3, ( "output record: msgtype = %d, "
+                            "version = [%d:%d], msglen = %d",
+                       ssl->out_hdr[0], ssl->out_hdr[1], ssl->out_hdr[2],
+                     ( ssl->out_hdr[3] << 8 ) | ssl->out_hdr[4] ) );
+
+        SSL_DEBUG_BUF( 4, "output record sent to network",
+                       ssl->out_hdr, 5 + ssl->out_msglen );
+    }
+
+    if( ( ret = ssl_flush_output( ssl ) ) != 0 )
+    {
+        SSL_DEBUG_RET( 1, "ssl_flush_output", ret );
+        return( ret );
+    }
+
+    SSL_DEBUG_MSG( 2, ( "<= write record" ) );
+
+    return( 0 );
+}
+
+
+
+
+// NOTE: assuming ssl->out_msgtype == SSL_MSG_HANDSHAKE 
+int ssl_write_large_ctx( ssl_context *ssl)
+{
+    int ret;
+    int len = ssl->out_msglen;
+    size_t startcount = 0;// should be able to optimize this 
+    size_t totallen = ssl->out_msglen;
+    unsigned int max_len = SSL_MAX_CONTENT_LEN;
+
+//MAX_FRAGMENT_LENGTH should be negotiable, but is ignored now
+
+    unsigned char* buf =malloc(len);
+
+	ssl->out_msg[1] = (unsigned char)( ( len - 4 ) >> 16 );
+	ssl->out_msg[2] = (unsigned char)( ( len - 4 ) >>  8 );
+	ssl->out_msg[3] = (unsigned char)( ( len - 4 )       );
+	if( ssl->out_msg[0] != SSL_HS_HELLO_REQUEST  )
+		ssl->handshake->update_checksum( ssl, buf, len );
+
+	memcpy(buf, ssl->out_msg, len );
+	memset(ssl->out_msg, 0, len );
+
+     SSL_DEBUG_MSG( 2, ( "=> write" ) );
+
+	printf("WTFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF %d\n", len);
+
+
+	while(len>0){
+
+		int ThisSendLength =	 ((size_t)len < max_len) ? len : max_len;
+		memcpy(ssl->out_msg, buf+startcount, ThisSendLength);
+		ssl->out_msglen = ThisSendLength;
+
+		if( ( ret = ssl_my_write_record( ssl ) ) != 0 )
+		{
+			SSL_DEBUG_RET( 1, "ssl_write_record", ret );
+			return( ret );
+		}
+
+		memset(ssl->out_msg, 0, ThisSendLength);	
+		len -= max_len;
+		startcount  += max_len;
+
+	}
+
+    SSL_DEBUG_MSG( 2, ( "<= write" ) );
+
+	ssl->out_msglen=totallen ;
+	memcpy(ssl->out_msg, buf, totallen);	//I'm NOT sure about this
+	free(buf );
+
+    return( 0);
+}
+
+
+int ssl_my_read_record( ssl_context *ssl )
+{
+    int ret, done = 0;
+
+    SSL_DEBUG_MSG( 2, ( "=> read record" ) );
+
+    if( ssl->in_hslen != 0 &&
+        ssl->in_hslen < ssl->in_msglen )
+    {
+        /*
+         * Get next Handshake message in the current record
+         */
+        ssl->in_msglen -= ssl->in_hslen;
+
+        memmove( ssl->in_msg, ssl->in_msg + ssl->in_hslen,
+                 ssl->in_msglen );
+
+        ssl->in_hslen  = 4;
+        ssl->in_hslen += ( ssl->in_msg[2] << 8 ) | ssl->in_msg[3];
+
+        SSL_DEBUG_MSG( 3, ( "handshake message: msglen ="
+                            " %d, type = %d, hslen = %d",
+                       ssl->in_msglen, ssl->in_msg[0], ssl->in_hslen ) );
+
+        if( ssl->in_msglen < 4 || ssl->in_msg[1] != 0 )
+        {
+            SSL_DEBUG_MSG( 1, ( "bad handshake length" ) );
+            return( POLARSSL_ERR_SSL_INVALID_RECORD );
+        }
+
+        if( ssl->in_msglen < ssl->in_hslen )
+        {
+            SSL_DEBUG_MSG( 1, ( "bad handshake length" ) );
+            return( POLARSSL_ERR_SSL_INVALID_RECORD );
+        }
+
+        if( ssl->state != SSL_HANDSHAKE_OVER )
+            ssl->handshake->update_checksum( ssl, ssl->in_msg, ssl->in_hslen );
+
+        return( 0 );
+    }
+
+    ssl->in_hslen = 0;
+
+    /*
+     * Read the record header and validate it
+     */
+    if( ( ret = ssl_fetch_input( ssl, 5 ) ) != 0 )
+    {
+        SSL_DEBUG_RET( 1, "ssl_fetch_input", ret );
+        return( ret );
+    }
+
+    ssl->in_msgtype =  ssl->in_hdr[0];
+    ssl->in_msglen = ( ssl->in_hdr[3] << 8 ) | ssl->in_hdr[4];
+
+    SSL_DEBUG_MSG( 3, ( "input record: msgtype = %d, "
+                        "version = [%d:%d], msglen = %d",
+                     ssl->in_hdr[0], ssl->in_hdr[1], ssl->in_hdr[2],
+                   ( ssl->in_hdr[3] << 8 ) | ssl->in_hdr[4] ) );
+
+    if( ssl->in_hdr[1] != ssl->major_ver )
+    {
+        SSL_DEBUG_MSG( 1, ( "major version mismatch" ) );
+        return( POLARSSL_ERR_SSL_INVALID_RECORD );
+    }
+
+    if( ssl->in_hdr[2] > ssl->max_minor_ver )
+    {
+        SSL_DEBUG_MSG( 1, ( "minor version mismatch" ) );
+        return( POLARSSL_ERR_SSL_INVALID_RECORD );
+    }
+
+    /* Sanity check (outer boundaries) */
+    if( ssl->in_msglen < 1 || ssl->in_msglen > SSL_BUFFER_LEN - 13 )
+    {
+        SSL_DEBUG_MSG( 1, ( "bad message length" ) );
+        return( POLARSSL_ERR_SSL_INVALID_RECORD );
+    }
+
+    /*
+     * Make sure the message length is acceptable for the current transform
+     * and protocol version.
+     */
+    if( ssl->transform_in == NULL )
+    {
+        if( ssl->in_msglen > SSL_MAX_CONTENT_LEN )
+        {
+            SSL_DEBUG_MSG( 1, ( "bad message length" ) );
+            return( POLARSSL_ERR_SSL_INVALID_RECORD );
+        }
+    }
+    else
+    {
+        if( ssl->in_msglen < ssl->transform_in->minlen )
+        {
+            SSL_DEBUG_MSG( 1, ( "bad message length" ) );
+            return( POLARSSL_ERR_SSL_INVALID_RECORD );
+        }
+
+#if defined(POLARSSL_SSL_PROTO_SSL3)
+        if( ssl->minor_ver == SSL_MINOR_VERSION_0 &&
+            ssl->in_msglen > ssl->transform_in->minlen + SSL_MAX_CONTENT_LEN )
+        {
+            SSL_DEBUG_MSG( 1, ( "bad message length" ) );
+            return( POLARSSL_ERR_SSL_INVALID_RECORD );
+        }
+#endif
+
+#if defined(POLARSSL_SSL_PROTO_TLS1) || defined(POLARSSL_SSL_PROTO_TLS1_1) || \
+    defined(POLARSSL_SSL_PROTO_TLS1_2)
+        /*
+         * TLS encrypted messages can have up to 256 bytes of padding
+         */
+        if( ssl->minor_ver >= SSL_MINOR_VERSION_1 &&
+            ssl->in_msglen > ssl->transform_in->minlen +
+                             SSL_MAX_CONTENT_LEN + 256 )
+        {
+            SSL_DEBUG_MSG( 1, ( "bad message length" ) );
+            return( POLARSSL_ERR_SSL_INVALID_RECORD );
+        }
+#endif
+    }
+
+    /*
+     * Read and optionally decrypt the message contents
+     */
+    if( ( ret = ssl_fetch_input( ssl, 5 + ssl->in_msglen ) ) != 0 )
+    {
+        SSL_DEBUG_RET( 1, "ssl_fetch_input", ret );
+        return( ret );
+    }
+
+    SSL_DEBUG_BUF( 4, "input record from network",
+                   ssl->in_hdr, 5 + ssl->in_msglen );
+
+#if defined(POLARSSL_SSL_HW_RECORD_ACCEL)
+    if( ssl_hw_record_read != NULL )
+    {
+        SSL_DEBUG_MSG( 2, ( "going for ssl_hw_record_read()" ) );
+
+        ret = ssl_hw_record_read( ssl );
+        if( ret != 0 && ret != POLARSSL_ERR_SSL_HW_ACCEL_FALLTHROUGH )
+        {
+            SSL_DEBUG_RET( 1, "ssl_hw_record_read", ret );
+            return( POLARSSL_ERR_SSL_HW_ACCEL_FAILED );
+        }
+
+        if( ret == 0 )
+            done = 1;
+    }
+#endif /* POLARSSL_SSL_HW_RECORD_ACCEL */
+    if( !done && ssl->transform_in != NULL )
+    {
+        if( ( ret = ssl_decrypt_buf( ssl ) ) != 0 )
+        {
+#if defined(POLARSSL_SSL_ALERT_MESSAGES)
+            if( ret == POLARSSL_ERR_SSL_INVALID_MAC )
+            {
+                ssl_send_alert_message( ssl,
+                                        SSL_ALERT_LEVEL_FATAL,
+                                        SSL_ALERT_MSG_BAD_RECORD_MAC );
+            }
+#endif
+            SSL_DEBUG_RET( 1, "ssl_decrypt_buf", ret );
+            return( ret );
+        }
+
+        SSL_DEBUG_BUF( 4, "input payload after decrypt",
+                       ssl->in_msg, ssl->in_msglen );
+
+        if( ssl->in_msglen > SSL_MAX_CONTENT_LEN )
+        {
+            SSL_DEBUG_MSG( 1, ( "bad message length" ) );
+            return( POLARSSL_ERR_SSL_INVALID_RECORD );
+        }
+    }
+
+#if defined(POLARSSL_ZLIB_SUPPORT)
+    if( ssl->transform_in != NULL &&
+        ssl->session_in->compression == SSL_COMPRESS_DEFLATE )
+    {
+        if( ( ret = ssl_decompress_buf( ssl ) ) != 0 )
+        {
+            SSL_DEBUG_RET( 1, "ssl_decompress_buf", ret );
+            return( ret );
+        }
+
+        ssl->in_hdr[3] = (unsigned char)( ssl->in_msglen >> 8 );
+        ssl->in_hdr[4] = (unsigned char)( ssl->in_msglen      );
+    }
+#endif /* POLARSSL_ZLIB_SUPPORT */
+
+    if( ssl->in_msgtype != SSL_MSG_HANDSHAKE &&
+        ssl->in_msgtype != SSL_MSG_ALERT &&
+        ssl->in_msgtype != SSL_MSG_CHANGE_CIPHER_SPEC &&
+        ssl->in_msgtype != SSL_MSG_APPLICATION_DATA )
+    {
+        SSL_DEBUG_MSG( 1, ( "unknown record type" ) );
+
+        if( ( ret = ssl_send_alert_message( ssl,
+                        SSL_ALERT_LEVEL_FATAL,
+                        SSL_ALERT_MSG_UNEXPECTED_MESSAGE ) ) != 0 )
+        {
+            return( ret );
+        }
+
+        return( POLARSSL_ERR_SSL_INVALID_RECORD );
+    }
+
+    if( ssl->in_msgtype == SSL_MSG_HANDSHAKE )
+    {
+        ssl->in_hslen  = 4;
+        ssl->in_hslen +=( ssl->in_msg[1] << 16 ) | ( ssl->in_msg[2] << 8 ) | ssl->in_msg[3];
+
+        SSL_DEBUG_MSG( 3, ( "handshake message: msglen ="
+                            " %d, type = %d, hslen = %d",
+                       ssl->in_msglen, ssl->in_msg[0], ssl->in_hslen ) );
+
+        /*
+         * Additional checks to validate the handshake header
+         */
+        if( ssl->in_msglen < 4 )
+        {
+            SSL_DEBUG_MSG( 1, ( "bad handshake length" ) );
+            if (ssl->in_msglen < 4) { SSL_DEBUG_MSG(1, ("<4")); } else { SSL_DEBUG_MSG(1, ("!=0")) }
+            return( POLARSSL_ERR_SSL_INVALID_RECORD );
+        }
+
+    }
+
+    if( ssl->in_msgtype == SSL_MSG_ALERT )
+    {
+        SSL_DEBUG_MSG( 2, ( "got an alert message, type: [%d:%d]",
+                       ssl->in_msg[0], ssl->in_msg[1] ) );
+
+        /*
+         * Ignore non-fatal alerts, except close_notify
+         */
+        if( ssl->in_msg[0] == SSL_ALERT_LEVEL_FATAL )
+        {
+            SSL_DEBUG_MSG( 1, ( "is a fatal alert message (msg %d)",
+                           ssl->in_msg[1] ) );
+            /**
+             * Subtract from error code as ssl->in_msg[1] is 7-bit positive
+             * error identifier.
+             */
+            return( POLARSSL_ERR_SSL_FATAL_ALERT_MESSAGE );
+        }
+
+        if( ssl->in_msg[0] == SSL_ALERT_LEVEL_WARNING &&
+            ssl->in_msg[1] == SSL_ALERT_MSG_CLOSE_NOTIFY )
+        {
+            SSL_DEBUG_MSG( 2, ( "is a close notify message" ) );
+            return( POLARSSL_ERR_SSL_PEER_CLOSE_NOTIFY );
+        }
+    }
+
+    ssl->in_left = 0;
+
+    SSL_DEBUG_MSG( 2, ( "<= read record" ) );
+
+    return( 0 );
+}
+
+
+
+// NOTE: assuming ssl->in_msgtype == SSL_MSG_HANDSHAKE 
+int ssl_read_large_ctx( ssl_context *ssl)
+{
+	int ret =0;
+	size_t len =0;
+	size_t totalread =0;
+	unsigned char *buf;
+
+    if( ( ret = 	ssl_my_read_record(ssl) ) != 0 )
+    {
+        SSL_DEBUG_RET( 1, "ssl_read_record", ret );
+        return( ret );
+    }
+
+	len = ssl->in_hslen;
+	buf =malloc(len);
+	memcpy(buf, ssl->in_msg, ssl->in_msglen );
+	memset(ssl->in_msg, 0, ssl->in_msglen );
+
+	totalread  += ssl->in_msglen;
+
+	printf("FTWWWWWWWWWWWWWWWWWWWWWWWWWWWWW %d\n", len );
+
+	while(totalread   < len ){
+		ssl->in_hslen = 0;
+		ssl->in_msglen = 0;
+			
+
+    		if( ( ret = 	ssl_my_read_record(ssl) ) != 0 )
+    		{
+        		SSL_DEBUG_RET( 1, "ssl_read_record", ret );
+        		return( ret );
+    		}
+
+		memcpy(buf+totalread, ssl->in_msg, ssl->in_msglen );
+		memset(ssl->in_msg, 0, ssl->in_msglen );
+
+		totalread  += ssl->in_msglen;
+	}
+
+	ssl->in_hslen = len;
+	ssl->in_msglen = len;
+	memcpy(ssl->in_msg, buf , totalread );
+	if( ssl->state != SSL_HANDSHAKE_OVER )
+		ssl->handshake->update_checksum( ssl, buf , ssl->in_hslen );
+
+
+    return( 0);
+}
+
 
 #endif /* POLARSSL_SSL_TLS_C */
