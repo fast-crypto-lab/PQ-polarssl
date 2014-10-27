@@ -2430,7 +2430,7 @@ write_msg:
 
     ssl->state++;
 
-    if( ( ret = ssl_write_large_ctx( ssl, hyper_big_buffer, i) ) != 0 )
+    if( ( ret = ssl_write_large_ctx( ssl, hyper_big_buffer, ssl->out_msglen) ) != 0 )
     {
         SSL_DEBUG_RET( 1, "ssl_write_record", ret );
         return( ret );
