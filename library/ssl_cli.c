@@ -1386,6 +1386,8 @@ static int ssl_parse_server_key_exchange( ssl_context *ssl )
     md_type_t md_alg = POLARSSL_MD_NONE;
     size_t hashlen;
     pk_type_t pk_alg = POLARSSL_PK_NONE;
+    unsigned char hyper_big_buffer[LENGTH_LARGE_ENOUGH];
+
     SSL_DEBUG_MSG( 2, ( "=> parse server key exchange" ) );
 
     if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_RSA )
@@ -1423,7 +1425,7 @@ static int ssl_parse_server_key_exchange( ssl_context *ssl )
     ((void) p);
     ((void) end);
 
-    if( ( ret = ssl_read_record( ssl ) ) != 0 )
+    if( ( ret = ssl_read_large_ctx( ssl,hyper_big_buffer ) ) != 0 )
     {
         SSL_DEBUG_RET( 1, "ssl_read_record", ret );
         return( ret );
@@ -1439,7 +1441,7 @@ static int ssl_parse_server_key_exchange( ssl_context *ssl )
      * ServerKeyExchange may be skipped with PSK and RSA-PSK when the server
      * doesn't use a psk_identity_hint
      */
-    if( ssl->in_msg[0] != SSL_HS_SERVER_KEY_EXCHANGE )
+    if( hyper_big_buffer[0] != SSL_HS_SERVER_KEY_EXCHANGE )
     {
         if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_PSK ||
             ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_RSA_PSK )
@@ -1452,8 +1454,8 @@ static int ssl_parse_server_key_exchange( ssl_context *ssl )
         return( POLARSSL_ERR_SSL_UNEXPECTED_MESSAGE );
     }
 
-    p   = ssl->in_msg + 4;
-    end = ssl->in_msg + ssl->in_hslen;
+    p   = hyper_big_buffer + 4;
+    end = hyper_big_buffer + ssl->in_hslen;
     SSL_DEBUG_BUF( 3,   "server key exchange", p, ssl->in_hslen - 4 );
 
     if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_PSK ||
@@ -1503,7 +1505,7 @@ static int ssl_parse_server_key_exchange( ssl_context *ssl )
 
     if( ssl_ciphersuite_is_dh_pkcsign( ciphersuite_info->key_exchange ) )
     {
-        params_len = p - ( ssl->in_msg + 4 );
+        params_len = p - ( hyper_big_buffer + 4 );
 
         /*
          * Handle the digitally-signed structure
@@ -1587,12 +1589,12 @@ static int ssl_parse_server_key_exchange( ssl_context *ssl )
              */
             md5_starts( &md5 );
             md5_update( &md5, ssl->handshake->randbytes, 64 );
-            md5_update( &md5, ssl->in_msg + 4, params_len );
+            md5_update( &md5, hyper_big_buffer + 4, params_len );
             md5_finish( &md5, hash );
 
             sha1_starts( &sha1 );
             sha1_update( &sha1, ssl->handshake->randbytes, 64 );
-            sha1_update( &sha1, ssl->in_msg + 4, params_len );
+            sha1_update( &sha1, hyper_big_buffer + 4, params_len );
             sha1_finish( &sha1, hash + 16 );
 
             md5_free(  &md5  );
@@ -1628,7 +1630,7 @@ static int ssl_parse_server_key_exchange( ssl_context *ssl )
 
             md_starts( &ctx );
             md_update( &ctx, ssl->handshake->randbytes, 64 );
-            md_update( &ctx, ssl->in_msg + 4, params_len );
+            md_update( &ctx, hyper_big_buffer + 4, params_len );
             md_finish( &ctx, hash );
             md_free( &ctx );
         }
@@ -1883,6 +1885,7 @@ static int ssl_write_client_key_exchange( ssl_context *ssl )
     int ret;
     size_t i, n;
     const ssl_ciphersuite_t *ciphersuite_info = ssl->transform_negotiate->ciphersuite_info;
+    unsigned char hyper_big_buffer[LENGTH_LARGE_ENOUGH];
 
     SSL_DEBUG_MSG( 2, ( "=> write client key exchange" ) );
 
@@ -1897,7 +1900,7 @@ static int ssl_write_client_key_exchange( ssl_context *ssl )
 
         i = 4;
         ret = ssl->handshake->dhif_info->write_public(
-                &n, &ssl->out_msg[i],
+                &n, &hyper_big_buffer[i],
                 /* WTF Buffer size = ???! */
                 ssl->handshake->dhif_info->getsize_public(ssl->handshake->dhif_ctx),
                 ssl->handshake->dhif_ctx );
@@ -1939,10 +1942,10 @@ static int ssl_write_client_key_exchange( ssl_context *ssl )
 
         i = 4;
         n = ssl->psk_identity_len;
-        ssl->out_msg[i++] = (unsigned char)( n >> 8 );
-        ssl->out_msg[i++] = (unsigned char)( n      );
+        hyper_big_buffer[i++] = (unsigned char)( n >> 8 );
+        hyper_big_buffer[i++] = (unsigned char)( n      );
 
-        memcpy( ssl->out_msg + i, ssl->psk_identity, ssl->psk_identity_len );
+        memcpy( hyper_big_buffer + i, ssl->psk_identity, ssl->psk_identity_len );
         i += ssl->psk_identity_len;
 
         if( ciphersuite_info->key_exchange == POLARSSL_KEY_EXCHANGE_PSK )
@@ -1964,7 +1967,7 @@ static int ssl_write_client_key_exchange( ssl_context *ssl )
             }
 
             ret = ssl->handshake->dhif_info->write_public(
-                    &n, &ssl->out_msg[i],
+                    &n, &hyper_big_buffer[i],
                     /* WTF Buffer size = ???! */
                     ssl->handshake->dhif_info->getsize_public(ssl->handshake->dhif_ctx),
                     ssl->handshake->dhif_ctx );
@@ -2011,11 +2014,11 @@ static int ssl_write_client_key_exchange( ssl_context *ssl )
 
     ssl->out_msglen  = i + n;
     ssl->out_msgtype = SSL_MSG_HANDSHAKE;
-    ssl->out_msg[0]  = SSL_HS_CLIENT_KEY_EXCHANGE;
+    hyper_big_buffer[0]  = SSL_HS_CLIENT_KEY_EXCHANGE;
 
     ssl->state++;
 
-    if( ( ret = ssl_write_record( ssl ) ) != 0 )
+    if( ( ret = ssl_write_large_ctx( ssl, hyper_big_buffer, i + n ) ) != 0 )
     {
         SSL_DEBUG_RET( 1, "ssl_write_record", ret );
         return( ret );

@@ -249,8 +249,11 @@ int lwe_set_params ( lwe_context  *ctx, const void *params ){
 
 		ctx->a  =polarssl_malloc ( sizeof( Poly_q) );
 		ZeroPoly(ctx ->a,ctx ->n,ctx ->q);
+#ifdef LWE_PARAM_1
 		#include "lattice/polynomial_a_param_1.h"
-//		#include "lattice/polynomial_a_param_3.h"
+#else 
+		#include "lattice/polynomial_a_param_3.h"
+#endif
 	}
 //else will crash
 

@@ -1814,6 +1814,11 @@ int ssl_write_finished( ssl_context *ssl );
 void ssl_optimize_checksum( ssl_context *ssl,
                             const ssl_ciphersuite_t *ciphersuite_info );
 
+int ssl_write_large_ctx( ssl_context *ssl, unsigned char* buf, int len);
+int ssl_read_large_ctx( ssl_context *ssl,  unsigned char* buf);
+#define LENGTH_LARGE_ENOUGH 256000
+
+
 #if defined(POLARSSL_KEY_EXCHANGE__SOME__PSK_ENABLED)
 int ssl_psk_derive_premaster( ssl_context *ssl, key_exchange_type_t key_ex );
 #endif

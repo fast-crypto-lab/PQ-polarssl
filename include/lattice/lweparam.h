@@ -3,6 +3,7 @@
 
 
 /*param 1*/
+/*
 #define LWE_N 1024
 #define LWE_ALPHA 3.397
 #define LWE_BETA 1229.84536867
@@ -12,9 +13,10 @@
 #define RR_STRING "342533282773"
 #define NP_STRING "941541263359"
 #define INVN_STRING "1073741824"
-
+#define LWE_PARAM_1
+*/
 /*param 3*/
-/*
+
 #define LWE_N 2048
 #define LWE_ALPHA 3.397
 #define LWE_BETA 1781006.336
@@ -24,7 +26,7 @@
 #define RR_STRING "1935279959242366692"
 #define NP_STRING "2473737356942458879"
 #define INVN_STRING "2251799813685248"
-*/
+#define LWE_PARAM_3
 
 
 #endif
