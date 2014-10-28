@@ -68,11 +68,13 @@ void vec_assign( uint8_t * r , const uint8_t * inp , unsigned len )
 
 
 
+#if 0
 inline static void vec_fastreduce32( uint8_t * r , const uint32_t * inp , unsigned len )
 {
 	unsigned i;
 	for(i=0;i<len;i++) r[i] = fast_mod31_32( inp[i] );
 }
+#endif
 
 
 void vec_fullreduce32_cvt( uint8_t * r , const uint32_t * inp , unsigned len )

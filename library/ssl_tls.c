@@ -5022,7 +5022,6 @@ int ssl_write_large_ctx( ssl_context *ssl,  unsigned char* buf, int len)
 {
     int ret;
     size_t startcount = 0;
-    size_t totallen = ssl->out_msglen;
     unsigned int max_len = SSL_MAX_CONTENT_LEN;
 
 #if defined(POLARSSL_SSL_MAX_FRAGMENT_LENGTH)

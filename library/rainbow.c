@@ -17,12 +17,14 @@
 
 #if defined(__RAINBOW__)||defined(__TTS__)
 
+#if 0
 static inline int verify( const uint8_t * md , const qpoly_64x40_t * key , const uint8_t * s )
 {
 	uint8_t r[40];
 	eval_q64x40( r , key , s );
 	return vec_cmp40(md,r);
 }
+#endif
 
 
 

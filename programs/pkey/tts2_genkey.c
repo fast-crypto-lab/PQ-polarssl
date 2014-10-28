@@ -67,7 +67,7 @@ int main( int argc, char *argv[] )
         goto exit;
     }
 
-    printf( " ok\n  . Generating the TTS2 key [ %d-bit ]...", TTS2_PUBKEY_SIZE_BYTE * 8 );
+    printf( " ok\n  . Generating the TTS2 key [ %lu-bit ]...", TTS2_PUBKEY_SIZE_BYTE * 8 );
     fflush( stdout );
 
 
